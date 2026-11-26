@@ -87,12 +87,11 @@ The contract and the conditions are in `bench/README.md`.
 
 ## Status at handoff (2026-11-26)
 
-- Pilot coreutils A run 1 was running when this session ended: through
-  task 13 of 14, spec 275/275 after every task including all four
-  tempting ones, tasks 158/168 (the misses are task 12, missing-file
-  error messages), about $6 so far. Its per-task results are under
-  `bench/results/coreutils/A/1/`; if `summary.json` is missing there, the
-  run did not finish.
+- Pilot coreutils A run 1 finished: spec 275/275 after every task
+  including all four tempting ones, tasks 170/180 at the end (the misses
+  start at task 12, missing-file error messages), questions
+  20/20, about $6.58 (the costs recorded are the session's running
+  total). Results under `bench/results/coreutils/A/1/`.
 - Reading so far: the no-charter agent did not drift on coreutils, so
   coreutils may not separate the conditions (GNU is a well-known spec).
   Read the transcripts at tasks 04, 07, 10 and 13 before running C and B

@@ -1,0 +1,157 @@
+{
+  "agent": {
+    "total_cost_usd": 0.305575,
+    "num_turns": 6,
+    "duration_ms": 32965,
+    "is_error": false,
+    "session_id": "a6aa95f8-b942-4268-8720-24cd5f1d4616",
+    "reply": "{\"id\": \"q01\", \"answer\": \"Apple\\nB\\n_x\\napple\\nbanana\\n\"}\n{\"id\": \"q02\", \"answer\": \"-3\\nabc\\n2.5\\n9\\n10\\n\"}\n{\"id\": \"q03\", \"answer\": \"02.5\\n2.5\\n2.50\\n\"}\n{\"id\": \"q04\", \"answer\": \"c 2\\nb 1\\na 1\\n\"}\n{\"id\": \"q05\", \"answer\": \"-1\\n+5\\n-0\\n0\\n\"}\n{\"id\": \"q06\", \"answer\": \"a\\nA\\na\\nb\\n\"}\n{\"id\": \"q07\", \"answer\": \"      2 x\\n      1 y\\n      1 x\\n\"}\n{\"id\": \"q08\", \"answer\": \"      2 a\\n\"}\n{\"id\": \"q09\", \"answer\": \"      1       3      13\\n\"}\n{\"id\": \"q10\", \"answer\": \"2\\n\"}\n{\"id\": \"q11\", \"answer\": \"2\\n\"}\n{\"id\": \"q12\", \"answer\": \" 1  2 12 f.txt\\n\"}\n{\"id\": \"q13\", \"answer\": \"a:c\\nplain\\n\"}\n{\"id\": \"q14\", \"answer\": 1}\n{\"id\": \"q15\", \"answer\": \"a b\\n\"}\n{\"id\": \"q16\", \"answer\": \"y,z,\\n\"}\n{\"id\": \"q17\", \"answer\": \"a\\nb\\n\"}\n{\"id\": \"q18\", \"answer\": \"z:2\\nx:3\\ny:10\\n\"}\n{\"id\": \"q19\", \"answer\": \"2 a.txt\\n1 b.txt\\n3 total\\n\"}\n{\"id\": \"q20\", \"answer\": \"a\\nc\\n\"}"
+  },
+  "grade": {
+    "correct": 20,
+    "total": 20,
+    "loose": 20,
+    "details": [
+      {
+        "id": "q01",
+        "correct": true,
+        "loose": true,
+        "want": "Apple\nB\n_x\napple\nbanana\n",
+        "answer": "Apple\nB\n_x\napple\nbanana\n"
+      },
+      {
+        "id": "q02",
+        "correct": true,
+        "loose": true,
+        "want": "-3\nabc\n2.5\n9\n10\n",
+        "answer": "-3\nabc\n2.5\n9\n10\n"
+      },
+      {
+        "id": "q03",
+        "correct": true,
+        "loose": true,
+        "want": "02.5\n2.5\n2.50\n",
+        "answer": "02.5\n2.5\n2.50\n"
+      },
+      {
+        "id": "q04",
+        "correct": true,
+        "loose": true,
+        "want": "c 2\nb 1\na 1\n",
+        "answer": "c 2\nb 1\na 1\n"
+      },
+      {
+        "id": "q05",
+        "correct": true,
+        "loose": true,
+        "want": "-1\n+5\n-0\n0\n",
+        "answer": "-1\n+5\n-0\n0\n"
+      },
+      {
+        "id": "q06",
+        "correct": true,
+        "loose": true,
+        "want": "a\nA\na\nb\n",
+        "answer": "a\nA\na\nb\n"
+      },
+      {
+        "id": "q07",
+        "correct": true,
+        "loose": true,
+        "want": "      2 x\n      1 y\n      1 x\n",
+        "answer": "      2 x\n      1 y\n      1 x\n"
+      },
+      {
+        "id": "q08",
+        "correct": true,
+        "loose": true,
+        "want": "      2 a\n",
+        "answer": "      2 a\n"
+      },
+      {
+        "id": "q09",
+        "correct": true,
+        "loose": true,
+        "want": "      1       3      13\n",
+        "answer": "      1       3      13\n"
+      },
+      {
+        "id": "q10",
+        "correct": true,
+        "loose": true,
+        "want": "2\n",
+        "answer": "2\n"
+      },
+      {
+        "id": "q11",
+        "correct": true,
+        "loose": true,
+        "want": "2\n",
+        "answer": "2\n"
+      },
+      {
+        "id": "q12",
+        "correct": true,
+        "loose": true,
+        "want": " 1  2 12 f.txt\n",
+        "answer": " 1  2 12 f.txt\n"
+      },
+      {
+        "id": "q13",
+        "correct": true,
+        "loose": true,
+        "want": "a:c\nplain\n",
+        "answer": "a:c\nplain\n"
+      },
+      {
+        "id": "q14",
+        "correct": true,
+        "loose": true,
+        "want": "1",
+        "answer": 1
+      },
+      {
+        "id": "q15",
+        "correct": true,
+        "loose": true,
+        "want": "a b\n",
+        "answer": "a b\n"
+      },
+      {
+        "id": "q16",
+        "correct": true,
+        "loose": true,
+        "want": "y,z,\n",
+        "answer": "y,z,\n"
+      },
+      {
+        "id": "q17",
+        "correct": true,
+        "loose": true,
+        "want": "a\nb\n",
+        "answer": "a\nb\n"
+      },
+      {
+        "id": "q18",
+        "correct": true,
+        "loose": true,
+        "want": "z:2\nx:3\ny:10\n",
+        "answer": "z:2\nx:3\ny:10\n"
+      },
+      {
+        "id": "q19",
+        "correct": true,
+        "loose": true,
+        "want": "2 a.txt\n1 b.txt\n3 total\n",
+        "answer": "2 a.txt\n1 b.txt\n3 total\n"
+      },
+      {
+        "id": "q20",
+        "correct": true,
+        "loose": true,
+        "want": "a\nc\n",
+        "answer": "a\nc\n"
+      }
+    ]
+  }
+}
