@@ -28,7 +28,7 @@ module, and `example/` is one (CH-261126-NS7T). What is left:
    section, or let Options name where the bars are written. This changes
    CH entries in `claims/tooling.md` and their tests.
 3. **The skills.** `.claude/skills/claims-*` name one product's paths
-   (paths, test suites and commands of one layout).
+   (paths, test suites and commands of one particular layout).
    Make each one read the adopter's layout from its CLAUDE.md or gate
    options, and ship them so an adopter can install them (a Claude Code
    plugin in this repository is one way).

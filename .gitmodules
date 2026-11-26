@@ -1,0 +1,6 @@
+[submodule "bench/vendor/toml-test"]
+	path = bench/vendor/toml-test
+	url = https://github.com/toml-lang/toml-test
+[submodule "bench/vendor/gjson"]
+	path = bench/vendor/gjson
+	url = https://github.com/tidwall/gjson
