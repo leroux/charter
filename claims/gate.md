@@ -396,7 +396,7 @@ Changes:
 
 ## CH-261126-GFR7 A contract scenario is verified by a portable fixture, run against whichever implementation charter.toml names
 
-Status: planned
+Status: deprecated
 Serves: CH-261126-P2SK
 See: CH-261126-PZ8Z, CH-042
 
@@ -427,3 +427,6 @@ Scenarios:
 4. `path-placeholder` (agent, provisional): output holding the temporary
    tree's path matches a fixture that writes the placeholder in its place.
 
+Changes:
+- 2026-11-26: deprecated before it was built: held as an idea for later in
+  backlog 006, the foundations coming first (owner, backlog 006).

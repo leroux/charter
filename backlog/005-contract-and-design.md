@@ -1,6 +1,6 @@
 # 005. The record splits into a contract any implementation must keep and the design of this one, and the contract's scenarios run against any implementation
 
-Status: drafted · Size: L · See: 004, 002
+Status: held · Size: L · See: 004, 002, 006
 
 The record should be enough for someone to rebuild the software from it,
 with other code and in another language, and to know the rebuild is right
@@ -8,6 +8,10 @@ by running its tests. That needs two things the record lacks: a line
 between what binds every implementation (the contract) and what this one
 chose (the design), and tests of the contract that are not written in the
 implementation's language.
+
+> Held, 2026-11-26: the owner put the foundations first. CH-261126-PZ8Z and
+> CH-261126-GFR7 are deprecated unbuilt, and the idea waits in backlog 006.
+> The map below stays as the analysis it was.
 
 ## Ruling
 

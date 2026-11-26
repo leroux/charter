@@ -356,7 +356,7 @@ Changes:
 
 ## CH-261126-PZ8Z An area is contract or design: what any implementation must do, or how this one does it
 
-Status: planned
+Status: deprecated
 Serves: CH-261126-PFG5
 See: CH-261126-GFR7, CH-033
 
@@ -383,3 +383,6 @@ Scenarios:
 4. `contract-alone` (agent, provisional): the digest and the export can be
    read with the design areas left out, the contract complete on its own.
 
+Changes:
+- 2026-11-26: deprecated before it was built: held as an idea for later in
+  backlog 006, the foundations coming first (owner, backlog 006).
