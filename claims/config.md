@@ -7,7 +7,7 @@ says that the tree cannot.
 
 ## CH-261126-33GK charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know
 
-Status: planned
+Status: active
 Serves: CH-002, CH-261126-NS7T
 See: CH-036, CH-037
 

@@ -1,6 +1,6 @@
 # 003. The charter is a binary over a whole repository, any module and any language, configured by a file beside the record
 
-Status: approved · Size: L · See: 001
+Status: in progress · Size: L · See: 001
 
 The gate today is a Go test inside one Go module: its options are a Go
 variable, its root is the nearest go.mod, its walk skips nested modules,
@@ -50,6 +50,9 @@ Ruled by the owner, 2026-11-26.
 | 27 | Q-261015-Y682 | Yes: `charter gen` is the one writer of generated files; the update variables go. |
 | 28 | Q-261015-CPW5 | Yes: a generated symbol's doc comment is its entry's title. |
 | 29 | Q-261015-5YV3 | Yes: lint -baseline and the style baseline are retired; CH-261009-SNX2 is deprecated. |
+| 30 | How is the rewrite laid out? | `cmd/charter` and `internal/`: config, record, facts, lang/{golang,python,typescript}, walk, surface, gate (importing no lang package), report, digest, lint, diff, export. Nothing is importable by an adopter. `charter.go`, `chartertest/`, `cli/`, `cmd/claimsgen` and `cmd/claimsmap` are removed. |
+| 31 | Which TOML parser? | github.com/BurntSushi/toml, the binary's one dependency. |
+| 32 | In what order does it land? | Bottom-up, one commit a step with its tests: config, record and facts; the Go language; gate, walk and surfaces; Python and TypeScript; gen, report, lint, diff, digest and export; then claims/ and example/ move to charter.toml, the old packages go, and the gate is green. |
 
 ## To do, in order
 

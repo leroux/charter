@@ -250,7 +250,7 @@ Changes:
 
 ## CH-261126-HK6S An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 
-Status: planned
+Status: active
 Serves: CH-005
 See: CH-035, CH-032
 

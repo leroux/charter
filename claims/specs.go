@@ -487,9 +487,7 @@ var CH_261015_9ZTY = &charter.Spec{ID: "CH-261015-9ZTY", Title: "A charter expor
 // surface kinds. A key it does not know, a value of the wrong type, or a
 // language table without its test command fails naming the line. Its paths
 // are relative to the root.
-//
-// Planned: CH-261126-33GK is ruled and not built; see claims/config.md.
-var CH_261126_33GK = &charter.Spec{ID: "CH-261126-33GK", Title: "charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know", Status: charter.Planned}
+var CH_261126_33GK = &charter.Spec{ID: "CH-261126-33GK", Title: "charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know", Status: charter.Active}
 
 // CH_261126_5JMD is CH-261126-5JMD: The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
 //
@@ -513,9 +511,7 @@ var CH_261126_5JMD = &charter.Spec{ID: "CH-261126-5JMD", Title: "The loop's skil
 // status outside the four or a name declared twice is a form problem naming
 // the line. Each language's generated file declares a symbol per
 // observation, by its name, and an observes its probes call.
-//
-// Planned: CH-261126-HK6S is ruled and not built; see claims/form.md.
-var CH_261126_HK6S = &charter.Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: charter.Planned}
+var CH_261126_HK6S = &charter.Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: charter.Active}
 
 // CH_261126_NS7T is CH-261126-NS7T: An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling
 //
