@@ -49,12 +49,32 @@ func TestEveryVerbWorksOnTheCharterFoundAbove(t *testing.T) {
 		t.Fatal(err)
 	}
 	var out, errOut bytes.Buffer
-	for _, verb := range []string{"gen", "check"} {
-		if code := run([]string{verb}, deep, &out, &errOut); code != 0 {
-			t.Errorf("charter %s from %s: exit %d, %s%s", verb, deep, code, out.String(), errOut.String())
+	for _, args := range [][]string{{"gen"}, {"check"}, {"lint"}, {"next", "SW"}, {"anchors", "SW-010"}, {"questions"}, {"export"}} {
+		out.Reset()
+		if code := run(args, deep, &out, &errOut); code != 0 {
+			t.Errorf("charter %v from %s: exit %d, %s%s", args, deep, code, out.String(), errOut.String())
 		}
 	}
 	if code := run([]string{"check"}, t.TempDir(), &out, &errOut); code != 2 || !strings.Contains(errOut.String(), "no claims/charter.toml") {
 		t.Errorf("outside any charter: exit %d, %q", code, errOut.String())
+	}
+}
+
+func TestQuestionsListsEachOpenQuestion(t *testing.T) {
+	chartertest.Verifies(t, claims.CH_261009_4B3B, "questions-verb-lists")
+	root := charterIn(t, planned)
+	q := "# Questions\n\n## Q-261009-M4TK Does it rule?\nAsked-by: agent\nEntry: SW-010\nProvisional: yes\n\n## Q-261009-N7PR Is it whole?\nAsked-by: owner\nEntry: SW-010\nProvisional: no\nAnswer: 2026-10-09, owner: yes\n"
+	if err := os.WriteFile(filepath.Join(root, "claims", "questions.md"), []byte(q), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	var out, errOut bytes.Buffer
+	run([]string{"questions"}, root, &out, &errOut)
+	if want := "Q-261009-M4TK  SW-010\n  Does it rule?\n  provisional: yes\n  asked by: agent\n\n1 open\n"; out.String() != want {
+		t.Errorf("questions =\n%s\nwant\n%s%s", out.String(), want, errOut.String())
+	}
+	out.Reset()
+	run([]string{"questions", "-all"}, root, &out, &errOut)
+	if !strings.Contains(out.String(), "Q-261009-N7PR  SW-010") || !strings.Contains(out.String(), "  answer: 2026-10-09, owner: yes\n") || !strings.HasSuffix(out.String(), "1 open\n") {
+		t.Errorf("questions -all =\n%s", out.String())
 	}
 }

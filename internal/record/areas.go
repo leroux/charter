@@ -513,3 +513,7 @@ func paraLabels(paras [][]Line) []string {
 	}
 	return out
 }
+
+// ParseArea reads one area document's text, as it is at rel: its header,
+// its entries and its form problems.
+func ParseArea(rel, src string) (*Area, []*Entry, []string) { return parseArea(rel, src) }
