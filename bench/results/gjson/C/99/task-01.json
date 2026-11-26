@@ -1,0 +1,47 @@
+{
+  "task": 1,
+  "slug": "nested-array-selectors",
+  "kind": "neutral",
+  "agent": {
+    "total_cost_usd": 0.2690692,
+    "num_turns": 8,
+    "duration_ms": 57317,
+    "is_error": false,
+    "session_id": "109d8fd0-56c0-423c-b6a5-8434260fb191",
+    "reply": "I fixed `@ugly|#.c.#` so it now returns `[1,1]`. `@ugly|#.c.#[a=10.11]` wasn't actually broken: before my change it already returned `[{\"a\":10.11}]`, with or without `@ugly`. I added tests for both, and `go test ./...` passes, including the charter gate.\n\n**Cause:** a count produced by `#` is computed, so the result has a number but no raw text (`Raw` is empty). When `#.path` builds its array, it copies each element's raw text. For `#.c.#` it was copying two empty strings, which gave `[,]`.\n\n**Fix (`gjson.go`, in `parseArray`):** when an element's result has no raw text, the code now writes out its value instead. That only affects computed values like the count; everything else is copied as before.\n\n**Tests and charter:**\n- I added a scenario, `each-nested`, to the existing decision for `#.path` (SW-261126-V9J9 in `claims/arrays.md`). It records both of your cases on your document.\n- `TestArrayEachElement` in `charter_test.go` now checks `#.c.#` and `#.c.#[a=10.11]`, each with and without `@ugly`.\n- With the fix taken out, the two count checks fail with `got \"[,]\"`. With it in, everything passes.\n- The decision's wording didn't change, so I added no `Changes:` line. Regenerating `claims/specs.go` changed nothing, and `go run ./cmd/claimsgen lint` printed no warnings."
+  },
+  "invalid": null,
+  "seconds": 58.1,
+  "diff": "3 files changed, 18 insertions(+), 2 deletions(-)",
+  "checks": {
+    "tests_pass": true,
+    "tail": "ok  \tgithub.com/tidwall/gjson\t11.975s\nok  \tgithub.com/tidwall/gjson/claims\t0.016s\n?   \tgithub.com/tidwall/gjson/claims/gate\t[no test files]\n?   \tgithub.com/tidwall/gjson/cmd/claimsgen\t[no test files]\n",
+    "gate_pass": true
+  },
+  "oracle": {
+    "spec": {
+      "passed": 53,
+      "total": 53
+    },
+    "tasks": {
+      "passed": 1,
+      "total": 1
+    },
+    "details": [
+      {
+        "file": "spec_test",
+        "passed": 53,
+        "total": 53,
+        "compiled": true,
+        "failed": []
+      },
+      {
+        "file": "task01_test",
+        "passed": 1,
+        "total": 1,
+        "compiled": true,
+        "failed": []
+      }
+    ]
+  }
+}

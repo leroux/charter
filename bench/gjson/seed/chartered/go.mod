@@ -8,5 +8,4 @@ require (
 	github.com/tidwall/pretty v1.0.0
 )
 
-// The charter tooling, from the checkout the benchmark runs in.
 replace github.com/leroux/charter => @CHARTER@
