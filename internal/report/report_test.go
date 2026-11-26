@@ -16,7 +16,8 @@ var repo, _ = filepath.Abs("../..")
 const area = "# Refill\n\n" +
 	"## SW-010 The bucket refills at the rate\nStatus: active\n\nIt refills.\n\nWhy: a caller that waits is let through.\n\n" +
 	"Scenarios:\n1. `go-passes` (owner, #1): passes in Go.\n2. `python-passes`: passes in Python.\n3. `typescript-passes`: passes in TypeScript.\n4. `one-fails`: one citing test fails.\n5. `all-skipped`: every citing test is skipped.\n6. `never-cited`: no test cites it.\n7. `waived`: waived.\n\n" +
-	"## SW-011 A planned rule\nStatus: planned\n\nNot yet.\n\nWhy: someone needs it.\n\nScenarios:\n1. `later`: later.\n"
+	"## SW-011 A planned rule\nStatus: planned\n\nNot yet.\n\nWhy: someone needs it.\n\nScenarios:\n1. `later`: later.\n\n" +
+	"## SW-012 A retired rule\nStatus: deprecated\n\nNo longer.\n\nWhy: it was replaced.\n\nScenarios:\n1. `gone`: gone.\n"
 
 func build(t *testing.T, extra map[string]string) *config.Config {
 	t.Helper()

@@ -14,15 +14,16 @@ Serves: CH-002, CH-261126-NS7T
 See: CH-036, CH-037
 
 The command walks up from the working directory to the first directory
-holding claims/charter.toml, and that directory is the root; with none it
-fails, naming where it started. The file holds the charter's name; each
-language it reads, a table with the directory its tests run in, the
-command that runs them, its constants module and, for Go, the generated
-module's path; the stakeholder tests, the probe path, the ignore and only
-patterns and the environment patterns; the digest; and the declared
-surface kinds. A key it does not know, a value of the wrong type, or a
-language table without its test command fails naming the line. Its paths
-are relative to the root.
+holding claims/charter.toml, and that directory is the root; with none it fails,
+naming where it started. The file holds the charter's name; each language
+it reads, a table with the directory its tests run in, the command that
+runs them, its constants module and, for Go, the generated module's path,
+and for TypeScript the typescript package it parses with and the specifier
+tests import the generated module by; the stakeholder tests, the probe
+path, the ignore and only patterns and the environment patterns; the
+digest; and the declared surface kinds. A key it does not know, a value of
+the wrong type, or a language table without its test command fails naming
+the line. Its paths are relative to the root.
 
 Why: a charter configured in Go code can be read only by a Go build, and a
 command that must be told where the charter is gets run in the wrong
@@ -38,11 +39,18 @@ Scenarios:
 3. `none-found-named` (owner, backlog 003): with no claims/charter.toml
    above the working directory, charter fails naming the directory it
    started from.
-4. `keys-read` (owner, backlog 003): a file setting every key yields each
-   value, its paths taken relative to the root.
+4. `keys-read` (owner, backlog 003): a file setting every key yields
+   each value as written.
 5. `unknown-key-refused` (owner, backlog 003): an unknown key, a value of
    the wrong type, and a language table without its test command each fail
    naming the line.
+
+Changes:
+- 2026-11-26: the text names the TypeScript table's compiler and import
+  keys, which were read and named nowhere; keys-read says each value is
+  yielded as written, where it said its paths were taken relative to the
+  root, which no test showed, the root being the caller's to join (review
+  of backlog 003).
 
 ## CH-261126-PQ7X A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 

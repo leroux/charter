@@ -267,3 +267,13 @@ test("skips", (ctx) => {
 		t.Error("with CHARTER_EVENTS unset the events file was written")
 	}
 }
+
+func TestAVerifiesInAnyDisabledTestIsRefused(t *testing.T) {
+	claims.Verifies(t, claims.CH_023, "disabled-ts-refused")
+	for _, mod := range []string{"skip", "fixme", "fail", "todo"} {
+		set := read(t, map[string]string{"web/a.test.ts": "import { test } from \"vitest\";\nimport { claims, verifies } from \"@fx/claims\";\n\ntest." + mod + "(\"refills\", () => {\n  verifies(claims.SW_010, \"waited-request-passes\");\n});\n"})
+		if len(set.Citations) != 0 || !strings.Contains(refused(set), "verifies sits in a test marked skip, fixme, fail or todo") {
+			t.Errorf("test.%s: citations %+v, refused:\n%s", mod, set.Citations, refused(set))
+		}
+	}
+}

@@ -210,6 +210,27 @@ func writeTree(t *testing.T, files map[string]string) string {
 
 const sharedArea = "# Refill\n\nHow the bucket refills.\n\n## SW-010 The bucket refills\nStatus: planned\n\nIt refills.\n\nWhy: a caller that waits is let through.\n\nScenarios:\n1. `refills` (owner, #1): it refills.\n"
 
+const sharedNeeds = "# Needs\n\n## SW-001 A caller that waits is let through\nStatus: planned\n\nIt is let through.\n\nWhy: waiting should not be punished.\n"
+
+// exportedAll is every entry export gives, without where it was read.
+func exportedAll(t *testing.T, root string) []map[string]any {
+	t.Helper()
+	var out, errOut bytes.Buffer
+	if code := run([]string{"export"}, root, &out, &errOut); code != 0 {
+		t.Fatalf("export in %s: exit %d %s", root, code, errOut.String())
+	}
+	var got struct{ Entries []map[string]any }
+	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range got.Entries {
+		for _, k := range []string{"refs", "anchors", "pos", "file"} {
+			delete(e, k)
+		}
+	}
+	return got.Entries
+}
+
 func exported(t *testing.T, root string) map[string]any {
 	t.Helper()
 	var out, errOut bytes.Buffer
@@ -233,17 +254,22 @@ func TestOneRecordReadsAlikeInAnyLayout(t *testing.T) {
 		"go.mod":              "module example.com/a\n\ngo 1.21\n",
 		"claims/charter.toml": "name = \"a\"\n\n[go]\nmodule = \"example.com/a/claims\"\ndir = \".\"\ntest = \"go test ./...\"\n",
 		"claims/refill.md":    sharedArea,
+		"claims/needs.md":     sharedNeeds,
 	})
 	pyRoot := writeTree(t, map[string]string{
 		"claims/charter.toml": "name = \"b\"\n\n[python]\ndir = \"tool\"\ntest = \"python3 -m unittest\"\n",
 		"claims/refill.md":    sharedArea,
+		"claims/needs.md":     sharedNeeds,
 		"tool/slug.py":        "x = 1\n",
 	})
-	a, b := exported(t, goRoot), exported(t, pyRoot)
+	a, b := exportedAll(t, goRoot), exportedAll(t, pyRoot)
+	if len(a) != 2 {
+		t.Fatalf("want a need and a decision, got %d entries", len(a))
+	}
 	ja, _ := json.Marshal(a)
 	jb, _ := json.Marshal(b)
 	if string(ja) != string(jb) {
-		t.Errorf("one entry read differently:\n%s\n%s", ja, jb)
+		t.Errorf("the record read differently:\n%s\n%s", ja, jb)
 	}
 }
 
@@ -320,5 +346,28 @@ func TestASurfaceNoEntryOwnsStopsTheChange(t *testing.T) {
 	run([]string{"gen"}, root, &out, &errOut)
 	if code := run([]string{"check"}, root, &out, &errOut); code != 1 || !strings.Contains(out.String(), "rule 6: env:FX_RATE is neither accounted for by an entry nor listed in claims/baseline.txt") {
 		t.Errorf("a new variable no entry owns: exit %d\n%s%s", code, out.String(), errOut.String())
+	}
+}
+
+func TestReportFailsOnAScenarioThatDidNotPass(t *testing.T) {
+	claims.Verifies(t, claims.CH_042, "skipped-scenario-fails")
+	root := goCharter(t)
+	if err := os.Remove(filepath.Join(root, "claims", "waivers.txt")); err != nil {
+		t.Fatal(err)
+	}
+	var out, errOut bytes.Buffer
+	run([]string{"gen"}, root, &out, &errOut)
+	out.Reset()
+	if code := run([]string{"report", "-md"}, root, &out, &errOut); code != 0 {
+		t.Fatalf("every scenario passing: exit %d\n%s%s", code, out.String(), errOut.String())
+	}
+	test := filepath.Join(root, "pkg", "a", "a_test.go")
+	src, _ := os.ReadFile(test)
+	if err := os.WriteFile(test, []byte(strings.Replace(string(src), "\"refills\")\n", "\"refills\")\n\tt.Skip(\"not yet\")\n", 1)), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	out.Reset()
+	if code := run([]string{"report", "-md"}, root, &out, &errOut); code != 1 || !strings.Contains(out.String(), "SW-010/refills") {
+		t.Errorf("a skipped scenario: exit %d\n%s%s", code, out.String(), errOut.String())
 	}
 }

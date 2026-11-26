@@ -167,3 +167,65 @@ func TestARetiredWordIsNamedUnlessAPhraseKeepsIt(t *testing.T) {
 	has(t, lint(t, fs, false), "claims/retired.txt:1: lint: 1 retired word is used; charter lint -style lists it")
 	has(t, lint(t, fs, true), "claims/refill.md:9: lint: \"quota\" is retired in the text of SW-010; write bucket")
 }
+
+// words is a phrase of n words; sentences is n short sentences.
+func words(n int) string {
+	w := make([]string, n)
+	for i := range w {
+		w[i] = "word"
+	}
+	return strings.Join(w, " ")
+}
+
+func sentences(n int) string {
+	s := make([]string, n)
+	for i := range s {
+		s[i] = "It holds."
+	}
+	return strings.Join(s, " ")
+}
+
+func TestTheStyleBarsHoldAtTheirLimits(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_9K5J, "long-title-named", "long-text-named", "long-scenario-named", "pointing-why-named")
+	for _, tc := range []struct {
+		name, old string
+		at, over  string
+		want      string
+	}{
+		{"title", "## SW-010 The bucket refills at the rate", "## SW-010 " + words(20), "## SW-010 " + words(21), "the title of SW-010 runs to 21 words"},
+		{"text", "At each request the bucket reads the clock.", sentences(6), sentences(7), "the text of SW-010 runs to 7 sentences"},
+		{"scenario", "a request after a wait passes.", words(30) + ".", words(31) + ".", "scenario `waited-request-passes` of SW-010 runs to 31 words"},
+		{"why", "Why: a caller that waits is let through again, so a burst does not punish the patient.", "Why: as ruled in backlog 003, " + words(24) + ".", "Why: as ruled in backlog 003.", "the Why of SW-010 points at a ruling"},
+	} {
+		at := lint(t, edit(t, "claims/refill.md", tc.old, tc.at), true)
+		for _, l := range at {
+			if strings.Contains(l, "lint: the "+tc.name) || strings.Contains(l, "runs to") || strings.Contains(l, "points at a ruling") {
+				t.Errorf("%s at the bar is named: %s", tc.name, l)
+			}
+		}
+		has(t, lint(t, edit(t, "claims/refill.md", tc.old, tc.over), true), tc.want)
+	}
+}
+
+func TestARetiredWordIsReadWhereverAReaderMeetsIt(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_WTMZ, "retired-word-named")
+	for _, tc := range []struct{ name, old, new, want string }{
+		{"title", "## SW-010 The bucket refills at the rate", "## SW-010 The quota refills at the rate", "\"quota\" is retired in the title of SW-010"},
+		{"why", "Why: a caller that waits", "Why: a quota that waits", "\"quota\" is retired in the Why of SW-010"},
+		{"scenario", "a request after a wait passes.", "a quota after a wait passes.", "\"quota\" is retired in scenario `waited-request-passes` of SW-010"},
+		{"header", "How the bucket refills.", "How the quota refills.", "\"quota\" is retired in the header"},
+	} {
+		fs := edit(t, "claims/refill.md", tc.old, tc.new)
+		fs["claims/retired.txt"] = "quotas? -> bucket | quota defaults\n"
+		has(t, lint(t, fs, true), tc.want)
+	}
+	for _, kept := range []string{"At each request the `quota` reads the clock.", "At each request the \"quota\" reads the clock."} {
+		fs := edit(t, "claims/refill.md", "At each request the bucket reads the clock.", kept)
+		fs["claims/retired.txt"] = "quotas? -> bucket\n"
+		for _, l := range lint(t, fs, true) {
+			if strings.Contains(l, "retired") {
+				t.Errorf("a retired word in %q is named: %s", kept, l)
+			}
+		}
+	}
+}

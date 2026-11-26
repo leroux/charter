@@ -11,6 +11,7 @@ import (
 
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/config"
+	"github.com/leroux/charter/internal/lang/python"
 )
 
 // fixture is a clean charter: a need, two decisions, an observation, the
@@ -569,5 +570,83 @@ func TestAnObservationIsASymbolProbedInEveryLanguage(t *testing.T) {
 		if err != nil || !strings.Contains(string(src), want) {
 			t.Errorf("claims/%s does not declare the observation: %v", file, err)
 		}
+	}
+}
+
+func TestEveryLanguagesGeneratedFileIsWrittenAndCompared(t *testing.T) {
+	claims.Verifies(t, claims.CH_020, "stale-generated-fails", "gen-writes")
+	c := build(t, polyglot(t, map[string]string{"py/tests/test_burst.py": pyBurst}))
+	for _, f := range []string{"specs.go", "go.mod", "claims.py", "index.ts"} {
+		p := filepath.Join(c.Root, "claims", f)
+		if _, err := os.Stat(p); err != nil {
+			t.Fatalf("gen did not write claims/%s: %v", f, err)
+		}
+	}
+	if ps := problems(t, c); len(ps) != 0 {
+		t.Fatalf("after gen: %q", ps)
+	}
+	for _, f := range []string{"claims.py", "index.ts"} {
+		p := filepath.Join(c.Root, "claims", f)
+		src, _ := os.ReadFile(p)
+		if err := os.WriteFile(p, append(src, '\n'), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	ps := problems(t, c)
+	for _, want := range []string{"claims/claims.py:1: rule 15: claims/claims.py is stale", "claims/index.ts:1: rule 15: claims/index.ts is stale"} {
+		if !strings.Contains(strings.Join(ps, "\n"), want) {
+			t.Errorf("want %q in %q", want, ps)
+		}
+	}
+	if err := os.Remove(filepath.Join(c.Root, "claims", "claims.py")); err != nil {
+		t.Fatal(err)
+	}
+	if err := Write(c); err != nil {
+		t.Fatal(err)
+	}
+	if ps := problems(t, c); len(ps) != 0 {
+		t.Errorf("gen wrote the missing file back, yet: %q", ps)
+	}
+}
+
+func TestTheWalksScopeDecidesWhichAnchorsAndCitationsAreSeen(t *testing.T) {
+	claims.Verifies(t, claims.CH_036, "nested-module-walked", "other-charter-skipped", "only-restricts")
+	f := fixture()
+	f["svc/go.mod"] = "module example.com/svc\n\ngo 1.21\n"
+	f["svc/b.go"] = "package svc\n\n// B is nested.\n//\n//charter:concerns SW-010\nfunc B() {}\n"
+	f["other/claims/charter.toml"] = "name = \"other\"\n"
+	f["other/c.go"] = "package other\n\n// C is another charter's.\n//\n//charter:realizes SW-999\nfunc C() {}\n"
+	c := build(t, f)
+	tree, err := Load(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	seen := map[string]bool{}
+	for _, a := range tree.Facts.Anchors {
+		seen[a.File] = true
+	}
+	if !seen["svc/b.go"] || seen["other/c.go"] {
+		t.Errorf("anchors seen in %v; want the nested module's, not the other charter's", seen)
+	}
+	if ps := problems(t, c); len(ps) != 0 {
+		t.Errorf("the other charter's SW-999 leaked: %q", ps)
+	}
+	c.Only = []string{"env", "pkg", "probes", "svc"}
+	tree, _ = Load(c)
+	for _, ct := range tree.Facts.Citations {
+		if strings.HasPrefix(ct.File, "cmd/") {
+			t.Errorf("with only naming other paths, %s was read", ct.File)
+		}
+	}
+}
+
+func TestALanguageNotNamedStartsNoParser(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_PQ7X, "unnamed-language-unread")
+	old := python.Interpreter
+	python.Interpreter = "python3-that-must-not-run"
+	defer func() { python.Interpreter = old }()
+	c := build(t, with(map[string]string{"tool/x.py": "import os\nos.environ.get(\"FX_RATE\")\n"}))
+	if ps := problems(t, c); len(ps) != 0 {
+		t.Errorf("a charter naming no Python: %q", ps)
 	}
 }

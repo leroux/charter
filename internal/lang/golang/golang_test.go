@@ -321,3 +321,23 @@ func TestAGoTestRecordsItsOutcomeInTheEventsFile(t *testing.T) {
 		t.Errorf("with CHARTER_EVENTS unset the tests did not run as they would:\n%s", unset)
 	}
 }
+
+func TestAGoCitationABlockEnclosesOrAVariableNamesIsRefused(t *testing.T) {
+	claims.Verifies(t, claims.CH_023, "later-statement-refused", "literal-arguments")
+	for _, tc := range []struct{ body, want string }{
+		{"func TestRefill(t *testing.T) {\n\tif true {\n\t\tclaims.Verifies(t, claims.SW_010)\n\t}\n}\n", "Verifies is the leading statement of its test"},
+		{"func TestRefill(t *testing.T) {\n\tclaims.Verifies(t, spec)\n}\n\nvar spec = claims.SW_010\n", "Verifies names a spec by its symbol"},
+	} {
+		set := readFixture(t, map[string]string{"pkg/a/a_test.go": "package a\n\n" + importClaims + tc.body})
+		if len(set.Citations) != 0 {
+			t.Errorf("counted %+v for\n%s", set.Citations, tc.body)
+		}
+		found := false
+		for _, r := range set.Refused {
+			found = found || strings.Contains(r.Message, tc.want)
+		}
+		if !found {
+			t.Errorf("want %q refused, got %+v", tc.want, set.Refused)
+		}
+	}
+}

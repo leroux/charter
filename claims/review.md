@@ -139,6 +139,10 @@ Scenarios:
    citing scenarios of two decisions and no need is counted, and listed
    once under -style; one also citing a need is not.
 
+Changes:
+- 2026-11-26: its scenarios came from CH-041 when it was split, verbatim,
+  with the owner's rulings they carried there (backlog 004).
+
 ## CH-261126-WTMZ A word the record retires is named wherever a reader meets it, unless one of its phrases keeps it
 
 Status: active
@@ -161,6 +165,10 @@ Scenarios:
 1. `retired-word-named` (owner): a retired word outside code,
    quotes and a phrase's line, in a live entry's title, text, Why or
    scenario or a header, is counted, and listed under -style.
+
+Changes:
+- 2026-11-26: its scenarios came from CH-041 when it was split, verbatim,
+  with the owner's rulings they carried there (backlog 004).
 
 ## CH-261005-6ZBS The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why
 
