@@ -1,0 +1,27 @@
+{
+  "bench": "toml",
+  "condition": "A",
+  "run": 99,
+  "session": "a8135f36-bf59-4de3-9a94-17c4abe1dc9e",
+  "model": "",
+  "started": "2026-11-26T06:46:09Z",
+  "tasks": [
+    {
+      "task": 1,
+      "kind": "neutral",
+      "oracle": {
+        "spec": {
+          "passed": 298,
+          "total": 298
+        },
+        "tasks": {
+          "passed": 64,
+          "total": 64
+        },
+        "details": []
+      },
+      "cost": 0.48720040000000003,
+      "tests_pass": true
+    }
+  ]
+}
