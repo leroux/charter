@@ -112,7 +112,7 @@ Changes:
 ## CH-012 An id is declared once; a new one is its prefix, the day it was taken and a random code
 
 Status: active
-Serves: CH-003
+Serves: CH-261126-PFG5
 See: CH-040
 
 An id is a prefix and then either a number, as SW-118, or the day it was
@@ -170,11 +170,13 @@ Changes:
   unique across the area documents alone and `declared-once` names two
   documents; the order holds in every generated file, Python's among them
   (backlog 003).
+- 2026-11-26: serves CH-261126-PFG5, where it served CH-003: CH-003 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-013 Status is planned, active or deprecated, every status generates a symbol, and coverage is asked of active entries only
 
 Status: active
-Serves: CH-002, CH-003
+Serves: CH-002, CH-261126-PFG5
 See: CH-020
 
 An entry's Status is planned, active or deprecated, and any other is a
@@ -200,11 +202,14 @@ Changes:
 - 2026-10-09: a status outside the three is ruled here alone, the status
   form being this entry's subject: CH-010's fields-checked named it too
   and now points here, and the text states it.
+- 2026-11-26: serves CH-002, CH-261126-PFG5, where it served CH-002,
+  CH-003: CH-003 is deprecated and the need above it is served directly
+  (backlog 004).
 
 ## CH-014 The earlier form, one file per spec, is read beside the area documents until it is migrated
 
 Status: deprecated
-Serves: CH-003
+Serves: CH-261126-PFG5
 
 A spec file in the spec directory, named for its numbered id, never a
 dated one, with a lens and a slug, is parsed into the same registry as an
@@ -233,6 +238,8 @@ Changes:
 - 2026-11-26: deprecated (Q-261015-N4HJ): neither charter holds a spec
   file, so the earlier form is no longer read, and its code goes with the
   rewrite (backlog 003).
+- 2026-11-26: serves CH-261126-PFG5, where it served CH-003: CH-003 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-015 Serves and See name existing entries, a need serves nothing, and nothing names itself
 
@@ -260,7 +267,7 @@ Changes:
 
 ## CH-003 The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated
 
-Status: active
+Status: deprecated
 Serves: CH-261126-PFG5
 
 An entry keeps its id for life; a retired one stays in its document with
@@ -292,11 +299,14 @@ Changes:
   its own, the needs being re-cut one a problem: the record's stability is
   how intent keeps a durable home, a property of the record and not
   something a person asks of it (backlog 004).
+- 2026-11-26: deprecated: each of its scenarios restated one that CH-012,
+  CH-013 and CH-040 rule, and the promise above them is CH-261126-PFG5's;
+  its children serve CH-261126-PFG5 in its place (backlog 004).
 
 ## CH-261126-HK6S An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 
 Status: active
-Serves: CH-005
+Serves: CH-261126-P2SK
 See: CH-035, CH-032
 
 observations.md in the claims directory holds one observation per heading,
@@ -323,6 +333,10 @@ Scenarios:
 3. `observation-symbol-generated` (owner, backlog 003): each generated
    file declares a symbol per observation, and a probe's observes naming
    one is read in Go, Python and TypeScript.
+
+Changes:
+- 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-261126-G5BX A need names the person it serves, one the needs document declares
 

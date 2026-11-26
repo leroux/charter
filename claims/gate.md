@@ -9,7 +9,7 @@ entries rest on, the walk and the gate's own report.
 
 ## CH-004 No surface exists that an entry does not own, and the baseline only shrinks
 
-Status: active
+Status: deprecated
 Serves: CH-261126-P2SK
 
 Every environment variable the tree reads, and every surface of a kind
@@ -40,6 +40,9 @@ Changes:
   its own, the needs being re-cut one a problem: every surface owned by an
   entry is part of holding the code to the record, a rule of the gate and
   not a promise to one person (backlog 004).
+- 2026-11-26: deprecated: each of its scenarios restated one that CH-033
+  and CH-034 rule, and the promise above them is CH-261126-P2SK's; its
+  children serve CH-261126-P2SK in its place (backlog 004).
 
 ## CH-030 An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor
 
@@ -121,7 +124,7 @@ Changes:
 ## CH-032 A probe cites observations only, and a test never cites an observation
 
 Status: active
-Serves: CH-005
+Serves: CH-261126-P2SK
 
 A probe is a test file under a path charter.toml names for probes, in any
 language the charter reads. A probe referencing an entry fails, and its
@@ -149,12 +152,14 @@ Changes:
   language, where it was a Go file carrying the probe tag;
   `negated-tag-is-no-probe` and `tag-required` are dropped for
   `probe-by-path` and `probe-path-required` (backlog 003).
+- 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-033 Every surface is enumerated, and accounted for by an entry or listed in a baseline of only live, unaccounted surfaces
 
 Status: active
 Kind: invariant
-Serves: CH-004
+Serves: CH-261126-P2SK
 Accounts: env:CHARTER_UPDATE_BASELINE
 
 The surfaces are the environment variables, the values of the string
@@ -198,11 +203,13 @@ Changes:
   language; build tags, OpenAPI operations and event kinds are kinds an
   adopter declares (CH-261126-NTRR), and the scenarios name the declared
   kinds (backlog 003).
+- 2026-11-26: serves CH-261126-P2SK, where it served CH-004: CH-004 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-261126-NTRR A declared surface kind is a command run from the root whose output lines are its keys
 
 Status: active
-Serves: CH-004
+Serves: CH-261126-P2SK
 See: CH-033
 
 A [[surface]] table in charter.toml names a kind, a lower-case word, and a
@@ -230,11 +237,15 @@ Scenarios:
    env, or not a lower-case word is a configuration problem naming its
    line in charter.toml.
 
+Changes:
+- 2026-11-26: serves CH-261126-P2SK, where it served CH-004: CH-004 is
+  deprecated and the need above it is served directly (backlog 004).
+
 ## CH-034 An environment variable is read through a named constant, or under a dynamic directive, and no literal names one
 
 Status: active
 Kind: invariant
-Serves: CH-004
+Serves: CH-261126-P2SK
 
 Outside the constants modules and outside test files, a read of the
 environment takes a constant of a constants module as its argument, or its
@@ -266,10 +277,12 @@ Changes:
   Go, each language's constants module named in charter.toml;
   `python-read-checked` and `typescript-read-checked` are added (backlog
   003).
+- 2026-11-26: serves CH-261126-P2SK, where it served CH-004: CH-004 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-005 An external system's fact is recorded with its source and date, and no active entry rests on one found false
 
-Status: active
+Status: deprecated
 Serves: CH-261126-P2SK
 
 An observation records a fact about a system the code does not own, with
@@ -298,11 +311,14 @@ Changes:
   its own, the needs being re-cut one a problem: a fact an entry rests on,
   checked by a probe, is part of holding the code to the record, a rule of
   the gate and not a promise to one person (backlog 004).
+- 2026-11-26: deprecated: each of its scenarios restated one that CH-032
+  and CH-035 rule, and the promise above them is CH-261126-P2SK's; its
+  children serve CH-261126-P2SK in its place (backlog 004).
 
 ## CH-035 Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails
 
 Status: active
-Serves: CH-005
+Serves: CH-261126-P2SK
 
 Every observation names a subject. An observed one has a calendar date and
 at least one citing probe; a documented one has a source; any date given
@@ -325,6 +341,8 @@ Scenarios:
 Changes:
 - 2026-10-09: the title reworded to twenty words or fewer; the ruling is
   unchanged.
+- 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-036 The walk covers every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores
 

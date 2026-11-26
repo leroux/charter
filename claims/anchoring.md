@@ -11,7 +11,7 @@ tests.
 ## CH-020 Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment
 
 Status: active
-Serves: CH-002, CH-003
+Serves: CH-002, CH-261126-PFG5
 See: CH-012, CH-261126-PQ7X
 
 For each language charter.toml names, charter gen writes one file in the
@@ -78,6 +78,9 @@ Changes:
   so the update variables and their Accounts are gone and `update-writes`
   is dropped for `gen-writes` (Q-261015-Y682); `stale-generated-fails`
   names any language and the command.
+- 2026-11-26: serves CH-002, CH-261126-PFG5, where it served CH-002,
+  CH-003: CH-003 is deprecated and the need above it is served directly
+  (backlog 004).
 
 ## CH-021 Production code anchors an entry in a Go doc comment, a TypeScript line comment, or above a Python def
 
@@ -261,7 +264,7 @@ Changes:
 ## CH-025 The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry
 
 Status: active
-Serves: CH-003
+Serves: CH-261126-PFG5
 
 Beside the markdown of the record and charter.toml, the claims directory
 holds only the files charter gen writes; a source file there that gen did
@@ -287,6 +290,8 @@ Changes:
   directory holds no hand-written code at all: `functions-refused` and
   `spec-in-go-refused` are dropped for `hand-written-source-refused`
   (backlog 003).
+- 2026-11-26: serves CH-261126-PFG5, where it served CH-003: CH-003 is
+  deprecated and the need above it is served directly (backlog 004).
 
 ## CH-040 One charter command generates, checks, lints, gives ids and lists anchors, and an adopter writes no main
 

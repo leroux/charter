@@ -185,7 +185,6 @@ func TestANeedIsVerifiedFromTheStakeholdersSide(t *testing.T) {
 
 func TestProbesAndTestsStayApart(t *testing.T) {
 	claims.Verifies(t, claims.CH_032, "probe-reference-is-no-citation", "test-citing-an-observation-fails", "probe-by-path")
-	claims.Verifies(t, claims.CH_005, "probes-and-tests-stay-apart")
 	f := fixture()
 	f["probes/clock_test.go"] = strings.Replace(f["probes/clock_test.go"], "claims.Observes(t, claims.ClockIsMonotonic)", "claims.Observes(t, claims.ClockIsMonotonic)\n\t_ = claims.SW_010", 1)
 	f["probes/refill_test.go"] = strings.Replace(f["pkg/a/a_test.go"], "package a", "package probes", 1)
@@ -205,7 +204,6 @@ func TestObservationsNeedAProbePath(t *testing.T) {
 
 func TestObservationsCarryTheirStatussFields(t *testing.T) {
 	claims.Verifies(t, claims.CH_035, "observed-needs-date-and-probe", "documented-needs-source", "subject-required", "broken-under-active")
-	claims.Verifies(t, claims.CH_005, "observed-fact-has-a-date-and-a-probe", "broken-fact-under-active-fails")
 	reports(t, replace(t, "claims/observations.md", "Observed: 2026-11-01\n", "Observed: 2026-13-01\n"), "claims/observations.md:1: rule 11: ClockIsMonotonic has Observed \"2026-13-01\"; want YYYY-MM-DD")
 	reports(t, replace(t, "claims/observations.md", "Observed: 2026-11-01\n", ""), "rule 11: ClockIsMonotonic is observed and has no Observed date")
 	reports(t, with(map[string]string{"probes/clock_test.go": ""}), "rule 11: observed observation ClockIsMonotonic is cited by no probe")
@@ -233,7 +231,6 @@ func TestRelationsNameEntriesTheRecordHolds(t *testing.T) {
 
 func TestEverySurfaceIsAccountedForOrBaselined(t *testing.T) {
 	claims.Verifies(t, claims.CH_033, "surfaces-enumerated", "unaccounted-fails", "accounts-must-exist", "baseline-holds-live-gaps-once", "deprecated-accounts-nothing")
-	claims.Verifies(t, claims.CH_004, "unaccounted-surface-fails", "baseline-holds-only-live-gaps")
 	reports(t, replace(t, "claims/charter.toml", "command = \"echo refill\"", "command = \"printf 'refill\\\\ndrain\\\\n'\""),
 		"rule 6: op:drain is neither accounted for by an entry nor listed in claims/baseline.txt")
 	reports(t, replace(t, "claims/refill.md", "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE, op:refill, op:gone"),
@@ -284,7 +281,6 @@ func TestAnEmptyConstantsModuleIsAConfigurationProblem(t *testing.T) {
 
 func TestAnEnvironmentReadGoesThroughAConstant(t *testing.T) {
 	claims.Verifies(t, claims.CH_034, "literal-argument", "variable-argument", "duplicated-name", "undeclared-pattern", "dynamic-directive")
-	claims.Verifies(t, claims.CH_004, "env-read-through-a-constant")
 	reports(t, replace(t, "pkg/a/a.go", "os.Getenv(env.Rate)", "os.Getenv(\"FX_RATE\")"),
 		"pkg/a/a.go:12: rule 8: an environment read names \"FX_RATE\" by a literal; read it through env.Rate",
 		"pkg/a/a.go:12: rule 8: literal \"FX_RATE\" duplicates env.Rate; use the constant")
@@ -483,7 +479,6 @@ func TestAPlannedEntryMayBeCitedBeforeItsCode(t *testing.T) {
 }
 
 func TestARetiredEntryStillBuildsAndIsAskedNothing(t *testing.T) {
-	claims.Verifies(t, claims.CH_003, "retired-entry-still-builds")
 	f := replace(t, "claims/refill.md", "## SW-011 A planned rule\nStatus: planned\n", "## SW-011 A planned rule\nStatus: deprecated\n")
 	c := build(t, f)
 	if ps := problems(t, c); len(ps) != 0 {

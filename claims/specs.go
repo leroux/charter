@@ -111,13 +111,19 @@ var CH_001 = &Spec{ID: "CH-001", Title: "A reviewer can judge a change by its en
 var CH_002 = &Spec{ID: "CH-002", Title: "A builder reaches the code and the tests from an id, and the gate names the fix for every problem", Status: Active}
 
 // CH_003 is CH-003: The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated
-var CH_003 = &Spec{ID: "CH-003", Title: "The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated", Status: Active}
+//
+// Deprecated: CH-003 is retired; see its Changes in claims/intent.md. Add no new anchors.
+var CH_003 = &Spec{ID: "CH-003", Title: "The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated", Status: Deprecated}
 
 // CH_004 is CH-004: No surface exists that an entry does not own, and the baseline only shrinks
-var CH_004 = &Spec{ID: "CH-004", Title: "No surface exists that an entry does not own, and the baseline only shrinks", Status: Active}
+//
+// Deprecated: CH-004 is retired; see its Changes in claims/gate.md. Add no new anchors.
+var CH_004 = &Spec{ID: "CH-004", Title: "No surface exists that an entry does not own, and the baseline only shrinks", Status: Deprecated}
 
 // CH_005 is CH-005: An external system's fact is recorded with its source and date, and no active entry rests on one found false
-var CH_005 = &Spec{ID: "CH-005", Title: "An external system's fact is recorded with its source and date, and no active entry rests on one found false", Status: Active}
+//
+// Deprecated: CH-005 is retired; see its Changes in claims/gate.md. Add no new anchors.
+var CH_005 = &Spec{ID: "CH-005", Title: "An external system's fact is recorded with its source and date, and no active entry rests on one found false", Status: Deprecated}
 
 // CH_006 is CH-006: The charter specifies itself, and its own gate is green
 var CH_006 = &Spec{ID: "CH-006", Title: "The charter specifies itself, and its own gate is green", Status: Active}
@@ -247,10 +253,10 @@ var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter keeps a char
 var CH_261126_NTRR = &Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: Active}
 
 // CH_261126_P2SK is CH-261126-P2SK: The code does what the record says, and a gap between them stops the change
-var CH_261126_P2SK = &Spec{ID: "CH-261126-P2SK", Title: "The code does what the record says, and a gap between them stops the change", Status: Planned}
+var CH_261126_P2SK = &Spec{ID: "CH-261126-P2SK", Title: "The code does what the record says, and a gap between them stops the change", Status: Active}
 
 // CH_261126_PFG5 is CH-261126-PFG5: What the software must do is written once, above the code, where people and agents both read and change it
-var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "What the software must do is written once, above the code, where people and agents both read and change it", Status: Planned}
+var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "What the software must do is written once, above the code, where people and agents both read and change it", Status: Active}
 
 // CH_261126_PQ7X is CH-261126-PQ7X: A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: Active, Kind: "structure"}

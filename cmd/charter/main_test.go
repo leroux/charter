@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -188,5 +189,136 @@ func TestExportGivesEveryPartOfTheRecord(t *testing.T) {
 	e := got.Entries[0]
 	if e.ID != "SW-010" || e.Scenarios[0].Handle != "refills" || e.Scenarios[0].Provenance != "owner, #1" || len(e.Anchors) != 1 || len(e.Refs) != 1 || e.Refs[0].Func != "TestRefill" || e.Refs[0].Handles[0] != "refills" {
 		t.Errorf("entry = %+v", e)
+	}
+}
+
+// writeTree writes files under a fresh root.
+func writeTree(t *testing.T, files map[string]string) string {
+	t.Helper()
+	root := t.TempDir()
+	for rel, src := range files {
+		p := filepath.Join(root, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(src), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return root
+}
+
+const sharedArea = "# Refill\n\nHow the bucket refills.\n\n## SW-010 The bucket refills\nStatus: planned\n\nIt refills.\n\nWhy: a caller that waits is let through.\n\nScenarios:\n1. `refills` (owner, #1): it refills.\n"
+
+func exported(t *testing.T, root string) map[string]any {
+	t.Helper()
+	var out, errOut bytes.Buffer
+	if code := run([]string{"export"}, root, &out, &errOut); code != 0 {
+		t.Fatalf("export in %s: exit %d %s", root, code, errOut.String())
+	}
+	var got struct{ Entries []map[string]any }
+	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
+		t.Fatal(err)
+	}
+	e := got.Entries[0]
+	for _, k := range []string{"refs", "anchors", "pos", "file"} {
+		delete(e, k)
+	}
+	return e
+}
+
+func TestOneRecordReadsAlikeInAnyLayout(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_PFG5, "one-form-everywhere")
+	goRoot := writeTree(t, map[string]string{
+		"go.mod":              "module example.com/a\n\ngo 1.21\n",
+		"claims/charter.toml": "name = \"a\"\n\n[go]\nmodule = \"example.com/a/claims\"\ndir = \".\"\ntest = \"go test ./...\"\n",
+		"claims/refill.md":    sharedArea,
+	})
+	pyRoot := writeTree(t, map[string]string{
+		"claims/charter.toml": "name = \"b\"\n\n[python]\ndir = \"tool\"\ntest = \"python3 -m unittest\"\n",
+		"claims/refill.md":    sharedArea,
+		"tool/slug.py":        "x = 1\n",
+	})
+	a, b := exported(t, goRoot), exported(t, pyRoot)
+	ja, _ := json.Marshal(a)
+	jb, _ := json.Marshal(b)
+	if string(ja) != string(jb) {
+		t.Errorf("one entry read differently:\n%s\n%s", ja, jb)
+	}
+}
+
+func TestAChangedEntryKeepsItsIdAndItsHistory(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_PFG5, "reference-survives")
+	root := writeTree(t, map[string]string{"claims/charter.toml": "name = \"a\"\n", "claims/refill.md": sharedArea})
+	for _, args := range [][]string{{"init", "-q"}, {"add", "."}, {"-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "base"}} {
+		cmd := exec.Command("git", args...)
+		cmd.Dir = root
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git %v: %v\n%s", args, err, out)
+		}
+	}
+	changed := strings.Replace(sharedArea, "It refills.", "It refills at the rate.", 1) + "\nChanges:\n- 2026-11-26: the rate named.\n"
+	if err := os.WriteFile(filepath.Join(root, "claims", "refill.md"), []byte(changed), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	var out, errOut bytes.Buffer
+	if code := run([]string{"diff", "HEAD"}, root, &out, &errOut); code != 0 {
+		t.Errorf("a recorded change: diff exit %d\n%s%s", code, out.String(), errOut.String())
+	}
+	e := exported(t, root)
+	changes, _ := e["changes"].([]any)
+	if e["id"] != "SW-010" || len(changes) != 1 || changes[0].(map[string]any)["date"] != "2026-11-26" {
+		t.Errorf("after the change: %v", e)
+	}
+}
+
+func TestAGapBetweenTheRecordAndTheCodeStopsTheChange(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_P2SK, "gap-stops-the-change")
+	for _, tc := range []struct{ file, old, new, want string }{
+		{"pkg/a/a.go", "//charter:realizes SW-010\n", "", "active entry SW-010 is realized by no code"},
+		{"pkg/a/a_test.go", "\tclaims.Verifies(t, claims.SW_010, \"refills\")\n", "", "scenario refills of SW-010 is verified by no test"},
+	} {
+		root := goCharter(t)
+		if err := os.Remove(filepath.Join(root, "claims", "waivers.txt")); err != nil {
+			t.Fatal(err)
+		}
+		var out, errOut bytes.Buffer
+		run([]string{"gen"}, root, &out, &errOut)
+		if code := run([]string{"check"}, root, &out, &errOut); code != 0 {
+			t.Fatalf("the charter before the gap: exit %d\n%s", code, out.String())
+		}
+		p := filepath.Join(root, filepath.FromSlash(tc.file))
+		src, _ := os.ReadFile(p)
+		if err := os.WriteFile(p, []byte(strings.Replace(string(src), tc.old, tc.new, 1)), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		out.Reset()
+		if code := run([]string{"check"}, root, &out, &errOut); code != 1 || !strings.Contains(out.String(), tc.want) {
+			t.Errorf("with %s changed: exit %d\n%s", tc.file, code, out.String())
+		}
+	}
+}
+
+func TestASurfaceNoEntryOwnsStopsTheChange(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_P2SK, "unowned-surface-stops-the-change")
+	root := goCharter(t)
+	if err := os.Remove(filepath.Join(root, "claims", "waivers.txt")); err != nil {
+		t.Fatal(err)
+	}
+	toml := filepath.Join(root, "claims", "charter.toml")
+	src, _ := os.ReadFile(toml)
+	if err := os.WriteFile(toml, append(src, []byte("env = \"env\"\n")...), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(filepath.Join(root, "env"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(root, "env", "env.go"), []byte("// Package env names the variables.\npackage env\n\n// Rate is new.\nconst Rate = \"FX_RATE\"\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	var out, errOut bytes.Buffer
+	run([]string{"gen"}, root, &out, &errOut)
+	if code := run([]string{"check"}, root, &out, &errOut); code != 1 || !strings.Contains(out.String(), "rule 6: env:FX_RATE is neither accounted for by an entry nor listed in claims/baseline.txt") {
+		t.Errorf("a new variable no entry owns: exit %d\n%s%s", code, out.String(), errOut.String())
 	}
 }

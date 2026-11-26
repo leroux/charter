@@ -102,7 +102,6 @@ func TestTheQuestionFileHoldsWhatNobodyRuled(t *testing.T) {
 
 func TestANewIDIsItsDayAndACodeTheRecordDoesNotHold(t *testing.T) {
 	claims.Verifies(t, claims.CH_040, "next-free")
-	claims.Verifies(t, claims.CH_003, "next-free-id")
 	r := writeRecord(t, map[string]string{"refill.md": strings.Replace(sampleArea, "## SW-010", "## SW-261002-BBBB", 1)})
 	for _, tc := range []struct {
 		name, prefix string
@@ -140,7 +139,6 @@ func TestNextGivesAsManyDifferentIDsAsAsked(t *testing.T) {
 
 func TestAnIdIsDeclaredOnce(t *testing.T) {
 	claims.Verifies(t, claims.CH_012, "declared-once")
-	claims.Verifies(t, claims.CH_003, "id-declared-once")
 	again := strings.Replace(sampleArea, "# Refill", "# Again", 1)
 	r := writeRecord(t, map[string]string{"refill.md": sampleArea, "zz.md": again})
 	if !anyContains(r.Problems, "claims/zz.md:4: form: SW-010 is declared twice, in claims/refill.md and claims/zz.md; the entry that has not landed takes a new id: charter next SW") {

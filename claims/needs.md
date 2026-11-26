@@ -16,7 +16,7 @@ public entry points, over a fixture.
 
 ## CH-261126-PFG5 What the software must do is written once, above the code, where people and agents both read and change it
 
-Status: planned
+Status: active
 
 The needs and decisions of a repository are written in its claims
 directory, each once, in the form every charter shares, and they are the
@@ -36,7 +36,7 @@ Scenarios:
 
 ## CH-261126-P2SK The code does what the record says, and a gap between them stops the change
 
-Status: planned
+Status: active
 
 Every active decision has code that claims it and a test that shows each of
 its scenarios, every surface the tree exposes is owned by an entry, and the
