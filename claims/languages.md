@@ -7,7 +7,7 @@ each of them is made of.
 
 ## CH-261126-PQ7X A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 
-Status: planned
+Status: active
 Kind: structure
 Serves: CH-002, CH-261126-NS7T
 See: CH-020, CH-021, CH-023, CH-024

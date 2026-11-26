@@ -550,6 +550,4 @@ var CH_261126_NTRR = &charter.Spec{ID: "CH-261126-NTRR", Title: "A declared surf
 // the typescript package charter.toml names; a missing one fails naming that
 // language's table. Another language is a change to the charter, not a
 // plug-in.
-//
-// Planned: CH-261126-PQ7X is ruled and not built; see claims/languages.md.
-var CH_261126_PQ7X = &charter.Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: charter.Planned, Kind: "structure"}
+var CH_261126_PQ7X = &charter.Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: charter.Active, Kind: "structure"}
