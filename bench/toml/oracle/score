@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+"""The toml benchmark's oracle: score WORKSPACE TASK_NUMBER.
+
+Builds the workspace's cmd/toml-decoder (and, from task 13, cmd/toml-encoder)
+into a temp dir, never touching the workspace, and runs toml-test cases
+against it, offline. Prints {"spec", "tasks", "details"}.
+
+spec  = the toml-test cases features.txt files under "subset" (the seed's
+        subset of TOML 1.0, run in the default mode), plus POSITIONS: invalid
+        documents whose error must name the line and column. Must hold after
+        every task.
+tasks = the cases of every feature whose task is at most TASK_NUMBER
+        (TASKS below; an invalid case counts once a valid case of its
+        feature passes), plus the encoder round trips (task 13) and the
+        pretty-error checks (task 14).
+"""
+
+import json
+import re
+import sys
+import tomllib
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import tomltest as T  # noqa: E402
+
+# feature (as features.txt names it) -> the task that asks for it.
+TASKS = {
+    "float": 1,           # 01-floats
+    "int-bases": 2,       # 02-integer-bases
+    "multiline": 4,       # 04-multiline-strings
+    "array": 5,           # 05-arrays
+    "inline-table": 6,    # 06-inline-tables
+    "array-of-tables": 7,  # 07-arrays-of-tables
+    "datetime": 9,        # 09-date-times
+    "date-time-local": 10,  # 10-dates-and-times (tempting)
+    "toml-1.1": 11,       # 11-toml-1-1, run as `toml-decoder -toml 1.1`
+}
+ENCODER_TASK = 13
+PRETTY_TASK = 14
+
+# Invalid documents and where their problem is: the line, and the columns
+# (from 1, in characters) any of which a decoder may fairly point at.
+POSITIONS = [
+    ("dup-key", 'a = 1\nb = "two"\na = 3\n', 3, (1, 1)),
+    ("bad-value", 'x = "ok"\ny = tru\n', 2, (5, 7)),
+    ("table-twice", "[t]\nk = 'v'\n\n[t]\n", 4, (1, 3)),
+    ("two-pairs", "# settings\nname = 1 port = 2\n", 2, (9, 10)),
+    ("leading-zero", "[server]\nport = 0080\n", 2, (8, 11)),
+    ("unicode-col", '"é" = "x"\nkey = "ü" junk\n', 2, (10, 11)),
+]
+
+POS_RE = [re.compile(r"line\D{0,3}(\d+)\D{1,12}?col(?:umn)?\D{0,3}(\d+)", re.I),
+          re.compile(r"\b(\d+):(\d+)\b")]
+
+
+def position(stderr):
+    for rx in POS_RE:
+        m = rx.search(stderr)
+        if m:
+            return int(m.group(1)), int(m.group(2))
+    return None
+
+
+def check_position(binary, doc, line, cols):
+    code, _, err = T.run_decoder(binary, doc.encode())
+    if code == 0:
+        return False, "accepted an invalid document"
+    err = err.decode("utf-8", "replace")
+    pos = position(err)
+    if not pos:
+        return False, f"no line and column in {err.strip()[:120]!r}"
+    if pos[0] != line or not cols[0] <= pos[1] <= cols[1]:
+        return False, f"position {pos}, want line {line}, column {cols[0]}-{cols[1]}"
+    return True, ""
+
+
+def check_pretty(binary, doc, line, cols):
+    """The error shows the offending line and a ^ under the column."""
+    code, _, err = T.run_decoder(binary, doc.encode())
+    if code == 0:
+        return False, "accepted an invalid document"
+    err = err.decode("utf-8", "replace")
+    src = doc.split("\n")[line - 1]
+    out = err.split("\n")
+    for i, l in enumerate(out):
+        k = l.find(src)
+        if k < 0:
+            continue
+        for c in out[i + 1:i + 3]:
+            if "^" in c and cols[0] - 1 <= c.index("^") - k <= cols[1] - 1:
+                return True, ""
+        return False, "the line is shown but no ^ under the column"
+    return False, f"the offending line is not shown: {err.strip()[:120]!r}"
+
+
+def encoder_cases():
+    """Valid 1.0 cases whose expected JSON Python's tomllib agrees with."""
+    out = []
+    for rel in T.case_list("1.0.0"):
+        if not rel.startswith("valid/"):
+            continue
+        want = json.loads((T.TESTS / (rel[:-5] + ".json")).read_text())
+        try:
+            got = T.tag_python(tomllib.loads((T.TESTS / rel).read_bytes().decode()))
+        except Exception:
+            continue
+        if T.compare(want, got) is None:
+            out.append(rel[:-5] + ".json")
+    return out
+
+
+def check_encode(binary, rel):
+    data = (T.TESTS / rel).read_bytes()
+    code, out, err = T.run_decoder(binary, data)
+    if code != 0:
+        return False, "encoder failed: " + err.decode("utf-8", "replace").strip()[:160]
+    try:
+        got = T.tag_python(tomllib.loads(out.decode()))
+    except Exception as e:
+        return False, f"output is not TOML: {e}"
+    r = T.compare(json.loads(data), got)
+    return r is None, r or ""
+
+
+def main():
+    ws, n = Path(sys.argv[1]).resolve(), int(sys.argv[2])
+    rows = [l.split() for l in (T.ORACLE / "features.txt").read_text().splitlines()
+            if l.strip() and not l.startswith("#")]
+    spec_cases = [r[0] for r in rows if r[2] == "subset"]
+    task_rows = [r for r in rows if r[2] in TASKS and TASKS[r[2]] <= n]
+    enc = encoder_cases() if n >= ENCODER_TASK else []
+    pretty = POSITIONS if n >= PRETTY_TASK else []
+    spec_total = len(spec_cases) + len(POSITIONS)
+    tasks_total = len(task_rows) + len(enc) + len(pretty)
+    details = []
+
+    def result(sp, tk):
+        print(json.dumps({"spec": {"passed": sp, "total": spec_total},
+                          "tasks": {"passed": tk, "total": tasks_total},
+                          "details": details[:60] + ([f"... {len(details) - 60} more"] if len(details) > 60 else [])}))
+
+    binary, err = T.build(ws)
+    if err:
+        details.append({"check": "build cmd/toml-decoder", "error": err})
+        return result(0, 0)
+    try:
+        sp = 0
+        for rel, (ok, why) in T.check_cases(binary, spec_cases).items():
+            sp += ok
+            if not ok:
+                details.append({"kind": "spec", "case": rel, "reason": why})
+        for name, doc, line, cols in POSITIONS:
+            ok, why = check_position(binary, doc, line, cols)
+            sp += ok
+            if not ok:
+                details.append({"kind": "spec", "case": "position/" + name, "reason": why})
+        tk = 0
+        results = {}
+        for version in ("1.0", "1.1"):
+            rels = [r[0] for r in task_rows if r[1] == version]
+            args = ("-toml", "1.1") if version == "1.1" else ()
+            results.update(T.check_cases(binary, rels, args))
+        # A refusal counts for a feature only once the decoder accepts the
+        # feature at all (passes one of its valid cases): a decoder that
+        # refuses every float has not built float validation.
+        built = {r[2] for r in task_rows if r[0].startswith("valid/") and results[r[0]][0]}
+        for rel, version, feat in task_rows:
+            ok, why = results[rel]
+            if ok and rel.startswith("invalid/") and feat not in built:
+                ok, why = False, "refused, but the feature is not built: no valid case of it passes"
+            tk += ok
+            if not ok:
+                details.append({"kind": "tasks", "feature": feat, "case": rel, "reason": why})
+        for name, doc, line, cols in pretty:
+            ok, why = check_pretty(binary, doc, line, cols)
+            tk += ok
+            if not ok:
+                details.append({"kind": "tasks", "feature": "pretty-errors", "case": "pretty/" + name, "reason": why})
+        if enc:
+            ebin, eerr = T.build(ws, "toml-encoder")
+            if eerr:
+                details.append({"kind": "tasks", "feature": "encoder", "check": "build cmd/toml-encoder", "error": eerr})
+            else:
+                try:
+                    for rel in enc:
+                        ok, why = check_encode(ebin, rel)
+                        tk += ok
+                        if not ok:
+                            details.append({"kind": "tasks", "feature": "encoder", "case": "encode/" + rel, "reason": why})
+                finally:
+                    T.cleanup(ebin)
+    finally:
+        T.cleanup(binary)
+    result(sp, tk)
+
+
+if __name__ == "__main__":
+    main()

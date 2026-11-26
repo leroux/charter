@@ -1,0 +1,9 @@
+# The order the digest reads the area documents in: from characters to
+# keys and values, then tables, then what a refusal says and how the
+# command reports both.
+lexing.md
+keys.md
+values.md
+tables.md
+errors.md
+command.md

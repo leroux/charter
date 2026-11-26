@@ -1,0 +1,112 @@
+#!/usr/bin/env python3
+"""The gjson benchmark's oracle: score WORKSPACE TASK_NUMBER.
+
+It never touches the workspace. It copies the workspace's root package to
+a temporary directory, removes the agent's own test files there, and runs
+each hidden test file in oracle/hidden on its own against the agent's code:
+
+  spec_test.go        gjson's own tests at the starting commit 40764d5,
+                      every Test function (53): the behaviour that must
+                      keep holding after every task.
+  taskNN_test.go      the Test functions upstream commit NN added or
+                      changed, cut from that commit's gjson_test.go with
+                      the helpers they use (see NOTES.md).
+
+A file runs alone, so helpers that two upstream versions both declare never
+collide, and a file that does not compile against the agent's code counts
+as every one of its tests failed. A test counts as passed when go test
+reports it passed. No network: the module proxy is off and the module cache
+primed when the benchmark was built.
+"""
+
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+HIDDEN = HERE / "hidden"
+TEST_FUNC = re.compile(r"^func (Test\w*)\(t \*testing\.T\)", re.M)
+
+
+def names(f: Path):
+    return TEST_FUNC.findall(f.read_text())
+
+
+def copy_package(ws: Path, dst: Path):
+    """The workspace's module without its .git, and without the root
+    package's own tests."""
+    shutil.copytree(ws, dst, symlinks=True,
+                    ignore=shutil.ignore_patterns(".git", ".claude"))
+    for p in dst.glob("*_test.go"):
+        p.unlink()
+
+
+def run_one(ws: Path, hidden: Path, tmp: Path):
+    want = names(hidden)
+    d = tmp / hidden.stem
+    copy_package(ws, d)
+    shutil.copy(hidden, d / ("zz_hidden_" + hidden.name))
+    env = dict(os.environ, GOPROXY="off", GOFLAGS="")
+    cmd = ["go", "test", "-json", "-count=1", "-vet=off", "-timeout", "100s",
+           "-run", "^(" + "|".join(want) + ")$", "."]
+    try:
+        p = subprocess.run(cmd, cwd=d, capture_output=True, text=True, timeout=150, env=env)
+        out = p.stdout
+        err = p.stderr
+    except subprocess.TimeoutExpired as e:
+        out = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
+        err = "timeout"
+    passed, failed = set(), set()
+    built = False
+    for line in out.splitlines():
+        try:
+            ev = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        t = ev.get("Test", "")
+        if ev.get("Action") == "run":
+            built = True
+        if not t or "/" in t:
+            continue
+        if ev.get("Action") == "pass":
+            passed.add(t)
+        elif ev.get("Action") == "fail":
+            failed.add(t)
+    ok = [n for n in want if n in passed]
+    detail = {"file": hidden.stem, "passed": len(ok), "total": len(want), "compiled": built,
+              "failed": [n for n in want if n not in passed]}
+    if not built:
+        detail["error"] = (err + out)[-800:]
+    return detail
+
+
+def main():
+    if len(sys.argv) != 3:
+        sys.exit("usage: score WORKSPACE TASK_NUMBER")
+    ws = Path(sys.argv[1]).resolve()
+    n = int(sys.argv[2])
+    files = [HIDDEN / "spec_test.go"]
+    for k in range(1, n + 1):
+        f = HIDDEN / f"task{k:02d}_test.go"
+        if f.exists():  # a tempting task has no hidden tests of its own
+            files.append(f)
+    with tempfile.TemporaryDirectory(prefix="gjson-score-") as tmp:
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            details = list(ex.map(lambda f: run_one(ws, f, Path(tmp)), files))
+    spec = [d for d in details if d["file"] == "spec_test"]
+    tasks = [d for d in details if d["file"] != "spec_test"]
+    print(json.dumps({
+        "spec": {"passed": sum(d["passed"] for d in spec), "total": sum(d["total"] for d in spec)},
+        "tasks": {"passed": sum(d["passed"] for d in tasks), "total": sum(d["total"] for d in tasks)},
+        "details": details,
+    }))
+
+
+if __name__ == "__main__":
+    main()
