@@ -84,3 +84,23 @@ The contract and the conditions are in `bench/README.md`.
   helps.
 - Each benchmark's charter was written by an agent, the tempting tasks
   too; both are part of what the owner reviews.
+
+## Status at handoff (2026-11-26)
+
+- Pilot coreutils A run 1 was running when this session ended: through
+  task 13 of 14, spec 275/275 after every task including all four
+  tempting ones, tasks 158/168 (the misses are task 12, missing-file
+  error messages), about $6 so far. Its per-task results are under
+  `bench/results/coreutils/A/1/`; if `summary.json` is missing there, the
+  run did not finish.
+- Reading so far: the no-charter agent did not drift on coreutils, so
+  coreutils may not separate the conditions (GNU is a well-known spec).
+  Read the transcripts at tasks 04, 07, 10 and 13 before running C and B
+  on it; toml or gjson, or harder tempting tasks, may be the better next
+  pilot.
+- Proposed next, not started: questions answered from the charter alone
+  (no code) beside code-only and both, to measure the charter as an
+  understanding layer; a rendered overview and entry pages from
+  claimsmap's JSON; a charter diff on each pull request.
+- The owner intends to build a project from scratch with the charter in
+  a new session, as product manager with the agent as engineer.
