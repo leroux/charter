@@ -393,3 +393,37 @@ Changes:
   configuration checked moved to CH-261126-33GK, `root-resolved` and
   `typescript-options-validated` with them, and `exit-status` is added
   (backlog 003).
+
+## CH-261126-GFR7 A contract scenario is verified by a portable fixture, run against whichever implementation charter.toml names
+
+Status: planned
+Serves: CH-261126-P2SK
+See: CH-261126-PZ8Z, CH-042
+
+A fixture is a txtar file under claims/fixtures, opening with the
+scenarios it verifies, "verifies: CH-030/scenario-unverified", then the
+files of the tree to run in, a "-- cmd --" section holding one command
+line, and the expected "-- stdout --", "-- stderr --" and "-- exit --".
+charter conform builds each fixture's tree in an empty directory, runs its
+command against the implementation the [contract] table's run key names,
+and compares what came back, byte for byte after the tree's path is
+replaced by a placeholder. The gate counts a fixture as a citation of each
+scenario it names, and the report joins its outcome as it joins a test's.
+A fixture's file names no language and no implementation.
+
+Why: a test written in the implementation's language cannot be run against
+a rewrite in another, so a contract checked only by such tests binds
+nothing but the code it was written for; a fixture is input and output at
+the edge, and runs against any implementation that keeps the contract.
+
+Scenarios:
+1. `fixture-read` (agent, provisional): a fixture yields the scenarios it
+   verifies, its tree, its command and its expected output and exit.
+2. `fixture-cites` (agent, provisional): a scenario a fixture names is
+   cited, and a fixture naming a handle its entry lacks fails naming both.
+3. `conform-runs-any-implementation` (agent, provisional): charter conform
+   runs every fixture against the binary the run key names and says per
+   scenario passed or failed, with the difference.
+4. `path-placeholder` (agent, provisional): output holding the temporary
+   tree's path matches a fixture that writes the placeholder in its place.
+

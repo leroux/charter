@@ -353,3 +353,33 @@ Changes:
 - 2026-11-26: deprecated before it was built: a need's title already names
   the person it serves, so a For field would add a rule and no information
   (owner, backlog 004).
+
+## CH-261126-PZ8Z An area is contract or design: what any implementation must do, or how this one does it
+
+Status: planned
+Serves: CH-261126-PFG5
+See: CH-261126-GFR7, CH-033
+
+An area document's header carries a Level line, "Level: contract" or
+"Level: design"; without one the area is contract. A contract entry rules
+what is observable at the edge of what the charter covers: what a user, a
+caller or another system can see. A design entry rules how this
+implementation meets the contract, serves a contract entry or another
+design entry, and binds no other implementation. A surface is accounted
+for by a contract entry only, so the contract describes the whole edge.
+
+Why: the record is meant to let someone rebuild the software from it, with
+other code and in another language; that needs the reader to tell what
+binds every implementation from what this one chose, and to know the
+contract leaves nothing at the edge out.
+
+Scenarios:
+1. `level-read` (agent, provisional): an area with "Level: design" yields
+   design entries, and one with no Level line yields contract entries.
+2. `design-serves` (agent, provisional): an active design entry that serves
+   nothing, or serves only a need, is named by lint.
+3. `surface-on-contract` (agent, provisional): an Accounts line on a design
+   entry fails, naming the contract entry the surface belongs to.
+4. `contract-alone` (agent, provisional): the digest and the export can be
+   read with the design areas left out, the contract complete on its own.
+

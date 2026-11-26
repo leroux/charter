@@ -232,6 +232,9 @@ var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship 
 // Deprecated: CH-261126-G5BX is retired; see its Changes in claims/intent.md. Add no new anchors.
 var CH_261126_G5BX = &Spec{ID: "CH-261126-G5BX", Title: "A need names the person it serves, one the needs document declares", Status: Deprecated}
 
+// CH_261126_GFR7 is CH-261126-GFR7: A contract scenario is verified by a portable fixture, run against whichever implementation charter.toml names
+var CH_261126_GFR7 = &Spec{ID: "CH-261126-GFR7", Title: "A contract scenario is verified by a portable fixture, run against whichever implementation charter.toml names", Status: Planned}
+
 // CH_261126_HK6S is CH-261126-HK6S: An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}
 
@@ -249,3 +252,6 @@ var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "What the software must 
 
 // CH_261126_PQ7X is CH-261126-PQ7X: A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: Active, Kind: "structure"}
+
+// CH_261126_PZ8Z is CH-261126-PZ8Z: An area is contract or design: what any implementation must do, or how this one does it
+var CH_261126_PZ8Z = &Spec{ID: "CH-261126-PZ8Z", Title: "An area is contract or design: what any implementation must do, or how this one does it", Status: Planned}
