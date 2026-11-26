@@ -1,0 +1,232 @@
+{
+ "q01": {
+  "doc": "a = 1\nb = \"two\"\na = 3\n",
+  "path": [
+   "a"
+  ],
+  "feature": "subset",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ },
+ "q02": {
+  "doc": "\"a.b\" = 1\na.b = 2\n",
+  "path": [
+   "a",
+   "b"
+  ],
+  "feature": "subset",
+  "reference": {
+   "valid": true,
+   "type": "integer",
+   "value": "2"
+  },
+  "answer": "integer 2"
+ },
+ "q03": {
+  "doc": "s = 'C:\\new\\table'\n",
+  "path": [
+   "s"
+  ],
+  "feature": "subset",
+  "reference": {
+   "valid": true,
+   "type": "string",
+   "value": "C:\\new\\table"
+  },
+  "answer": "string C:\\new\\table"
+ },
+ "q04": {
+  "doc": "n = -0\n",
+  "path": [
+   "n"
+  ],
+  "feature": "subset",
+  "reference": {
+   "valid": true,
+   "type": "integer",
+   "value": "0"
+  },
+  "answer": "integer 0"
+ },
+ "q05": {
+  "doc": "[a.b]\nx = 1\n[a]\ny = 2\n",
+  "path": null,
+  "feature": "subset",
+  "reference": {
+   "valid": true
+  },
+  "answer": "valid"
+ },
+ "q06": {
+  "doc": "a.b = 1\n[a]\nc = 2\n",
+  "path": null,
+  "feature": "subset",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ },
+ "q07": {
+  "doc": "port = 0080\n",
+  "path": null,
+  "feature": "subset",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ },
+ "q08": {
+  "doc": "k = \"\\x41\"\n",
+  "path": null,
+  "feature": "subset",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ },
+ "q09": {
+  "doc": "t = True\n",
+  "path": null,
+  "feature": "subset",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ },
+ "q10": {
+  "doc": "s = \"a#b\" # c\n",
+  "path": [
+   "s"
+  ],
+  "feature": "subset",
+  "reference": {
+   "valid": true,
+   "type": "string",
+   "value": "a#b"
+  },
+  "answer": "string a#b"
+ },
+ "q11": {
+  "doc": "x = 1e3\n",
+  "path": [
+   "x"
+  ],
+  "feature": "float",
+  "reference": {
+   "valid": true,
+   "type": "float",
+   "value": "1000.0"
+  },
+  "answer": "float 1000"
+ },
+ "q12": {
+  "doc": "y = .5\n",
+  "path": null,
+  "feature": "float",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ },
+ "q13": {
+  "doc": "h = 0xff\n",
+  "path": [
+   "h"
+  ],
+  "feature": "int-bases",
+  "reference": {
+   "valid": true,
+   "type": "integer",
+   "value": "255"
+  },
+  "answer": "integer 255"
+ },
+ "q14": {
+  "doc": "s = \"\"\"\nab\\\n   cd\"\"\"\n",
+  "path": [
+   "s"
+  ],
+  "feature": "multiline",
+  "reference": {
+   "valid": true,
+   "type": "string",
+   "value": "abcd"
+  },
+  "answer": "string abcd"
+ },
+ "q15": {
+  "doc": "a = [1, \"x\", [2]]\n",
+  "path": [
+   "a",
+   1
+  ],
+  "feature": "array",
+  "reference": {
+   "valid": true,
+   "type": "string",
+   "value": "x"
+  },
+  "answer": "string x"
+ },
+ "q16": {
+  "doc": "p = { x = 1 }\np.y = 2\n",
+  "path": null,
+  "feature": "inline-table",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ },
+ "q17": {
+  "doc": "[[f]]\nn = 1\n[[f]]\nn = 2\n",
+  "path": [
+   "f",
+   1,
+   "n"
+  ],
+  "feature": "array-of-tables",
+  "reference": {
+   "valid": true,
+   "type": "integer",
+   "value": "2"
+  },
+  "answer": "integer 2"
+ },
+ "q18": {
+  "doc": "d = 1979-05-27 07:32:00Z\n",
+  "path": [
+   "d"
+  ],
+  "feature": "datetime",
+  "reference": {
+   "valid": true,
+   "type": "datetime",
+   "value": "1979-05-27T07:32:00+00:00"
+  },
+  "answer": "datetime 1979-05-27T07:32:00Z"
+ },
+ "q19": {
+  "doc": "d = 1979-05-27\n",
+  "path": [
+   "d"
+  ],
+  "feature": "date-time-local",
+  "reference": {
+   "valid": true,
+   "type": "date-local",
+   "value": "1979-05-27"
+  },
+  "answer": "date-local 1979-05-27"
+ },
+ "q20": {
+  "doc": "t = { a = 1, }\n",
+  "path": null,
+  "feature": "inline-table",
+  "reference": {
+   "valid": false
+  },
+  "answer": "invalid"
+ }
+}
