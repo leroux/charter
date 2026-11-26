@@ -1,15 +1,51 @@
-# The gate
+# Holding the code to the record
 
-Code: chartertest
+Code: internal/gate, internal/check, internal/walk, internal/surface
 
-What the gate holds the tree to once the entries, the anchors and the
-citations are read.
+The problem this area answers: code drifts from intent unnoticed. It holds
+what the gate fails a tree on once the record, the anchors and the
+citations are read: coverage, the surfaces, the environment, the facts the
+entries rest on, the walk and the gate's own report.
+
+## CH-004 No surface exists that an entry does not own, and the baseline only shrinks
+
+Status: active
+Serves: CH-261126-P2SK
+
+Every environment variable the tree reads, and every surface of a kind
+the charter declares, is named by an entry's Accounts, or listed with a reason
+in a baseline that predates the charter. The gate fails a surface neither
+names, a baseline line whose surface is gone or now accounted for, and a
+read of an environment variable that goes through anything but a named
+constant.
+
+Why: the surfaces are the operator's contract with the system. A variable
+nobody claims is a promise nobody keeps.
+
+Scenarios:
+1. `unaccounted-surface-fails` (owner, backlog 003): a key of a declared
+   kind that no entry accounts for and the baseline does not list fails
+   naming it.
+2. `baseline-holds-only-live-gaps`: a baseline line for a surface that is
+   gone, or that an entry now accounts for, fails naming the entry.
+3. `env-read-through-a-constant` (owner, backlog 003): an environment read
+   in Go, Python or TypeScript whose argument is a string literal, or a
+   variable, fails naming the constant to use.
+
+Changes:
+- 2026-11-26: environment variables are the one built-in kind, read in Go,
+  Python and TypeScript; build tags, contract operations and event kinds
+  become kinds a charter declares, like any other (backlog 003).
+- 2026-11-26: a decision serving CH-261126-P2SK, where it was a need of
+  its own, the needs being re-cut one a problem: every surface owned by an
+  entry is part of holding the code to the record, a rule of the gate and
+  not a promise to one person (backlog 004).
 
 ## CH-030 An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor
 
 Status: active
 Kind: invariant
-Serves: CH-001
+Serves: CH-261126-P2SK, CH-001
 See: CH-022
 
 An active decision with no realizes anchor fails, and nothing waives it;
@@ -50,11 +86,14 @@ Changes:
   a decision anchored by concerns alone, as CH-022's
   concerns-is-not-realized is, and is now tested with one anchored by
   nothing; the text names CH-022 for concerns.
+- 2026-11-26: serves CH-261126-P2SK, CH-001, where it served CH-001: the
+  needs are re-cut one a problem, and this decision answers the one that
+  names it (backlog 004).
 
 ## CH-031 A need needs no anchor and is verified only from the stakeholder's side
 
 Status: active
-Serves: CH-001
+Serves: CH-261126-P2SK
 
 A need is realized by the decisions that serve it, so the gate asks no
 anchor of it. When charter.toml names the test files on the stakeholder's
@@ -75,6 +114,9 @@ Scenarios:
 Changes:
 - 2026-11-26: the stakeholder tests are named in charter.toml, where they
   were in the gate's options (backlog 003).
+- 2026-11-26: serves CH-261126-P2SK, where it served CH-001: the needs are
+  re-cut one a problem, and this decision answers the one that names it
+  (backlog 004).
 
 ## CH-032 A probe cites observations only, and a test never cites an observation
 
@@ -224,6 +266,38 @@ Changes:
   Go, each language's constants module named in charter.toml;
   `python-read-checked` and `typescript-read-checked` are added (backlog
   003).
+
+## CH-005 An external system's fact is recorded with its source and date, and no active entry rests on one found false
+
+Status: active
+Serves: CH-261126-P2SK
+
+An observation records a fact about a system the code does not own, with
+its subject, where it was read or when a probe last saw it true, and the
+entries that rest on it. Probes check observations and nothing else; tests
+cite entries and never observations. A broken observation under an active
+entry fails the gate.
+
+Why: a decision that rests on a vendor's behaviour is only as good as the
+fact; recording the fact apart from the decision says what to re-check
+when the vendor changes.
+
+Scenarios:
+1. `observed-fact-has-a-date-and-a-probe`: an observed observation without
+   a calendar date, or cited by no probe, fails.
+2. `broken-fact-under-active-fails`: a broken observation supporting an
+   active entry fails, and one supporting a planned or deprecated entry
+   does not.
+3. `probes-and-tests-stay-apart`: a test file referencing an observation,
+   and a probe referencing an entry, each fail.
+
+Changes:
+- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
+  unchanged.
+- 2026-11-26: a decision serving CH-261126-P2SK, where it was a need of
+  its own, the needs being re-cut one a problem: a fact an entry rests on,
+  checked by a probe, is part of holding the code to the record, a rule of
+  the gate and not a promise to one person (backlog 004).
 
 ## CH-035 Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails
 

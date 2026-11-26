@@ -270,7 +270,7 @@ func (c *checker) coverage() {
 // observations holds each observation to its status's fields, an observed
 // one to a probe that cites it, and a broken one to no active entry.
 //
-//charter:realizes CH-035
+//charter:realizes CH-035, CH-005
 func (c *checker) observations() {
 	if len(c.Record.Observations) > 0 && len(c.Probes) == 0 {
 		c.add("%s:1: rule 11: the record holds observations and charter.toml names no probe path; set probes to the paths that hold them", path.Join(c.Record.Dir, "charter.toml"))
@@ -391,7 +391,7 @@ func Surfaces(in Input) (surfaces map[string]bool, accounted map[string]string) 
 // every Accounts to a surface, and the baseline to live, unaccounted
 // surfaces, each once.
 //
-//charter:realizes CH-033
+//charter:realizes CH-033, CH-004
 func (c *checker) surfaces() {
 	surfaces, accounted := Surfaces(c.Input)
 	for _, e := range c.Record.Entries {

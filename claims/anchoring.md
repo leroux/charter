@@ -1,9 +1,12 @@
-# Anchors, citations and symbols
+# From an id to its code and its tests
 
-Code: chartertest, the charter package
+Code: internal/lang/golang, internal/lang/python, internal/lang/typescript, internal/facts, cmd/charter
 
-How code and tests name the entries, and what the compiler and the gate
-hold those names to.
+The problem this area answers: a person or an agent new to the code cannot
+find their way from what was decided to where it is done. It holds how code
+and tests name the entries in each language, the generated symbols that
+make a wrong name fail, and the command that lists an entry's code and
+tests.
 
 ## CH-020 Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment
 
@@ -283,4 +286,78 @@ Changes:
 - 2026-11-26: observations are markdown (CH-261126-HK6S), so the claims
   directory holds no hand-written code at all: `functions-refused` and
   `spec-in-go-refused` are dropped for `hand-written-source-refused`
+  (backlog 003).
+
+## CH-040 One charter command generates, checks, lints, gives ids and lists anchors, and an adopter writes no main
+
+Status: active
+Serves: CH-002
+See: CH-261126-33GK
+
+charter gen writes the generated files from the documents alone, so it
+works when one is stale or missing. check runs the gate (CH-037), lint
+prints the gate's problems and then the advice, report and diff are
+CH-042's and CH-261009-QQC8's, and export is CH-261015-9ZTY's. next prints
+a new id for a prefix, the day's UTC date and a code drawn at random,
+drawn again when the tree already holds that id, or as many as the count
+after the prefix asks for, each different. anchors prints, per id, the
+document, the title, the status, the scenarios, the realizing and
+concerning sites with their declarations, the verifying tests with the
+handles each names, and the relations. Every verb works on the charter
+CH-261126-33GK finds, and an adopter writes or builds nothing of its own
+to run them.
+
+Why: the agent's way in and the person's way to regenerate are one
+command; a command an adopter must write a main for is one they write
+wrong, or let fall behind the tooling.
+
+Scenarios:
+1. `gen-from-documents-alone` (owner, backlog 003): charter gen writes
+   every generated file when one of them is missing or stale, reading the
+   documents alone.
+2. `registry-lists-everything`: the registry gives each entry with
+   scenarios, anchors and citations by handle, each area document in
+   reading order with title, code and summary, and each waiver with its
+   reason.
+3. `next-free`: next gives an id of the prefix, today's UTC date and a
+   code of the alphabet, for a prefix in use or not, drawing again one the
+   tree holds.
+4. `next-count`: next with a count gives that many ids, each different,
+   and a count that is not a number above zero is refused.
+5. `verbs-on-the-found-charter` (owner, backlog 003): run inside an
+   adopter's tree, each verb reads the charter found there, with no
+   command of the adopter's own.
+
+Changes:
+- 2026-10-01: next gives dated ids, where it gave one above the highest,
+  and takes a count, so a story's entries are numbered in one call
+  (CH-012).
+- 2026-10-09: the registry also gives the area documents, in the
+  reading order with their headers, and the waivers, so a renderer such
+  as the claims viewer walks a reader through any charter in the order
+  it declares and shows a scenario as waived without parsing the files
+  again.
+- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
+  unchanged.
+- 2026-10-09: the next free id is ruled here alone, the next verb's
+  behaviour being this entry's subject: CH-012's next-free restated
+  next-free and is dropped, its test citing this one, which now says what
+  the dropped one did, the UTC date, a prefix in use or not and the
+  redraw, and the text says how next draws.
+- 2026-10-09: `registry-lists-everything` reworded under thirty words; the
+  ruling is unchanged.
+- 2026-11-26: the charter became a repository of its own, meant for other repositories (Q-261015-3Q84). The verbs live in the
+  cli package, which a repository's own command calls with the charters
+  it keeps; the charter flag selects one of those by name, where it chose
+  between the product's charter and the charter's own. The title says any
+  charter, and `charter-flag-selects` is added. A command reads a charter
+  from the module above the working directory, since the calling file is
+  the tooling's, in another module; `root-from-working-directory` is
+  added.
+- 2026-11-26: the verbs are one charter command, the gate's check and
+  claimsmap's export among them, working on the charter it finds above the
+  working directory. An adopter writes no main, so the charter flag and a
+  root given in options are gone, `charter-flag-selects` and
+  `root-from-working-directory` with them; `generate-writes-both` becomes
+  `gen-from-documents-alone`, and `verbs-on-the-found-charter` is added
   (backlog 003).

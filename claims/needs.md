@@ -1,10 +1,58 @@
 # What people need of the charter
 
-The charter tooling serves five people: the reviewer of a change, the agent
-or person building to a decision, the owner of the record, the operator
-whose surfaces the record owns, and the adopter who keeps a charter in a
-repository of their own. Each need here is verified through the
-gate's public entry points over a fixture, the way those people meet it.
+The charter is a higher level to build software at: what the software must
+do is written down above the code, the code is held to it, and a change is
+reviewed through it, by people and agents alike. Each need below answers
+one problem that level exists to solve, in this order: intent has no
+durable home; code drifts from intent unnoticed; reviewing code line by
+line does not scale; who decided what is invisible; a newcomer, a person or
+an agent, cannot find their way in; and every project is different.
+
+The people it serves are the owner of the record, the reviewer of a
+change, the builder, a person or an agent building to a decision, and the
+adopter who keeps a charter in a repository of their own. Each need is
+verified the way they meet the charter: through its command and its
+public entry points, over a fixture.
+
+## CH-261126-PFG5 What the software must do is written once, above the code, where people and agents both read and change it
+
+Status: planned
+
+The needs and decisions of a repository are written in its claims
+directory, each once, in the form every charter shares, and they are the
+reference a change is held to. Each keeps its id for life, and what changed
+in it, and when, is written beside it.
+
+Why: intent that lives in heads, chats and pull requests is lost to the
+next person and to every agent; code says what the software does, not what
+it should, so without a written reference there is nothing to hold it to.
+
+Scenarios:
+1. `one-form-everywhere` (agent, provisional): the same need and decision,
+   written in two charters of different languages and layouts, are read
+   alike by the command.
+2. `reference-survives` (agent, provisional): an entry changed with a dated
+   line keeps its id, and the record shows the change and when it was made.
+
+## CH-261126-P2SK The code does what the record says, and a gap between them stops the change
+
+Status: planned
+
+Every active decision has code that claims it and a test that shows each of
+its scenarios, every surface the tree exposes is owned by an entry, and the
+gate fails a tree where any of that is missing. A change, a person's or an
+agent's, that leaves such a gap does not pass.
+
+Why: code written fast, by agents most of all, drifts from what was decided
+without anyone noticing; a check that fails on the gap is the only
+adherence that does not depend on someone remembering to look.
+
+Scenarios:
+1. `gap-stops-the-change` (agent, provisional): a tree whose active decision
+   lost its anchor, or whose scenario lost its citation, fails the check
+   naming the gap.
+2. `unowned-surface-stops-the-change` (agent, provisional): a new
+   environment variable no entry owns fails the check naming it.
 
 ## CH-001 A reviewer can judge a change by its entries and their tests, not by reading the code
 
@@ -29,6 +77,36 @@ Scenarios:
    citation to write.
 3. `every-rule-has-a-mutation`: every rule of the gate has a mutation of
    the clean fixture that trips it, named after the rule.
+
+## CH-261009-3FHW A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named
+
+Status: active
+
+Every scenario says who ruled it: the owner, with what the ruling cites;
+a named delegate; or an agent whose choice nobody has ruled on, which a
+scenario with nothing written is. The registry and the report carry it,
+and the report counts the active scenarios by who ruled them. A change to
+the record that its Changes lines do not say, an entry removed, unbuilt
+or retired without a line, text or a scenario changed without one, or a
+ruling lost, is named against the revision it was made from.
+
+Why: an agent's default and the owner's decision look the same on the
+page, so the record could not say what was decided; a change nobody wrote
+down is the drift the whole form exists to refuse.
+
+Scenarios:
+1. `provenance-in-the-registry` (owner): reading the registry
+   gives each scenario's provenance, and a scenario with none written is
+   an agent's, provisional.
+2. `report-counts-who-ruled` (owner): the report shows each
+   scenario's provenance and counts the active scenarios by it.
+3. `unrecorded-change-named` (owner): a change to an entry's
+   text with no dated Changes line is named against the earlier revision,
+   and one with the line is not.
+
+Changes:
+- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
+  unchanged.
 
 ## CH-002 A builder reaches the code and the tests from an id, and the gate names the fix for every problem
 
@@ -58,116 +136,6 @@ Changes:
   Go, Python and TypeScript, so a citation of an entry that does not exist
   fails to compile or to import, where it named Go's compiler alone
   (backlog 003).
-
-## CH-003 The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated
-
-Status: active
-
-An entry keeps its id for life; a retired one stays in its document with
-its status and its changes, and its symbol still builds, so the strip can
-follow at its own pace. Two entries with one id, anywhere in the charter,
-fail. A change to an entry is a dated line in its Changes.
-
-Why: everything hangs on the ids: anchors, citations, waivers, the
-backlog. A record that renumbers or forgets is not a record.
-
-Scenarios:
-1. `id-declared-once`: two entries with one id, in one document or in two
-   documents, fail naming both places.
-2. `retired-entry-still-builds`: a deprecated entry is generated with a
-   deprecation notice and the gate asks no coverage of it.
-3. `next-free-id`: a new id with a prefix is one the charter does not
-   hold.
-
-Changes:
-- 2026-10-01: a new id is one the charter does not hold, where it was one
-  above the highest, which two branches took at once and one of them then
-  changed (CH-012).
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
-- 2026-11-26: the earlier form's spec files are no longer read
-  (Q-261015-N4HJ), so `id-declared-once` names two documents, not a
-  document and a spec file.
-
-## CH-004 No surface exists that an entry does not own, and the baseline only shrinks
-
-Status: active
-
-Every environment variable the tree reads, and every surface of a kind
-the charter declares, is named by an entry's Accounts, or listed with a reason
-in a baseline that predates the charter. The gate fails a surface neither
-names, a baseline line whose surface is gone or now accounted for, and a
-read of an environment variable that goes through anything but a named
-constant.
-
-Why: the surfaces are the operator's contract with the system. A variable
-nobody claims is a promise nobody keeps.
-
-Scenarios:
-1. `unaccounted-surface-fails` (owner, backlog 003): a key of a declared
-   kind that no entry accounts for and the baseline does not list fails
-   naming it.
-2. `baseline-holds-only-live-gaps`: a baseline line for a surface that is
-   gone, or that an entry now accounts for, fails naming the entry.
-3. `env-read-through-a-constant` (owner, backlog 003): an environment read
-   in Go, Python or TypeScript whose argument is a string literal, or a
-   variable, fails naming the constant to use.
-
-Changes:
-- 2026-11-26: environment variables are the one built-in kind, read in Go,
-  Python and TypeScript; build tags, contract operations and event kinds
-  become kinds a charter declares, like any other (backlog 003).
-
-## CH-005 An external system's fact is recorded with its source and date, and no active entry rests on one found false
-
-Status: active
-
-An observation records a fact about a system the code does not own, with
-its subject, where it was read or when a probe last saw it true, and the
-entries that rest on it. Probes check observations and nothing else; tests
-cite entries and never observations. A broken observation under an active
-entry fails the gate.
-
-Why: a decision that rests on a vendor's behaviour is only as good as the
-fact; recording the fact apart from the decision says what to re-check
-when the vendor changes.
-
-Scenarios:
-1. `observed-fact-has-a-date-and-a-probe`: an observed observation without
-   a calendar date, or cited by no probe, fails.
-2. `broken-fact-under-active-fails`: a broken observation supporting an
-   active entry fails, and one supporting a planned or deprecated entry
-   does not.
-3. `probes-and-tests-stay-apart`: a test file referencing an observation,
-   and a probe referencing an entry, each fail.
-
-Changes:
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
-
-## CH-006 The charter specifies itself, and its own gate is green
-
-Status: active
-
-The tooling's decisions are entries in this directory, in the form the
-charter asks of any adopter, realized by the tooling and verified by its
-tests, and checked by a gate of their own over the tooling alone.
-
-Why: a form that cannot carry the charter's own thirty decisions is the
-wrong form, and a gate nobody runs on its own maker is a claim, not a
-proof.
-
-Scenarios:
-1. `self-gate-walks-the-tooling-only`: the charter's own gate walks the
-   tooling and nothing else, so an adopter's anchors and tests, the
-   example adopter's among them, are invisible to it.
-
-Changes:
-- 2026-11-26: the charter became a repository of its own (Q-261015-3Q84). The entries are in the form the charter asks of
-  any adopter, where they were in the product's, and the gate walks the
-  repository's tooling, where it walked the tooling's directories inside
-  the product; the example adopter is a module of its own, which every
-  walk skips.
 
 ## CH-261126-NS7T An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling
 
@@ -210,33 +178,3 @@ Changes:
   languages are kept, a second example of Go and Python proving it;
   `polyglot-example-passes`, `polyglot-untested-scenario-named` and
   `nothing-of-the-tooling-imported` are added (backlog 003).
-
-## CH-261009-3FHW A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named
-
-Status: active
-
-Every scenario says who ruled it: the owner, with what the ruling cites;
-a named delegate; or an agent whose choice nobody has ruled on, which a
-scenario with nothing written is. The registry and the report carry it,
-and the report counts the active scenarios by who ruled them. A change to
-the record that its Changes lines do not say, an entry removed, unbuilt
-or retired without a line, text or a scenario changed without one, or a
-ruling lost, is named against the revision it was made from.
-
-Why: an agent's default and the owner's decision look the same on the
-page, so the record could not say what was decided; a change nobody wrote
-down is the drift the whole form exists to refuse.
-
-Scenarios:
-1. `provenance-in-the-registry` (owner): reading the registry
-   gives each scenario's provenance, and a scenario with none written is
-   an agent's, provisional.
-2. `report-counts-who-ruled` (owner): the report shows each
-   scenario's provenance and counts the active scenarios by it.
-3. `unrecorded-change-named` (owner): a change to an entry's
-   text with no dated Changes line is named against the earlier revision,
-   and one with the line is not.
-
-Changes:
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.

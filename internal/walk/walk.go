@@ -43,7 +43,7 @@ type Tree map[string][]string
 
 // Walk lists the files.
 //
-//charter:realizes CH-036
+//charter:realizes CH-036, CH-006
 func Walk(o Options) (Tree, error) {
 	want := map[string]bool{}
 	for _, l := range o.Languages {

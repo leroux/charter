@@ -136,7 +136,7 @@ var CH_013 = &Spec{ID: "CH-013", Title: "Status is planned, active or deprecated
 
 // CH_014 is CH-014: The earlier form, one file per spec, is read beside the area documents until it is migrated
 //
-// Deprecated: CH-014 is retired; see its Changes in claims/form.md. Add no new anchors.
+// Deprecated: CH-014 is retired; see its Changes in claims/intent.md. Add no new anchors.
 var CH_014 = &Spec{ID: "CH-014", Title: "The earlier form, one file per spec, is read beside the area documents until it is migrated", Status: Deprecated}
 
 // CH_015 is CH-015: Serves and See name existing entries, a need serves nothing, and nothing names itself
@@ -198,7 +198,7 @@ var CH_261005_6ZBS = &Spec{ID: "CH-261005-6ZBS", Title: "The digest reads the ch
 
 // CH_261005_VFJR is CH-261005-VFJR: mutate breaks an entry's realizing code and says, per scenario, whether the tests that cite it noticed
 //
-// Deprecated: CH-261005-VFJR is retired; see its Changes in claims/tooling.md. Add no new anchors.
+// Deprecated: CH-261005-VFJR is retired; see its Changes in claims/review.md. Add no new anchors.
 var CH_261005_VFJR = &Spec{ID: "CH-261005-VFJR", Title: "mutate breaks an entry's realizing code and says, per scenario, whether the tests that cite it noticed", Status: Deprecated}
 
 // CH_261009_3FHW is CH-261009-3FHW: A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named
@@ -212,7 +212,7 @@ var CH_261009_QQC8 = &Spec{ID: "CH-261009-QQC8", Title: "charter diff names what
 
 // CH_261009_SNX2 is CH-261009-SNX2: lint -baseline fails when a style check's count exceeds its count in the style baseline, naming both counts
 //
-// Deprecated: CH-261009-SNX2 is retired; see its Changes in claims/tooling.md. Add no new anchors.
+// Deprecated: CH-261009-SNX2 is retired; see its Changes in claims/review.md. Add no new anchors.
 var CH_261009_SNX2 = &Spec{ID: "CH-261009-SNX2", Title: "lint -baseline fails when a style check's count exceeds its count in the style baseline, naming both counts", Status: Deprecated, Kind: "bound"}
 
 // CH_261009_VY5C is CH-261009-VY5C: A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional
@@ -227,6 +227,9 @@ var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/ch
 // CH_261126_5JMD is CH-261126-5JMD: The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
 var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Planned}
 
+// CH_261126_G5BX is CH-261126-G5BX: A need names the person it serves, one the needs document declares
+var CH_261126_G5BX = &Spec{ID: "CH-261126-G5BX", Title: "A need names the person it serves, one the needs document declares", Status: Planned}
+
 // CH_261126_HK6S is CH-261126-HK6S: An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}
 
@@ -235,6 +238,12 @@ var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter keeps a char
 
 // CH_261126_NTRR is CH-261126-NTRR: A declared surface kind is a command run from the root whose output lines are its keys
 var CH_261126_NTRR = &Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: Active}
+
+// CH_261126_P2SK is CH-261126-P2SK: The code does what the record says, and a gap between them stops the change
+var CH_261126_P2SK = &Spec{ID: "CH-261126-P2SK", Title: "The code does what the record says, and a gap between them stops the change", Status: Planned}
+
+// CH_261126_PFG5 is CH-261126-PFG5: What the software must do is written once, above the code, where people and agents both read and change it
+var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "What the software must do is written once, above the code, where people and agents both read and change it", Status: Planned}
 
 // CH_261126_PQ7X is CH-261126-PQ7X: A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: Active, Kind: "structure"}

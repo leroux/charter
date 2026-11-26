@@ -1,14 +1,16 @@
-# The form of an entry
+# Recording intent
 
-Code: chartertest
+Code: internal/record
 
-An entry is a heading in an area document; this document holds what the
-parser holds an entry and a document to.
+The problem this area answers: what the software must do has no durable
+home. It holds the form intent is written in: the entry, its id, its
+status and relations, the needs, the observations, and what keeps the
+record stable.
 
 ## CH-010 An entry is a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes in order
 
 Status: active
-Serves: CH-001, CH-002
+Serves: CH-261126-PFG5, CH-001
 See: CH-013
 
 An area document is a markdown file whose header is a title and an
@@ -81,11 +83,14 @@ Changes:
   its subject; fields-checked no longer names it, and the text names
   CH-013 for a Status's values, keeping the fields' presence and order
   here.
+- 2026-11-26: serves CH-261126-PFG5, CH-001, where it served CH-001 and
+  CH-002: the needs are re-cut one a problem, and this decision answers
+  the one that names it (backlog 004).
 
 ## CH-011 A need lives in needs.md and has no Kind, Serves or Guidance
 
 Status: active
-Serves: CH-001
+Serves: CH-261126-PFG5
 
 An entry of the document named needs.md is a need. A need serves nothing,
 carries no kind and no guidance; each of those is a form problem.
@@ -98,6 +103,11 @@ Scenarios:
    document is a decision.
 2. `need-fields-refused`: a Kind, a Serves or a Guidance on a need is a
    form problem.
+
+Changes:
+- 2026-11-26: serves CH-261126-PFG5, where it served CH-001: the needs are
+  re-cut one a problem, and this decision answers the one that names it
+  (backlog 004).
 
 ## CH-012 An id is declared once; a new one is its prefix, the day it was taken and a random code
 
@@ -248,6 +258,41 @@ Changes:
   (Q-261015-N4HJ): `stakeholder-realizes-nothing` is dropped with them,
   and `unknown-target` names Serves and See alone.
 
+## CH-003 The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated
+
+Status: active
+Serves: CH-261126-PFG5
+
+An entry keeps its id for life; a retired one stays in its document with
+its status and its changes, and its symbol still builds, so the strip can
+follow at its own pace. Two entries with one id, anywhere in the charter,
+fail. A change to an entry is a dated line in its Changes.
+
+Why: everything hangs on the ids: anchors, citations, waivers, the
+backlog. A record that renumbers or forgets is not a record.
+
+Scenarios:
+1. `id-declared-once`: two entries with one id, in one document or in two
+   documents, fail naming both places.
+2. `retired-entry-still-builds`: a deprecated entry is generated with a
+   deprecation notice and the gate asks no coverage of it.
+3. `next-free-id`: a new id with a prefix is one the charter does not
+   hold.
+
+Changes:
+- 2026-10-01: a new id is one the charter does not hold, where it was one
+  above the highest, which two branches took at once and one of them then
+  changed (CH-012).
+- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
+  unchanged.
+- 2026-11-26: the earlier form's spec files are no longer read
+  (Q-261015-N4HJ), so `id-declared-once` names two documents, not a
+  document and a spec file.
+- 2026-11-26: a decision serving CH-261126-PFG5, where it was a need of
+  its own, the needs being re-cut one a problem: the record's stability is
+  how intent keeps a durable home, a property of the record and not
+  something a person asks of it (backlog 004).
+
 ## CH-261126-HK6S An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 
 Status: active
@@ -279,81 +324,27 @@ Scenarios:
    file declares a symbol per observation, and a probe's observes naming
    one is read in Go, Python and TypeScript.
 
-## CH-261009-VY5C A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional
+## CH-261126-G5BX A need names the person it serves, one the needs document declares
 
-Status: active
-Serves: CH-261009-3FHW
+Status: planned
+Serves: CH-261126-PFG5
+See: CH-011
 
-A scenario's handle may be followed, in parentheses, by who ruled it:
-"owner", with what the ruling cites after a comma; "delegate" with the
-delegate's name and, after a comma, what it cites; or "agent,
-provisional". Nothing written is an agent's, provisional, and the
-registry says it was not written. Anything else is a form problem naming
-the line and the three forms. The provenance is part of the scenario as
-the registry gives it.
+The header of needs.md declares the charter's people in a line, "People:
+reviewer, builder, owner, adopter", and each need names one of them in a
+field line, "For: reviewer". A need without For, a For naming a person the
+header does not declare, and a For on a decision are form problems naming
+the line. The digest and the export group the needs by person.
 
-Why: who decided is a fact a person writes, never one the tooling infers;
-written beside the promise it lets a reader, a reviewer and a policy tell
-a ruling from a default.
-
-Scenarios:
-1. `owner-read` (owner): "(owner, #444)" gives the owner with
-   the reference, and "(owner)" the owner alone.
-2. `delegate-read` (owner): "(delegate name, #12)"
-   gives the delegate's name and the reference.
-3. `default-is-provisional` (owner): a scenario with nothing
-   in parentheses is an agent's, provisional, and says it was not written.
-4. `malformed-refused` (owner): a provenance naming anyone but
-   owner, delegate or agent, a named owner, an unnamed delegate, or an
-   agent with a reference is a form problem naming the forms to write.
-
-Changes:
-- 2026-10-09: the title and the malformed-refused scenario reworded to the
-  style's bars; the ruling is unchanged.
-
-## CH-261009-4B3B The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered
-
-Status: active
-Serves: CH-261009-3FHW
-
-questions.md in the entries directory holds one question per heading,
-"## Q-ID question", with field lines Asked-by, Entry (an id, or an id and
-a scenario as ID/handle), Provisional (the answer taken meanwhile) and,
-once a person has answered, Answer, opening with the date and who
-answered. A question without Asked-by, Entry or Provisional, naming an
-entry or scenario the record does not hold, with an Answer that does not
-open with a date, or with an id declared twice, is a form problem naming
-the line. A question is never deleted. Lint prints one line, at the
-question file's first line, saying how many questions are open and naming
-the command that lists them; with none open it prints none. claimsgen
-questions lists each open question with its id, the entry it is about,
-its text, the provisional answer and who asked, then how many are open;
-with -all it lists the answered ones too, each with its answer.
-
-Why: an agent that must choose something unruled needs a place to say so
-and go on, and the owner needs the list to clear; without it the choice
-lands as if it were a decision. Lint is read for what to look at, and a
-line per open question buried its advice; a count keeps it readable, and
-the list is one command away.
+Why: a need is a promise to a person, and a record that does not say whose
+leaves the reader to guess who relies on it; naming the person lets each
+one find what the record promises them.
 
 Scenarios:
-1. `question-read` (owner): a well-formed question yields its
-   id, text, asker, entry, provisional answer and, when present, its
-   answer.
-2. `unknown-entry-refused` (owner): a question about an entry
-   or a scenario the record does not hold is a form problem.
-3. `missing-parts-refused` (owner): a question without
-   Asked-by, Entry or Provisional, or whose Answer does not open with a
-   date, is a form problem naming what to write.
-4. `open-listed` (owner): lint prints one line, at the
-   question file's first line, counting the open questions and naming the
-   command that lists them, and none when no question is open.
-5. `questions-verb-lists` (owner): claimsgen questions prints
-   each open question with its id, entry, text, provisional answer and who
-   asked, then how many are open; -all adds the answered ones with their
-   answers.
-
-Changes:
-- 2026-10-09: lint summarises the open questions in one line and the
-  questions verb lists them.
-- 2026-10-09: the title reworded to twenty words; the ruling is unchanged.
+1. `people-declared` (agent, provisional): a needs header with a People
+   line yields the charter's people, in order.
+2. `for-checked` (agent, provisional): a need without For, a For naming an
+   undeclared person, and a For on a decision are each a form problem
+   naming the line.
+3. `grouped-by-person` (agent, provisional): the digest and the export list
+   each person's needs together, in the order the People line gives.

@@ -212,7 +212,7 @@ func Read(root, dir string, skip ...string) (*Record, error) {
 // addEntries orders the entries by prefix and then by id, and keeps each id
 // once, a second declaration a form problem naming both places.
 //
-//charter:realizes CH-012
+//charter:realizes CH-012, CH-003
 func (r *Record) addEntries(entries []*Entry) {
 	sort.SliceStable(entries, func(i, j int) bool {
 		if entries[i].Prefix != entries[j].Prefix {

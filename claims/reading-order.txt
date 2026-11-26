@@ -1,0 +1,8 @@
+# The areas in the order the problems are told in needs.md: intent, the way
+# from an id to its code, the gate, review, who decided, and adoption.
+intent.md
+anchoring.md
+gate.md
+review.md
+provenance.md
+adoption.md
