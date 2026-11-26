@@ -134,7 +134,7 @@ func TestAStatusOutsideTheThreeIsAFormProblem(t *testing.T) {
 // The header orients the reader and is not parsed beyond its title and
 // Code line; a section heading in it is a form problem.
 func TestTheHeaderIsProse(t *testing.T) {
-	claims.Verifies(t, claims.CH_010, "header-is-prose")
+	claims.Verifies(t, claims.CH_261126_JC9B, "header-is-prose")
 	header := "# Refill\nCode: pkg/a\n\n" +
 		"A bucket reads the clock at each request.\n\n" +
 		"- **burst**: the most tokens a bucket holds.\n" +
@@ -164,7 +164,7 @@ func TestTheHeaderIsProse(t *testing.T) {
 
 // A line inside a fenced block in an entry is text, never a heading.
 func TestAHeadingInAFenceIsText(t *testing.T) {
-	claims.Verifies(t, claims.CH_010, "heading-in-fence-is-text")
+	claims.Verifies(t, claims.CH_261126_JC9B, "heading-in-fence-is-text")
 	for _, fenced := range []string{
 		"```sh\n# a comment\n## SW-011 not an entry\nmake claims\n```\n",
 		"~~~~\n# a comment\n~~~\n## still inside\n~~~~\n",

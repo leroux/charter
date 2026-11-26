@@ -60,35 +60,17 @@ Changes:
 Status: active
 Serves: CH-001
 
-Lint runs the whole gate first and prints every problem it fails on,
-then one line counting the open questions of the question file, then
-its advice: a decision that serves nothing, a planned entry each of
-whose scenarios is verified, a deprecated entry
-still anchored or cited, an active decision realized only by a package
-clause unless its kind is structure, and a citation of an entry with
-scenarios that names none. Then it checks the style a reader would
-stumble on, by the bars of the README's Style, in the live entries of
-the area documents and the needs: a word retired.txt in the entries
-directory retires; a title over twenty words; a text over six sentences;
-a scenario sentence over thirty words; a Why under twenty-five words that
-names a story, a ruling or a review; and a test whose citations name
-scenarios of two or more live decisions and no need. A retired word is
-read in a title, a text, a Why, a scenario's sentence and a document's
-header, never in a code span or a double-quoted string, and is kept
-where the line or the sentence holding it holds one of the word's
-phrases. The file holds a word a line: a pattern matched at word
-boundaries whatever the case, then -> and the word to write, then | and
-the phrases, separated by semicolons. Each style check that finds
-anything prints one line, after the rest, counting what it found and
-naming the command that lists it; with -style, lint lists every finding
-at its line in their place, a retired word with the word to write and a
-test once, at the test.
+Lint runs the whole gate first and prints every problem it fails on, then
+one line counting the open questions of the question file, then its
+advice: a decision that serves nothing, a planned entry each of whose
+scenarios is verified, a deprecated entry still anchored or cited, an
+active decision realized only by a package clause unless its kind is
+structure, and a citation of an entry with scenarios that names none. The
+style checks, CH-261126-9K5J's and CH-261126-WTMZ's, print after the rest.
 
 Why: these are the gaps a reviewer would want to know about and that no
-mechanical rule should block a merge on. The style the README sets can
-be measured, so lint measures it and an audit spends its reader only on
-what needs one; a test two decisions share is where one may rule what
-the other states.
+mechanical rule should block a merge on, so lint names them and the gate
+does not.
 
 Scenarios:
 1. `serves-nothing`: a decision with no Serves is advised.
@@ -102,24 +84,6 @@ Scenarios:
    handle is advised.
 6. `gate-problems-first` (owner): a problem the gate fails on,
    a scenario no test cites, is in lint's output.
-7. `retired-word-named` (owner): a retired word outside code,
-   quotes and a phrase's line, in a live entry's title, text, Why or
-   scenario or a header, is counted, and listed under -style.
-8. `long-title-named` (owner): a live entry's title of
-   twenty-one words is counted, and listed under -style with its length,
-   and one of twenty is not.
-9. `long-text-named` (owner): a text of seven sentences is
-   counted, and listed under -style, and one of six is not, no period in
-   code or of e.g. or i.e. ending one.
-10. `long-scenario-named` (owner): a scenario sentence of
-    thirty-one words after its handle and provenance is counted, and
-    listed at its line under -style, and one of thirty is not.
-11. `pointing-why-named` (owner): a Why under twenty-five
-    words naming a story, a ruling or a review is counted, and listed
-    under -style; a longer one, or one naming none, is not.
-12. `shared-test-named` (owner): a test in any language
-    citing scenarios of two decisions and no need is counted, and listed
-    once under -style; one also citing a need is not.
 
 Changes:
 - 2026-10-09: lint ran the load alone and missed the rules that need the
@@ -134,6 +98,69 @@ Changes:
   print their counts, and `lint -style` lists the lines.
 - 2026-11-26: `shared-test-named` holds for a test in any language the
   charter reads, Python's among them (backlog 003).
+- 2026-11-26: split: the style checks are CH-261126-9K5J's and the retired
+  words CH-261126-WTMZ's, each a ruling of its own; their scenarios moved
+  there, and this entry keeps the gate first, the questions' count and the
+  advice (backlog 004).
+
+## CH-261126-9K5J Lint counts the style a reader would stumble on, against fixed bars, and -style lists each finding
+
+Status: active
+Serves: CH-001
+See: CH-041
+
+In the live entries of the area documents and the needs, lint finds a
+title over twenty words, a text over six sentences, a scenario sentence
+over thirty words, a Why under twenty-five words that names a story, a
+ruling or a review, and a test whose citations name scenarios of two or
+more live decisions and no need. Each check that finds anything prints one
+line, after the rest, counting what it found and naming the command that
+lists it; with -style, lint lists every finding at its line, a test once,
+at the test.
+
+Why: the style the record keeps can be measured, so lint measures it and
+an audit spends its reader only on what needs one; a test two decisions
+share is where one may rule what the other states.
+
+Scenarios:
+1. `long-title-named` (owner): a live entry's title of
+   twenty-one words is counted, and listed under -style with its length,
+   and one of twenty is not.
+2. `long-text-named` (owner): a text of seven sentences is
+   counted, and listed under -style, and one of six is not, no period in
+   code or of e.g. or i.e. ending one.
+3. `long-scenario-named` (owner): a scenario sentence of
+   thirty-one words after its handle and provenance is counted, and
+   listed at its line under -style, and one of thirty is not.
+4. `pointing-why-named` (owner): a Why under twenty-five
+   words naming a story, a ruling or a review is counted, and listed
+   under -style; a longer one, or one naming none, is not.
+5. `shared-test-named` (owner): a test in any language
+   citing scenarios of two decisions and no need is counted, and listed
+   once under -style; one also citing a need is not.
+
+## CH-261126-WTMZ A word the record retires is named wherever a reader meets it, unless one of its phrases keeps it
+
+Status: active
+Serves: CH-001
+See: CH-041
+
+retired.txt in the claims directory holds a word a line: a pattern matched
+at word boundaries whatever the case, then -> and the word to write, then |
+and the phrases that keep it, separated by semicolons. Lint reads a live
+entry's title, text, Why and scenario sentences and each document's header,
+never a code span or a double-quoted string, and names each retired word
+with the word to write, unless the line or the sentence holding it holds
+one of its phrases.
+
+Why: a record read by people and agents alike needs one word for one
+thing; a word it has given up, left in, sends the next reader back to the
+meaning it was retired for.
+
+Scenarios:
+1. `retired-word-named` (owner): a retired word outside code,
+   quotes and a phrase's line, in a live entry's title, text, Why or
+   scenario or a header, is counted, and listed under -style.
 
 ## CH-261005-6ZBS The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why
 

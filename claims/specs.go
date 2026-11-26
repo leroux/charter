@@ -233,6 +233,9 @@ var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/ch
 // CH_261126_5JMD is CH-261126-5JMD: The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
 var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Planned}
 
+// CH_261126_9K5J is CH-261126-9K5J: Lint counts the style a reader would stumble on, against fixed bars, and -style lists each finding
+var CH_261126_9K5J = &Spec{ID: "CH-261126-9K5J", Title: "Lint counts the style a reader would stumble on, against fixed bars, and -style lists each finding", Status: Active}
+
 // CH_261126_G5BX is CH-261126-G5BX: A need names the person it serves, one the needs document declares
 //
 // Deprecated: CH-261126-G5BX is retired; see its Changes in claims/intent.md. Add no new anchors.
@@ -245,6 +248,9 @@ var CH_261126_GFR7 = &Spec{ID: "CH-261126-GFR7", Title: "A contract scenario is 
 
 // CH_261126_HK6S is CH-261126-HK6S: An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}
+
+// CH_261126_JC9B is CH-261126-JC9B: An area document's header is a title, a Code line and prose, and a fenced line is never a heading
+var CH_261126_JC9B = &Spec{ID: "CH-261126-JC9B", Title: "An area document's header is a title, a Code line and prose, and a fenced line is never a heading", Status: Active}
 
 // CH_261126_NS7T is CH-261126-NS7T: An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling
 var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling", Status: Active}
@@ -265,3 +271,6 @@ var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader,
 //
 // Deprecated: CH-261126-PZ8Z is retired; see its Changes in claims/intent.md. Add no new anchors.
 var CH_261126_PZ8Z = &Spec{ID: "CH-261126-PZ8Z", Title: "An area is contract or design: what any implementation must do, or how this one does it", Status: Deprecated}
+
+// CH_261126_WTMZ is CH-261126-WTMZ: A word the record retires is named wherever a reader meets it, unless one of its phrases keeps it
+var CH_261126_WTMZ = &Spec{ID: "CH-261126-WTMZ", Title: "A word the record retires is named wherever a reader meets it, unless one of its phrases keeps it", Status: Active}

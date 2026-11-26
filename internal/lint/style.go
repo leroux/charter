@@ -79,7 +79,7 @@ type retiredWord struct {
 // line that is not "pattern -> word | phrase; phrase", or whose pattern
 // does not compile, is a lint line of its own.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-WTMZ
 func readRetired(root, dir string) ([]retiredWord, []string, error) {
 	rel := retiredPath(dir)
 	data, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(rel)))
@@ -132,7 +132,7 @@ type retiredUse struct {
 // holds it holds one of the word's phrases, a phrase wrapped onto the next
 // line counting for both. A word is found once a line.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-WTMZ
 func retiredIn(words []retiredWord, lines []record.Line) []retiredUse {
 	if len(words) == 0 || len(lines) == 0 {
 		return nil
@@ -251,7 +251,7 @@ func lowerASCII(s string) string {
 // countWords counts the words of a sentence: its whitespace-separated
 // tokens that hold a letter or a digit.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-9K5J
 func countWords(s string) int {
 	n := 0
 	for _, f := range strings.Fields(s) {
@@ -266,7 +266,7 @@ func countWords(s string) int {
 // them: a period in a code span ends none, nor does a numbered item's
 // marker or anything in a fenced block.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-9K5J
 func countSentences(text string) int {
 	var lines []record.Line
 	for _, l := range strings.Split(text, "\n") {
@@ -281,7 +281,7 @@ func countSentences(text string) int {
 // last run that ends in none ends at the end. The period of i.e. or e.g.
 // ends none.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-9K5J
 func sentenceEnds(s string) []int {
 	var ends []int
 	last := 0
@@ -364,7 +364,7 @@ func (f *styleFindings) lines() []string {
 // counts says, in one line for each check that found anything, how many
 // findings it has, and names the command that lists them.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-9K5J
 func (f *styleFindings) counts() []string {
 	var out []string
 	for _, c := range f.checks {
@@ -389,7 +389,7 @@ func (f *styleFindings) counts() []string {
 // line: the heading's, or the scenario's, or the line a retired word is
 // on. The retired words' count names their file, the others the README.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-9K5J, CH-261126-WTMZ
 func lintStyle(t *check.Tree) (*styleFindings, error) {
 	dir := t.Record.Dir
 	words, problems, err := readRetired(t.Config.Root, dir)

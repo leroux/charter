@@ -149,6 +149,8 @@ func (r *Record) BySymbol(sym string) (*Entry, *Observation) {
 // Read reads the record in root/dir. skip names files of the directory, by
 // base name, that are not area documents beyond those the record itself
 // keeps, such as the generated digest.
+//
+//charter:realizes CH-261126-JC9B
 func Read(root, dir string, skip ...string) (*Record, error) {
 	r := &Record{Dir: dir, byID: map[string]*Entry{}, obsByID: map[string]*Observation{}}
 	abs := filepath.Join(root, filepath.FromSlash(dir))

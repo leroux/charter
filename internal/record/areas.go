@@ -137,7 +137,7 @@ func parseProvenance(s string) (Provenance, string) {
 
 // parseArea reads one area document: its header and its entries.
 //
-//charter:realizes CH-010, CH-011
+//charter:realizes CH-010, CH-011, CH-261126-JC9B
 func parseArea(rel, src string) (*Area, []*Entry, []string) {
 	doc := &Area{File: rel, Needs: path.Base(rel) == NeedsFile}
 	var entries []*Entry

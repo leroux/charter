@@ -23,11 +23,8 @@ that order and each at most once; the text and Why are required, and an
 active entry lists at least one scenario. A scenario is a numbered item
 with a handle in backticks, lower-case kebab, unique in the entry, and a
 sentence; a change is a dated item; a continuation line is indented. Every
-form problem names the document, the line and the form to write. The
-header, before the first entry, may hold prose, a vocabulary list, tables
-and diagrams that orient the reader; it is not parsed beyond its title and
-Code line and has no section headings, and a line inside a fenced block,
-in the header or in an entry, is text and never a heading.
+form problem names the document, the line and the form to write. What a
+document's header may hold is CH-261126-JC9B's.
 
 Why: the parts are what the reviewer reads, in the order they read them;
 a fixed order and a fixed form make a diff say what changed.
@@ -52,18 +49,6 @@ Scenarios:
    the rule.
 9. `blank-lines-before-fields`: blank lines between the heading and the
    first field are allowed; the first blank line after a field ends them.
-10. `readme-is-not-a-document`: README.md in the directory is documentation
-    and is not read as an area document.
-11. `header-is-prose`: a header of prose, a list, a table and a fenced
-    block with a "#" line parses clean and yields no entry; a section
-    heading there is a form problem.
-12. `heading-in-fence-is-text`: a fenced "#" or "## " line in an entry's
-    body is text, no form problem and no entry; a fence among the field
-    lines is no field line and starts no entry.
-
-Guidance: the header carries no rulings, and a hand-written index of the
-entries is not part of it, since the headings are the index; neither is
-something the parser can tell, so review holds the header to them.
 
 Changes:
 - 2026-10-01: the header may hold prose, lists, tables and diagrams, is
@@ -86,6 +71,42 @@ Changes:
 - 2026-11-26: serves CH-261126-PFG5, CH-001, where it served CH-001 and
   CH-002: the needs are re-cut one a problem, and this decision answers
   the one that names it (backlog 004).
+- 2026-11-26: split: the header of an area document, what it may hold and
+  that a fenced line is never a heading, is CH-261126-JC9B's, a ruling of
+  its own; readme-is-not-a-document, header-is-prose and
+  heading-in-fence-is-text and the Guidance moved there with it (backlog
+  004).
+
+## CH-261126-JC9B An area document's header is a title, a Code line and prose, and a fenced line is never a heading
+
+Status: active
+Serves: CH-261126-PFG5
+See: CH-010
+
+The header of an area document, before its first entry, is a title, an
+optional Code line, and prose that orients the reader: paragraphs, a
+vocabulary list, tables and diagrams. It is not parsed beyond its title and
+Code line and has no section headings. A line inside a fenced block, in the
+header or in an entry, is text and never a heading. README.md in the
+directory is documentation and no area document.
+
+Why: a reader needs a way into an area before its entries, and a header the
+parser held to a form would leave no room for one; a fenced example of an
+entry must not be read as an entry.
+
+Scenarios:
+1. `readme-is-not-a-document`: README.md in the directory is documentation
+   and is not read as an area document.
+2. `header-is-prose`: a header of prose, a list, a table and a fenced
+   block with a "#" line parses clean and yields no entry; a section
+   heading there is a form problem.
+3. `heading-in-fence-is-text`: a fenced "#" or "## " line in an entry's
+   body is text, no form problem and no entry; a fence among the field
+   lines is no field line and starts no entry.
+
+Guidance: the header carries no rulings, and a hand-written index of the
+entries is not part of it, since the headings are the index; neither is
+something the parser can tell, so review holds the header to them.
 
 ## CH-011 A need lives in needs.md and has no Kind, Serves or Guidance
 

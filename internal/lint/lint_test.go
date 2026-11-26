@@ -98,7 +98,7 @@ func TestLintAdvises(t *testing.T) {
 }
 
 func TestTheStyleIsCountedAndListed(t *testing.T) {
-	claims.Verifies(t, claims.CH_041, "retired-word-named", "long-title-named", "long-text-named", "long-scenario-named", "pointing-why-named")
+	claims.Verifies(t, claims.CH_261126_9K5J, "long-title-named", "long-text-named", "long-scenario-named", "pointing-why-named")
 	fs := files()
 	fs["claims/retired.txt"] = "quotas? -> bucket | quota defaults\n"
 	fs["claims/refill.md"] = strings.Replace(area, "At each request the bucket reads the clock.", "At each request the quota reads the clock. One. Two. Three. Four. Five. Six. `e.g. code.`", 1)
@@ -128,7 +128,7 @@ func TestTheStyleIsCountedAndListed(t *testing.T) {
 }
 
 func TestATestTwoDecisionsShareIsNamed(t *testing.T) {
-	claims.Verifies(t, claims.CH_041, "shared-test-named")
+	claims.Verifies(t, claims.CH_261126_9K5J, "shared-test-named")
 	fs := edit(t, "claims/refill.md", "## SW-011 A rule that is planned\nStatus: planned", "## SW-011 A rule that is planned\nStatus: active")
 	fs["pkg/a/a.go"] = strings.Replace(fs["pkg/a/a.go"], "SW-010", "SW-010, SW-011", 1)
 	fs["pkg/a/a_test.go"] = strings.Replace(fs["pkg/a/a_test.go"], "\"burst-caps-tokens\")\n", "\"burst-caps-tokens\")\n\tclaims.Verifies(t, claims.SW_011, \"planned-rule\")\n", 1)
@@ -155,4 +155,15 @@ func TestLintCountsTheOpenQuestionsInOneLine(t *testing.T) {
 			t.Errorf("no question open: %s", l)
 		}
 	}
+}
+
+func TestARetiredWordIsNamedUnlessAPhraseKeepsIt(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_WTMZ, "retired-word-named")
+	fs := files()
+	fs["claims/retired.txt"] = "quotas? -> bucket | quota defaults\n"
+	// The first sentence uses the word; the second holds it in code and in
+	// one of its phrases, which keep it.
+	fs["claims/refill.md"] = strings.Replace(area, "At each request the bucket reads the clock.", "At each request the quota reads the clock.\nIts `quota` field keeps the quota defaults.", 1)
+	has(t, lint(t, fs, false), "claims/retired.txt:1: lint: 1 retired word is used; charter lint -style lists it")
+	has(t, lint(t, fs, true), "claims/refill.md:9: lint: \"quota\" is retired in the text of SW-010; write bucket")
 }

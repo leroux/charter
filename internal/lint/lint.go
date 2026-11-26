@@ -145,7 +145,7 @@ func questions(rec *record.Record) []string {
 // sharedTests names, once, each test whose citations name scenarios of two
 // or more live decisions and that cites no need, at its first citation.
 //
-//charter:realizes CH-041
+//charter:realizes CH-261126-9K5J
 func sharedTests(t *check.Tree) []string {
 	type key struct{ file, test string }
 	type test struct {

@@ -254,11 +254,19 @@ func TestEntriesAreOrderedByPrefixThenNumberThenDay(t *testing.T) {
 	}
 }
 
-func TestBlankLinesMayOpenTheFieldsAndTheReadmeIsNoDocument(t *testing.T) {
-	claims.Verifies(t, claims.CH_010, "blank-lines-before-fields", "readme-is-not-a-document")
+func TestBlankLinesMayOpenTheFields(t *testing.T) {
+	claims.Verifies(t, claims.CH_010, "blank-lines-before-fields")
 	src := strings.Replace(sampleArea, "## SW-010 The bucket refills from its last request at the rate\n", "## SW-010 The bucket refills from its last request at the rate\n\n\n", 1)
-	r := writeRecord(t, map[string]string{"refill.md": src, "README.md": "# How to write\n\n## Not an entry\n\nprose\n"})
-	if len(r.Problems) != 0 || len(r.Entries) != 1 || r.Entries[0].Status != "active" || len(r.Areas) != 1 {
+	r := writeRecord(t, map[string]string{"refill.md": src})
+	if len(r.Problems) != 0 || len(r.Entries) != 1 || r.Entries[0].Status != "active" {
+		t.Errorf("problems %q, %d entries", r.Problems, len(r.Entries))
+	}
+}
+
+func TestTheReadmeIsNoAreaDocument(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_JC9B, "readme-is-not-a-document")
+	r := writeRecord(t, map[string]string{"refill.md": sampleArea, "README.md": "# How to write\n\n## Not an entry\n\nprose\n"})
+	if len(r.Problems) != 0 || len(r.Entries) != 1 || len(r.Areas) != 1 {
 		t.Errorf("problems %q, %d entries, %d areas", r.Problems, len(r.Entries), len(r.Areas))
 	}
 }
