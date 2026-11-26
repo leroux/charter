@@ -39,6 +39,6 @@ The charter tooling and method, specified by its own charter. Start with
   and the examples', the examples' lint and report, the viewer. It needs
   `pnpm install` for the TypeScript compiler and vitest.
 
-The skills in `.claude/skills/claims-*` still name `claimsgen` and one
-product's layout in places; CH-261126-5JMD (planned) makes them a plugin
-that reads charter.toml.
+The skills in `.claude/skills/claims-*` run the loop with the `charter`
+command and read the layout from `charter.toml`; CH-261126-5JMD (planned)
+ships them as a plugin for other repositories.

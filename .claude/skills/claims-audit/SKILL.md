@@ -22,8 +22,8 @@ finds is built from a story, under `claims-implement`.
 - Narrow, by hand, over the entries whose documents, anchored code or
   citing tests changed since the last audit: `git log -1 --format=%H --
   claims/audit.md` gives the last audit's commit; `go run
-  ./cmd/claimsgen diff THAT` names the entries whose text changed,
-  and `git diff --name-only THAT..HEAD` matched against `claimsgen
+  ./charter diff THAT` names the entries whose text changed,
+  and `git diff --name-only THAT..HEAD` matched against `charter
   anchors` names the rest.
 
 ## Step 1: the mechanical checks
@@ -31,8 +31,8 @@ finds is built from a story, under `claims-implement`.
 Run the gate and lint first; their lines are the audit's first findings
 and cost no reader:
 
-    go test -count=1 ./claims ./claims
-    go run ./cmd/claimsgen lint
+    charter check
+    charter lint
 
 Lint names the retired words (`claims/retired.txt`), the titles over
 twenty words, the texts over six sentences, the scenario sentences over
@@ -46,7 +46,7 @@ count has no mechanical finding.
 Split the live entries among fresh readers, one or two documents each,
 as `claims/reading-order.txt` groups them; a reader reads nothing of how
 the record was written. For each live entry, with `go run
-./cmd/claimsgen anchors ID` open:
+./charter anchors ID` open:
 
 1. **Each scenario against its test.** Read the sentence, then every
    citing test from its citation down. A sentence that claims more than
@@ -109,7 +109,7 @@ owner sets a bar in `claims/policy.md` when the counts should fail.
 A finding that needs a ruling (which of two homes, whether a clause is
 tested or dropped, what the code should do) is a question in
 `claims/questions.md` with the provisional answer "as it stands", filed
-by hand with `claimsgen next Q`; in CI it is listed in the issue for a
+by hand with `charter next Q`; in CI it is listed in the issue for a
 person to file. Nothing else changes: the audit does not reword, move or
 fix. The fixes are a story, built under `claims-implement`, and the next
 audit says whether they held.

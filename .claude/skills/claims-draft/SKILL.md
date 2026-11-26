@@ -1,14 +1,14 @@
 ---
 name: claims-draft
-description: Turn a backlog story's rulings into charter entries, a decision or a Changes line in its area document or a need in claims/needs.md, at the right altitude, with a scenario per clause and a new id from claimsgen. Use when a story's Ruling table is settled and its ids are not yet written, e.g. "draft the entries for backlog 038", "write the decisions for this ruling". Not building (claims-implement) or reviewing a change (claims-review).
+description: Turn a backlog story's rulings into charter entries, a decision or a Changes line in its area document or a need in claims/needs.md, at the right altitude, with a scenario per clause and a new id from charter. Use when a story's Ruling table is settled and its ids are not yet written, e.g. "draft the entries for backlog 038", "write the decisions for this ruling". Not building (claims-implement) or reviewing a change (claims-review).
 ---
 
 # Draft entries from a story
 
-The form is `claims/README.md` ("Writing a decision", "Altitude"); the
-best worked example is `claims/`. Nothing is minted, drafted
+The form is the one every charter shares (the README, "Adopting it"); the
+best worked example is the charter's own `claims/`. Nothing is minted, drafted
 or promoted: the ruling table is the draft, the area document is the
-record, and an id is one `claimsgen next` gives.
+record, and an id is one `charter next` gives.
 
 ## Procedure
 
@@ -17,23 +17,22 @@ record, and an id is one `claimsgen next` gives.
    the story cites and the surfaces it introduces.
 
 2. **Find the area.** Decisions go in `claims/<area>.md`, needs in
-   `claims/needs.md`. `ls claims/*.md` (not `DIGEST.md`, which `make claims` generates from
+   `claims/needs.md`. `ls claims/*.md` (not the digest, which `charter gen` generates from
    the others, nor `README.md`) and read the document whose
    `Code:` line names the code the ruling touches. A new area gets a
    document with a title line, a `Code:` line naming its packages and a
-   sentence on what it holds. Until an area has moved, its older specs
-   are files in `claims/specs/`; grep both.
+   sentence on what it holds, and its name goes in
+   `claims/reading-order.txt` where a reader should meet it.
 
-3. **New entry or a change?** For each ruling, grep `claims/*.md` and
-   `claims/specs/` for the ids the story cites and the words of the
+3. **New entry or a change?** For each ruling, grep `claims/*.md` for the ids the story cites and the words of the
    ruling. A ruling that alters an existing decision is a `Changes:` line
    on it (`- YYYY-MM-DD: what changed and why`), with its text and
-   scenarios edited to match; `go run ./cmd/claimsgen anchors ID` shows
+   scenarios edited to match; `charter anchors ID` shows
    the code and tests the change will reach. A ruling nobody has ruled
    before is a new entry. Not everything is a decision: a helper's
    contract, a log line, a refactor are code and tests without an entry.
 
-4. **Take the ids.** `go run ./cmd/claimsgen next SW 3` gives three
+4. **Take the ids.** `charter next SW 3` gives three
    new ids, one a line, each the day's date and a random code such as
    `SW-261001-K7Q2`; ask for as many as the story has new decisions
    (`next STK` for a need). Never write an id by hand or reuse one.
@@ -50,7 +49,7 @@ record, and an id is one `claimsgen next` gives.
    and an observable outcome", the provenance `(owner, #444)` when the
    story's ruling is the owner's, `(delegate name, #12)` for a delegate
    `claims/policy.md` names for the area, else `(agent, provisional)` with
-   a question in `claims/questions.md` (id from `claimsgen next Q`) saying
+   a question in `claims/questions.md` (id from `charter next Q`) saying
    what was chosen and why; `Guidance:` only when the ruling said how. A need
    has no Kind, Serves or Guidance. Abridged from `claims/form.md`:
 
@@ -89,7 +88,7 @@ record, and an id is one `claimsgen next` gives.
    Each answer is a clause with a scenario, or an exclusion stated in the
    text.
 
-8. **Check.** `make claims`, then `go run ./cmd/claimsgen lint`; both
+8. **Check.** `charter gen`, then `charter lint`; both
    clean but for lint's line counting the open questions. Lint names a
    decision that serves nothing.
 
@@ -101,7 +100,7 @@ record, and an id is one `claimsgen next` gives.
 
 - Every ruling is a new entry or a dated Changes line, in its area
   document, at the altitude above, with a scenario per clause.
-- The ids came from `claimsgen next`; `make claims` and `claimsgen lint`
+- The ids came from `charter next`; `charter gen` and `charter lint`
   are clean but for the open-questions line; the story's `## Charter`
   lists the ids.
 - The owner has the diff; nothing is built or committed.

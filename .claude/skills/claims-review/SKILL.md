@@ -19,16 +19,16 @@ The scenarios the change touched, and only those:
 - scenarios added, reworded or given a new provenance;
 - scenarios whose citing tests or whose entry's anchored code the change
   edits: `git diff BASE... | grep -n 'charter:\|Verifies(\|verifies('`
-  and the files it touches, looked up with `go run ./cmd/claimsgen
+  and the files it touches, looked up with `charter
   anchors ID...`;
-- every entry `go run ./cmd/claimsgen diff BASE` names.
+- every entry `charter diff BASE` names.
 
 Over a pull request, `gh pr diff N` is the change and the base is the
 pull request's base branch; by hand, `main`.
 
 ## The three questions
 
-For each scenario in scope, `claimsgen anchors ID` gives the sentence,
+For each scenario in scope, `charter anchors ID` gives the sentence,
 the realizing code with its declarations, and the citing tests with the
 handles each names. Read, then answer each question yes or no, with the
 evidence that decided it: the file and line of the assertion, the
@@ -52,7 +52,7 @@ declaration, the Changes line.
    change edited. Yes when the dated line names the change in place and
    its reason. No when there is no line, when it points at a review or a
    story instead of saying, or when it says what and not why. An entry
-   `claimsgen diff BASE` names has no line to read: that is a no.
+   `charter diff BASE` names has no line to read: that is a no.
 
 Also read the provenance. A scenario written as the owner's or a
 delegate's whose Why or Changes cite no ruling is a finding: the record
