@@ -2,8 +2,10 @@ module gjsonoracle
 
 go 1.24
 
+require github.com/tidwall/gjson v0.0.0
+
 require (
-	github.com/tidwall/gjson v0.0.0
+	github.com/stretchr/testify v1.12.1 // indirect
 	github.com/tidwall/match v1.0.1 // indirect
 	github.com/tidwall/pretty v1.0.0 // indirect
 )

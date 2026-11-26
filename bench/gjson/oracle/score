@@ -3,7 +3,7 @@
 
 It never touches the workspace. It copies the workspace's root package to
 a temporary directory, removes the agent's own test files there, and runs
-each hidden test file in oracle/hidden on its own against the agent's code:
+each hidden test file in oracle/testdata/hidden on its own against the agent's code:
 
   spec_test.go        gjson's own tests at the starting commit 40764d5,
                       every Test function (53): the behaviour that must
@@ -30,7 +30,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-HIDDEN = HERE / "hidden"
+HIDDEN = HERE / "testdata" / "hidden"
 TEST_FUNC = re.compile(r"^func (Test\w*)\(t \*testing\.T\)", re.M)
 
 
