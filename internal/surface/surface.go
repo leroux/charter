@@ -29,8 +29,8 @@ var kindForm = regexp.MustCompile(`^[a-z][a-z0-9]*$`)
 func Declared(c *config.Config) ([]string, []string) {
 	var keys, problems []string
 	seen := map[string]bool{}
-	at := fmt.Sprintf("%s:%d", c.Rel(), c.Line("surface"))
-	for _, s := range c.Surfaces {
+	for i, s := range c.Surfaces {
+		at := fmt.Sprintf("%s:%d", c.Rel(), c.SurfaceLine(i))
 		switch {
 		case !kindForm.MatchString(s.Kind):
 			problems = append(problems, fmt.Sprintf("%s: rule 9: the surface kind %q is not a lower-case word", at, s.Kind))

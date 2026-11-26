@@ -46,9 +46,9 @@ func TestEachLineADeclaredCommandPrintsIsAKey(t *testing.T) {
 
 func TestAFailingCommandIsNamed(t *testing.T) {
 	claims.Verifies(t, claims.CH_261126_NTRR, "failing-command-named")
-	c := charter(t, "\n[[surface]]\nkind = \"key\"\ncommand = \"echo no schema >&2; exit 3\"\n")
+	c := charter(t, "[[surface]]\nkind = \"op\"\ncommand = \"true\"\n\n[[surface]]\nkind = \"key\"\ncommand = \"echo no schema >&2; exit 3\"\n")
 	_, problems := Declared(c)
-	if len(problems) != 1 || !strings.HasPrefix(problems[0], "claims/charter.toml:2: rule 9: the key command \"echo no schema >&2; exit 3\" failed") || !strings.Contains(problems[0], "no schema") {
+	if len(problems) != 1 || !strings.HasPrefix(problems[0], "claims/charter.toml:5: rule 9: the key command \"echo no schema >&2; exit 3\" failed") || !strings.Contains(problems[0], "no schema") {
 		t.Errorf("problems = %q", problems)
 	}
 }
@@ -64,13 +64,13 @@ func TestADuplicateKeyIsNamed(t *testing.T) {
 
 func TestAKindsFormIsChecked(t *testing.T) {
 	claims.Verifies(t, claims.CH_261126_NTRR, "kind-form-checked")
-	for _, tc := range []struct{ src, want string }{
-		{"[[surface]]\nkind = \"key\"\ncommand = \"true\"\n[[surface]]\nkind = \"key\"\ncommand = \"true\"\n", "the surface kind key is declared twice"},
-		{"[[surface]]\nkind = \"env\"\ncommand = \"true\"\n", "the surface kind env is built in"},
-		{"[[surface]]\nkind = \"Build-Tag\"\ncommand = \"true\"\n", "the surface kind \"Build-Tag\" is not a lower-case word"},
+	for _, tc := range []struct{ src, at, want string }{
+		{"[[surface]]\nkind = \"key\"\ncommand = \"true\"\n[[surface]]\nkind = \"key\"\ncommand = \"true\"\n", "claims/charter.toml:4: ", "the surface kind key is declared twice"},
+		{"name = \"x\"\n\n[[surface]]\nkind = \"env\"\ncommand = \"true\"\n", "claims/charter.toml:3: ", "the surface kind env is built in"},
+		{"[[surface]]\nkind = \"Build-Tag\"\ncommand = \"true\"\n", "claims/charter.toml:1: ", "the surface kind \"Build-Tag\" is not a lower-case word"},
 	} {
 		_, problems := Declared(charter(t, tc.src))
-		if len(problems) != 1 || !strings.HasPrefix(problems[0], "claims/charter.toml:1: rule 9: ") || !strings.Contains(problems[0], tc.want) {
+		if len(problems) != 1 || !strings.HasPrefix(problems[0], tc.at+"rule 9: ") || !strings.Contains(problems[0], tc.want) {
 			t.Errorf("want %q at its line, got %q", tc.want, problems)
 		}
 	}

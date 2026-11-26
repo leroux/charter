@@ -138,7 +138,6 @@ func TestATypeScriptDirectiveNamingAnUnknownIDFails(t *testing.T) {
 }
 
 func TestTypeScriptEnvironmentReadsAreFacts(t *testing.T) {
-	claims.Verifies(t, claims.CH_034, "typescript-read-checked")
 	set := read(t, map[string]string{
 		"web/env.ts":  "export const RATE = \"FX_RATE\";\nconst hidden = \"FX_HIDDEN\";\n",
 		"web/main.ts": "import * as env from \"./env\";\nimport { RATE } from \"./env.ts\";\n\nconst a = process.env[env.RATE];\nconst b = process.env[RATE];\nconst c = process.env.FX_RATE;\nconst d = process.env[name]; // charter:dynamic\nconst e = process.env[name];\nconst name = \"x\";\n",

@@ -45,9 +45,12 @@ type Reader struct {
 // ErrNoInterpreter is wrapped when python3 cannot be run.
 var ErrNoInterpreter = errors.New("python3 is not on PATH")
 
-// Read runs the reader script over the files.
+// Read runs the reader script over the files. The script, reader.py,
+// embedded here, is where Python's anchors, citations and environment reads
+// are decided; this charter reads no Python of its own, so they are anchored
+// on the call that runs it.
 //
-//charter:realizes CH-261126-PQ7X
+//charter:realizes CH-261126-PQ7X, CH-021, CH-023, CH-034
 func (r Reader) Read(files []string) (*facts.Set, error) {
 	var keep []string
 	for _, f := range files {

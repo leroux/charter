@@ -98,9 +98,11 @@ type record_ struct {
 
 var directive = regexp.MustCompile(`^\s*//\s*charter:(realizes|concerns)\b(.*)$`)
 
-// Read runs the reader over the files.
+// Read runs the reader over the files, and decides from its records which
+// citations count and which are refused, and which environment reads go
+// through a constant.
 //
-//charter:realizes CH-261126-PQ7X
+//charter:realizes CH-261126-PQ7X, CH-023, CH-034
 func (r Reader) Read(files []string) (*facts.Set, error) {
 	var keep []string
 	for _, f := range files {

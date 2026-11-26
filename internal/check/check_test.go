@@ -230,7 +230,7 @@ func TestRelationsNameEntriesTheRecordHolds(t *testing.T) {
 }
 
 func TestEverySurfaceIsAccountedForOrBaselined(t *testing.T) {
-	claims.Verifies(t, claims.CH_033, "surfaces-enumerated", "unaccounted-fails", "accounts-must-exist", "baseline-holds-live-gaps-once", "deprecated-accounts-nothing")
+	claims.Verifies(t, claims.CH_033, "unaccounted-fails", "accounts-must-exist", "baseline-holds-live-gaps-once", "deprecated-accounts-nothing")
 	reports(t, replace(t, "claims/charter.toml", "command = \"echo refill\"", "command = \"printf 'refill\\\\ndrain\\\\n'\""),
 		"rule 6: op:drain is neither accounted for by an entry nor listed in claims/baseline.txt")
 	reports(t, replace(t, "claims/refill.md", "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE, op:refill, op:gone"),
@@ -419,31 +419,75 @@ func TestTheGatesRulesImportNoLanguage(t *testing.T) {
 	}
 }
 
+// polyglot is the fixture with a Python and a TypeScript part beside its Go:
+// the Go test cites waited-request-passes only, so burst-caps-tokens is
+// the other languages' to cite.
+func polyglot(t *testing.T, edits map[string]string) map[string]string {
+	t.Helper()
+	compiler, _ := filepath.Abs("../../node_modules/typescript")
+	f := fixture()
+	f["pkg/a/a_test.go"] = strings.Replace(f["pkg/a/a_test.go"], ", \"burst-caps-tokens\")", ")", 1)
+	f["claims/charter.toml"] += "\n[python]\ndir = \"py\"\ntest = \"python3 -m unittest\"\nenv = \"py/acme/env.py\"\n" +
+		"\n[typescript]\ndir = \"web\"\ntest = \"vitest run\"\nenv = \"web/env.ts\"\ncompiler = \"" + compiler + "\"\nimport = \"@fx/claims\"\n"
+	f["py/acme/env.py"] = "PY = \"FX_PY\"\n"
+	f["py/acme/run.py"] = "import os\n\nfrom acme import env\n\nx = os.environ.get(env.PY)\n"
+	f["web/env.ts"] = "export const TS = \"FX_TS\";\n"
+	f["web/main.ts"] = "import * as env from \"./env\";\n\nexport const x = process.env[env.TS];\n"
+	f["claims/refill.md"] = strings.Replace(f["claims/refill.md"], "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE, env:FX_PY, env:FX_TS, op:refill", 1)
+	for k, v := range edits {
+		f[k] = v
+	}
+	return f
+}
+
+const pyBurst = "import unittest\n\nimport claims\n\n\nclass T(unittest.TestCase):\n    def test_burst(self):\n        claims.verifies(self, claims.SW_010, \"burst-caps-tokens\")\n"
+const tsBurst = "import { claims, verifies } from \"@fx/claims\";\n\ntest(\"burst\", () => {\n  verifies(claims.SW_010, \"burst-caps-tokens\");\n});\n"
+
 func TestTheSameRuleSaysTheSameInEveryLanguage(t *testing.T) {
 	claims.Verifies(t, claims.CH_261126_PQ7X, "same-rule-every-language")
-	compiler, _ := filepath.Abs("../../node_modules/typescript")
 	want := "claims/refill.md:18: rule 25: scenario burst-caps-tokens of SW-010 is verified by no test; cite it with verifies(claims.SW_010, \"burst-caps-tokens\") as a test's first statement, or waive SW-010/burst-caps-tokens in claims/waivers.txt with a reason"
-	for _, tc := range []struct {
-		lang  string
-		edits map[string]string
-	}{
-		{"go", map[string]string{"pkg/a/a_test.go": strings.Replace(fixture()["pkg/a/a_test.go"], ", \"burst-caps-tokens\")", ")", 1)}},
-		{"python", map[string]string{
-			"pkg/a/a_test.go":        strings.Replace(fixture()["pkg/a/a_test.go"], ", \"burst-caps-tokens\")", ")", 1),
-			"claims/charter.toml":    fixture()["claims/charter.toml"] + "\n[python]\ndir = \"py\"\ntest = \"python3 -m unittest\"\n",
-			"py/tests/test_burst.py": "import unittest\n\nimport claims\n\n\nclass T(unittest.TestCase):\n    def test_burst(self):\n        claims.verifies(self, claims.SW_010)\n",
-		}},
-		{"typescript", map[string]string{
-			"pkg/a/a_test.go":     strings.Replace(fixture()["pkg/a/a_test.go"], ", \"burst-caps-tokens\")", ")", 1),
-			"claims/charter.toml": fixture()["claims/charter.toml"] + "\n[typescript]\ndir = \"web\"\ntest = \"vitest run\"\ncompiler = \"" + compiler + "\"\nimport = \"@fx/claims\"\n",
-			"web/burst.test.ts":   "import { claims, verifies } from \"@fx/claims\";\n\ntest(\"burst\", () => {\n  verifies(claims.SW_010);\n});\n",
-		}},
+	for _, tc := range []struct{ lang, file, cited, uncited string }{
+		{"python", "py/tests/test_burst.py", pyBurst, strings.Replace(pyBurst, ", \"burst-caps-tokens\")", ")", 1)},
+		{"typescript", "web/burst.test.ts", tsBurst, strings.Replace(tsBurst, ", \"burst-caps-tokens\")", ")", 1)},
 	} {
-		ps := problems(t, build(t, with(tc.edits)))
-		if len(ps) != 1 || ps[0] != want {
-			t.Errorf("%s: problems =\n%s\nwant exactly\n%s", tc.lang, strings.Join(ps, "\n"), want)
+		// The language's own citation is what covers the scenario...
+		if ps := problems(t, build(t, polyglot(t, map[string]string{tc.file: tc.cited}))); len(ps) != 0 {
+			t.Errorf("%s: cited from %s alone, the scenario still fails:\n%s", tc.lang, tc.lang, strings.Join(ps, "\n"))
+		}
+		// ...and without it the gap reads as it does for Go.
+		if ps := problems(t, build(t, polyglot(t, map[string]string{tc.file: tc.uncited}))); len(ps) != 1 || ps[0] != want {
+			t.Errorf("%s: the gap reads\n%s\nwant exactly\n%s", tc.lang, strings.Join(ps, "\n"), want)
 		}
 	}
+	if ps := problems(t, build(t, replace(t, "pkg/a/a_test.go", ", \"burst-caps-tokens\")", ")"))); len(ps) != 1 || ps[0] != want {
+		t.Errorf("go: the gap reads\n%s", strings.Join(ps, "\n"))
+	}
+}
+
+func TestEveryLanguagesConstantsAreSurfaces(t *testing.T) {
+	claims.Verifies(t, claims.CH_033, "surfaces-enumerated")
+	f := polyglot(t, map[string]string{"py/tests/test_burst.py": pyBurst})
+	if ps := problems(t, build(t, f)); len(ps) != 0 {
+		t.Fatalf("with every variable accounted for: %q", ps)
+	}
+	f["claims/refill.md"] = strings.Replace(f["claims/refill.md"], "env:FX_PY, env:FX_TS, ", "", 1)
+	reports(t, f,
+		"rule 6: env:FX_PY is neither accounted for by an entry nor listed in claims/baseline.txt",
+		"rule 6: env:FX_TS is neither accounted for by an entry nor listed in claims/baseline.txt")
+}
+
+func TestPythonAndTypeScriptReadsGoThroughAConstant(t *testing.T) {
+	claims.Verifies(t, claims.CH_034, "python-read-checked", "typescript-read-checked")
+	base := map[string]string{"py/tests/test_burst.py": pyBurst}
+	if ps := problems(t, build(t, polyglot(t, base))); len(ps) != 0 {
+		t.Fatalf("reads through the constants: %q", ps)
+	}
+	py := polyglot(t, base)
+	py["py/acme/run.py"] = "import os\n\nx = os.environ.get(\"FX_PY\")\n"
+	reports(t, py, "py/acme/run.py:3: rule 8: an environment read names \"FX_PY\" by a literal; read it through env.PY")
+	ts := polyglot(t, base)
+	ts["web/main.ts"] = "export const x = process.env.FX_TS;\n"
+	reports(t, ts, "web/main.ts:1: rule 8: an environment read names \"FX_TS\" by a literal; read it through env.TS")
 }
 
 func TestAStaleDigestFailsTheGateAndGenWritesIt(t *testing.T) {

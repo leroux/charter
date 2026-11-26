@@ -70,35 +70,35 @@ func TestNoCharterNamesWhereTheSearchStarted(t *testing.T) {
 	}
 }
 
-const everyKey = `name = "torii"
+const everyKey = `name = "acme"
 stakeholder-tests = ["proxy/internal/engine/sim_test.go", "dom0/tests/*"]
 probes = ["proxy/internal/itest"]
 ignore = ["build"]
 only = ["proxy", "dom0"]
-env-patterns = ["^TORII_[A-Z0-9_]+$"]
+env-patterns = ["^ACME_[A-Z0-9_]+$"]
 digest = "DIGEST.md"
 
 [go]
-module = "github.com/leroux/torii-qubes/claims"
+module = "github.com/leroux/acme-svc/claims"
 dir = "proxy"
 test = "go test ./..."
 env = "proxy/internal/env"
 
 [python]
 dir = "dom0"
-test = "python3 -m unittest tests.test_torii"
-env = "dom0/torii/env.py"
+test = "python3 -m unittest tests.test_acme"
+env = "dom0/acme/env.py"
 
 [typescript]
 dir = "web"
 test = "pnpm test"
 env = "web/src/env.ts"
 compiler = "node_modules/typescript"
-import = "@torii/claims"
+import = "@acme/claims"
 
 [[surface]]
 kind = "key"
-command = "python3 -m torii keys"
+command = "python3 -m acme keys"
 `
 
 func TestEveryKeyIsRead(t *testing.T) {
@@ -111,19 +111,19 @@ func TestEveryKeyIsRead(t *testing.T) {
 	}
 	want := &Config{
 		Root: root, Path: filepath.Join(root, Dir, File),
-		Name:             "torii",
+		Name:             "acme",
 		StakeholderTests: []string{"proxy/internal/engine/sim_test.go", "dom0/tests/*"},
 		Probes:           []string{"proxy/internal/itest"},
 		Ignore:           []string{"build"},
 		Only:             []string{"proxy", "dom0"},
-		EnvPatterns:      []string{"^TORII_[A-Z0-9_]+$"},
+		EnvPatterns:      []string{"^ACME_[A-Z0-9_]+$"},
 		Digest:           "DIGEST.md",
-		Go:               &Go{Language: Language{Dir: "proxy", Test: "go test ./...", Env: "proxy/internal/env"}, Module: "github.com/leroux/torii-qubes/claims"},
-		Python:           &Language{Dir: "dom0", Test: "python3 -m unittest tests.test_torii", Env: "dom0/torii/env.py"},
-		TypeScript:       &TypeScript{Language: Language{Dir: "web", Test: "pnpm test", Env: "web/src/env.ts"}, Compiler: "node_modules/typescript", Import: "@torii/claims"},
-		Surfaces:         []Surface{{Kind: "key", Command: "python3 -m torii keys"}},
+		Go:               &Go{Language: Language{Dir: "proxy", Test: "go test ./...", Env: "proxy/internal/env"}, Module: "github.com/leroux/acme-svc/claims"},
+		Python:           &Language{Dir: "dom0", Test: "python3 -m unittest tests.test_acme", Env: "dom0/acme/env.py"},
+		TypeScript:       &TypeScript{Language: Language{Dir: "web", Test: "pnpm test", Env: "web/src/env.ts"}, Compiler: "node_modules/typescript", Import: "@acme/claims"},
+		Surfaces:         []Surface{{Kind: "key", Command: "python3 -m acme keys"}},
 	}
-	c.lines = nil
+	c.lines, c.surfaceLines = nil, nil
 	if !reflect.DeepEqual(c, want) {
 		t.Errorf("Load =\n%+v\nwant\n%+v", c, want)
 	}

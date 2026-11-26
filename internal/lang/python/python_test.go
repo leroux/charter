@@ -40,7 +40,7 @@ func read(t *testing.T, files map[string]string) *facts.Set {
 		}
 	}
 	slices.Sort(rels)
-	set, err := Reader{Root: root, Dir: "dom0", EnvFile: "dom0/torii/env.py", ClaimsDir: "claims", Table: "claims/charter.toml:3"}.Read(rels)
+	set, err := Reader{Root: root, Dir: "dom0", EnvFile: "dom0/acme/env.py", ClaimsDir: "claims", Table: "claims/charter.toml:3"}.Read(rels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,7 +57,7 @@ func messages(set *facts.Set) string {
 
 func TestAPythonDirectiveAnchorsTheDefBelowIt(t *testing.T) {
 	claims.Verifies(t, claims.CH_021, "python-anchor-recorded", "python-comment-elsewhere-refused")
-	set := read(t, map[string]string{"dom0/torii/plan.py": `import functools
+	set := read(t, map[string]string{"dom0/acme/plan.py": `import functools
 
 # Derives the policy from the machine file.
 # charter:realizes SW-010, SW-012
@@ -80,7 +80,7 @@ x = 1  # charter:realizes SW-010
 	if len(set.Anchors) != 3 {
 		t.Fatalf("anchors = %+v\nrefused:\n%s", set.Anchors, messages(set))
 	}
-	if a := set.Anchors[0]; a.Pos() != "dom0/torii/plan.py:4" || a.Kind != "realizes" || !slices.Equal(a.IDs, []string{"SW-010", "SW-012"}) || a.Decl != "def derive" {
+	if a := set.Anchors[0]; a.Pos() != "dom0/acme/plan.py:4" || a.Kind != "realizes" || !slices.Equal(a.IDs, []string{"SW-010", "SW-012"}) || a.Decl != "def derive" {
 		t.Errorf("above the decorator: %+v", a)
 	}
 	if a := set.Anchors[1]; a.Kind != "concerns" || a.Decl != "class Planner" || a.DeclKind != "class" {
@@ -90,7 +90,7 @@ x = 1  # charter:realizes SW-010
 		t.Errorf("above a method: %+v", a)
 	}
 	got := messages(set)
-	for _, line := range []string{"dom0/torii/plan.py:7:", "dom0/torii/plan.py:17:", "dom0/torii/plan.py:19:"} {
+	for _, line := range []string{"dom0/acme/plan.py:7:", "dom0/acme/plan.py:17:", "dom0/acme/plan.py:19:"} {
 		if !strings.Contains(got, line+" rule 24: # charter:realizes is written on the comment lines directly above the def or class") {
 			t.Errorf("want %s refused in:\n%s", line, got)
 		}
@@ -163,23 +163,22 @@ func TestAPythonCitationOpensAUnittestOrPytestTest(t *testing.T) {
 }
 
 func TestPythonEnvironmentReadsAreFacts(t *testing.T) {
-	claims.Verifies(t, claims.CH_034, "python-read-checked")
 	set := read(t, map[string]string{
-		"dom0/torii/env.py": "BUNDLE = \"TORII_BUNDLE\"\n_private = \"TORII_X\"\n",
-		"dom0/torii/apply.py": "import os\nfrom torii import env\nfrom torii.env import BUNDLE\n\n" +
-			"a = os.environ.get(env.BUNDLE)\nb = os.getenv(BUNDLE)\nc = os.environ.get(\"TORII_BUNDLE\")\nd = os.environ[name]\ne = os.getenv(name)  # charter:dynamic\n",
+		"dom0/acme/env.py": "BUNDLE = \"ACME_BUNDLE\"\n_private = \"ACME_X\"\n",
+		"dom0/acme/apply.py": "import os\nfrom acme import env\nfrom acme.env import BUNDLE\n\n" +
+			"a = os.environ.get(env.BUNDLE)\nb = os.getenv(BUNDLE)\nc = os.environ.get(\"ACME_BUNDLE\")\nd = os.environ[name]\ne = os.getenv(name)  # charter:dynamic\n",
 	})
-	if len(set.EnvConsts) != 1 || set.EnvConsts[0].Name != "env.BUNDLE" || set.EnvConsts[0].Value != "TORII_BUNDLE" {
+	if len(set.EnvConsts) != 1 || set.EnvConsts[0].Name != "env.BUNDLE" || set.EnvConsts[0].Value != "ACME_BUNDLE" {
 		t.Errorf("constants = %+v", set.EnvConsts)
 	}
 	if len(set.EnvReads) != 5 {
 		t.Fatalf("reads = %+v", set.EnvReads)
 	}
 	r := set.EnvReads
-	if r[0].Const != "env.BUNDLE" || r[1].Const != "env.BUNDLE" || r[2].Literal != "TORII_BUNDLE" || r[3].Const != "" || r[3].Literal != "" || r[3].Dynamic || !r[4].Dynamic {
+	if r[0].Const != "env.BUNDLE" || r[1].Const != "env.BUNDLE" || r[2].Literal != "ACME_BUNDLE" || r[3].Const != "" || r[3].Literal != "" || r[3].Dynamic || !r[4].Dynamic {
 		t.Errorf("reads = %+v", r)
 	}
-	if len(set.Literals) != 1 || set.Literals[0].Value != "TORII_BUNDLE" || set.Literals[0].Line != 7 {
+	if len(set.Literals) != 1 || set.Literals[0].Value != "ACME_BUNDLE" || set.Literals[0].Line != 7 {
 		t.Errorf("literals = %+v", set.Literals)
 	}
 }

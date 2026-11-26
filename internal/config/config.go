@@ -78,6 +78,16 @@ type Config struct {
 
 	// lines maps a table's or a key's dotted name to its line, for problems.
 	lines map[string]int
+	// surfaceLines are the lines the [[surface]] tables open on, in order.
+	surfaceLines []int
+}
+
+// SurfaceLine returns the line the i-th [[surface]] table opens on, or 1.
+func (c *Config) SurfaceLine(i int) int {
+	if i >= 0 && i < len(c.surfaceLines) {
+		return c.surfaceLines[i]
+	}
+	return 1
 }
 
 // Line returns the line of the table or key with the dotted name, such as
@@ -136,7 +146,7 @@ func Load(root string) (*Config, error) {
 // Parse decodes a configuration's text. Its errors open with the line,
 // "12: ...", for the caller to prefix with the file.
 func Parse(src string) (*Config, error) {
-	c := &Config{lines: keyLines(src)}
+	c := &Config{lines: keyLines(src), surfaceLines: tableLines(src, "surface")}
 	md, err := toml.Decode(src, c)
 	if err != nil {
 		var pe toml.ParseError
@@ -220,4 +230,15 @@ func keyLines(src string) map[string]int {
 		}
 	}
 	return lines
+}
+
+// tableLines are the lines each [[name]] table of the array opens on.
+func tableLines(src, name string) []int {
+	var out []int
+	for i, line := range strings.Split(src, "\n") {
+		if m := tableLine.FindStringSubmatch(line); m != nil && m[1] == name && strings.HasPrefix(strings.TrimSpace(line), "[[") {
+			out = append(out, i+1)
+		}
+	}
+	return out
 }
