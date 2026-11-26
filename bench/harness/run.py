@@ -239,6 +239,22 @@ def questions(bench: Path, ws: Path, out: Path, model: str, dry: bool):
     return {"agent": usage(res), "grade": grade}
 
 
+LIMIT_MARKERS = ("hit your", "usage limit", "rate limit", "rate_limit", "overloaded")
+
+
+def failed(res):
+    """Why the agent's turn did not count, or None: an API error, a usage
+    or rate limit, or no JSON. Such a task is no measurement."""
+    if res.get("dry_run"):
+        return None
+    if "error" in res:
+        return res["error"]
+    reply = str(res.get("result", "")).lower()
+    if res.get("is_error") or any(m in reply for m in LIMIT_MARKERS) and len(reply) < 300:
+        return "agent error: " + str(res.get("result", ""))[:200]
+    return None
+
+
 def usage(res):
     keys = ["total_cost_usd", "num_turns", "duration_ms", "is_error", "dry_run", "error", "session_id"]
     u = {k: res[k] for k in keys if k in res}
@@ -262,7 +278,8 @@ def run(args):
     for i, t in enumerate(pick(read_tasks(bench), args.tasks)):
         t0 = time.time()
         res = agent(t["prompt"], ws, session, i == 0, args.model, args.dry_run, args.max_turns)
-        record = {"task": t["n"], "slug": t["slug"], "kind": t["kind"], "agent": usage(res),
+        why = failed(res)
+        record = {"task": t["n"], "slug": t["slug"], "kind": t["kind"], "agent": usage(res), "invalid": why,
                   "seconds": round(time.time() - t0, 1), "diff": diffstat(ws),
                   "checks": gate(ws, cond), "oracle": score(bench, ws, t["n"])}
         commit(ws, f"task {t['n']}: {t['slug']}")
@@ -271,9 +288,13 @@ def run(args):
         (out / f"task-{t['n']:02d}.json").write_text(json.dumps(record, indent=2))
         summary["tasks"].append({k: record[k] for k in ("task", "kind", "oracle")} |
                                 {"cost": record["agent"].get("total_cost_usd"), "tests_pass": record["checks"]["tests_pass"]})
+        if why:
+            summary["invalid"] = f"task {t['n']}: {why}"
+            print(f"{args.bench} {cond} run {args.run} task {t['n']}: INVALID, stopping: {why}", flush=True)
+            break
         print(f"{args.bench} {cond} run {args.run} task {t['n']}: oracle {json.dumps(record['oracle'].get('spec'))} "
               f"{json.dumps(record['oracle'].get('tasks'))} cost {record['agent'].get('total_cost_usd')}", flush=True)
-    if not args.no_questions:
+    if not args.no_questions and "invalid" not in summary:
         qa = questions(bench, ws, out, args.model, args.dry_run)
         (out / "qa.json").write_text(json.dumps(qa, indent=2))
         summary["qa"] = qa["grade"]

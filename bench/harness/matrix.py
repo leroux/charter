@@ -30,6 +30,9 @@ def table(bench):
         spec, tasks = last.get("spec", {}), last.get("tasks", {})
         cost = sum(t.get("cost") or 0 for t in d["tasks"])
         qa = d.get("qa", {})
+        if d.get("invalid"):
+            rows.append((d["condition"], d["run"], "invalid", d["invalid"][:60], "", ""))
+            continue
         rows.append((d["condition"], d["run"], f"{spec.get('passed')}/{spec.get('total')}",
                      f"{tasks.get('passed')}/{tasks.get('total')}", f"{qa.get('correct')}/{qa.get('total')}", f"{cost:.2f}"))
     print("| Condition | Run | Spec at end | Tasks at end | Questions | Cost USD |")
