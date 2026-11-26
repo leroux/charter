@@ -450,3 +450,24 @@ func TestTheSameRuleSaysTheSameInEveryLanguage(t *testing.T) {
 		}
 	}
 }
+
+func TestAStaleDigestFailsTheGateAndGenWritesIt(t *testing.T) {
+	chartertest.Verifies(t, claims.CH_261005_6ZBS, "stale-digest-fails")
+	c := build(t, replace(t, "claims/charter.toml", "name = \"fx\"\n", "name = \"fx\"\ndigest = \"DIGEST.md\"\n"))
+	if ps := problems(t, c); len(ps) != 0 {
+		t.Fatalf("after charter gen: %q", ps)
+	}
+	digest := filepath.Join(c.Root, "claims", "DIGEST.md")
+	if err := os.WriteFile(digest, []byte("# old\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if ps := problems(t, c); len(ps) != 1 || ps[0] != "claims/DIGEST.md:1: rule 15: claims/DIGEST.md is stale: it differs from what the record renders; run charter gen" {
+		t.Errorf("a stale digest: %q", ps)
+	}
+	if err := os.Remove(digest); err != nil {
+		t.Fatal(err)
+	}
+	if ps := problems(t, c); len(ps) != 1 || !strings.Contains(ps[0], "claims/DIGEST.md is missing; run charter gen") {
+		t.Errorf("a missing digest: %q", ps)
+	}
+}

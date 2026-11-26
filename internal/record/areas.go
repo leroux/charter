@@ -165,9 +165,9 @@ func parseArea(rel, src string) (*Area, []*Entry, []string) {
 		// header's title or Code line.
 		inFence := fence != ""
 		if !inFence {
-			fence = fenceOpen(line)
+			fence = FenceOpen(line)
 			inFence = fence != ""
-		} else if fenceCloses(line, fence) {
+		} else if FenceCloses(line, fence) {
 			fence = ""
 		}
 		if inFence {
@@ -258,9 +258,9 @@ func parseArea(rel, src string) (*Area, []*Entry, []string) {
 	return doc, entries, problems
 }
 
-// fenceOpen returns the marker of the fenced block a line opens, three or
+// FenceOpen returns the marker of the fenced block a line opens, three or
 // more backticks or tildes after at most three spaces, or "".
-func fenceOpen(line string) string {
+func FenceOpen(line string) string {
 	t := strings.TrimLeft(line, " ")
 	if len(line)-len(t) > 3 || len(t) < 3 || (t[0] != '`' && t[0] != '~') {
 		return ""
@@ -275,10 +275,10 @@ func fenceOpen(line string) string {
 	return t[:k]
 }
 
-// fenceCloses reports whether a line closes the block marker opened: the
+// FenceCloses reports whether a line closes the block marker opened: the
 // same character, at least as many, after at most three spaces and with
 // nothing after.
-func fenceCloses(line, marker string) bool {
+func FenceCloses(line, marker string) bool {
 	t := strings.TrimLeft(line, " ")
 	if len(line)-len(t) > 3 {
 		return false

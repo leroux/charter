@@ -17,6 +17,7 @@ import (
 	"strings"
 
 	"github.com/leroux/charter/internal/config"
+	"github.com/leroux/charter/internal/digest"
 	"github.com/leroux/charter/internal/env"
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/gate"
@@ -129,6 +130,9 @@ func Generated(c *config.Config, rec *record.Record) (map[string][]byte, error) 
 	if c.TypeScript != nil {
 		out[config.Dir+"/index.ts"] = typescript.Generate(rec, Regen)
 	}
+	if c.Digest != "" {
+		out[path.Join(config.Dir, c.Digest)] = []byte(digest.Render(rec, c.Digest, Regen))
+	}
 	return out, nil
 }
 
@@ -157,15 +161,22 @@ func Write(c *config.Config) error {
 //
 //charter:realizes CH-037
 func Problems(c *config.Config) ([]string, error) {
+	_, problems, err := Run(c)
+	return problems, err
+}
+
+// Run loads the charter and runs the gate, returning the tree it read and
+// every problem, sorted.
+func Run(c *config.Config) (*Tree, []string, error) {
 	t, err := Load(c)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	problems := append([]string{}, t.Problems...)
 
 	generated, err := Generated(c, t.Record)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	var genFiles []string
 	for rel, want := range generated {
@@ -175,7 +186,7 @@ func Problems(c *config.Config) ([]string, error) {
 		case errors.Is(err, fs.ErrNotExist):
 			problems = append(problems, fmt.Sprintf("%s:1: rule 15: %s is missing; run %s", rel, rel, Regen))
 		case err != nil:
-			return nil, err
+			return nil, nil, err
 		case !bytes.Equal(got, want):
 			problems = append(problems, fmt.Sprintf("%s:1: rule 15: %s is stale: it differs from what the record renders; run %s", rel, rel, Regen))
 		}
@@ -218,13 +229,13 @@ func Problems(c *config.Config) ([]string, error) {
 	baselinePath := filepath.Join(c.Root, config.Dir, record.BaselineFile)
 	lines, ps, err := surface.ReadBaseline(baselinePath, in.BaselineFile)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if os.Getenv(env.UpdateBaseline) != "" {
 		surfaces, accounted := gate.Surfaces(in)
 		lines = surface.Rebuild(lines, surfaces, accounted)
 		if err := surface.WriteBaseline(baselinePath, lines); err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		ps = nil
 	}
@@ -232,7 +243,7 @@ func Problems(c *config.Config) ([]string, error) {
 
 	problems = append(problems, gate.Check(in)...)
 	sort.Strings(problems)
-	return problems, nil
+	return t, problems, nil
 }
 
 func allFiles(t walk.Tree) []string {
