@@ -1,6 +1,6 @@
 # 003. The charter is a binary over a whole repository, any module and any language, configured by a file beside the record
 
-Status: ruled · Size: L · See: 001
+Status: approved · Size: L · See: 001
 
 The gate today is a Go test inside one Go module: its options are a Go
 variable, its root is the nearest go.mod, its walk skips nested modules,
@@ -72,7 +72,7 @@ Ruled by the owner, 2026-11-26.
 
 ## Charter
 
-Drafted 2026-11-26, for the owner's review before any build.
+Drafted 2026-11-26 and approved by the owner the same day in design review, before any build.
 
 New, planned:
 
