@@ -159,7 +159,7 @@ Changes:
 
 ## CH-261126-NTRR A declared surface kind is a command run from the root whose output lines are its keys
 
-Status: planned
+Status: active
 Serves: CH-004
 See: CH-033
 

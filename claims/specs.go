@@ -533,9 +533,7 @@ var CH_261126_NS7T = &charter.Spec{ID: "CH-261126-NS7T", Title: "An adopter keep
 // a line twice, fails naming the kind and what it printed. A kind declared
 // twice, named env, or not a lower-case word is a configuration problem
 // naming its line.
-//
-// Planned: CH-261126-NTRR is ruled and not built; see claims/gate.md.
-var CH_261126_NTRR = &charter.Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: charter.Planned}
+var CH_261126_NTRR = &charter.Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: charter.Active}
 
 // CH_261126_PQ7X is CH-261126-PQ7X: A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 //
