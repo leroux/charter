@@ -24,6 +24,13 @@ WORK = Path(os.environ.get("CHARTER_BENCH_WORK", "/tmp/charter-bench"))
 CONDITIONS = "ABCDE"
 SKILLS = ["claims-implement", "claims-review"]
 
+# The oracles and the hidden parts of the tasks live under bench/. The
+# agent's file tools are denied it through --settings, which the workspace
+# never shows, and every tool call in the transcript is audited for it.
+HIDDEN = str(BENCH)
+SETTINGS = json.dumps({"permissions": {"deny": [
+    f"{tool}(/{HIDDEN}/**)" for tool in ("Read", "Edit", "Write", "Grep", "Glob")]}})
+
 # What CLAUDE.md says in each condition. A says nothing of a charter; each
 # later condition adds to the one before.
 CLAUDE_MD = {
@@ -156,13 +163,13 @@ def agent(prompt, ws: Path, session: str, first: bool, model: str, dry: bool, ma
     if dry:
         return {"dry_run": True, "total_cost_usd": 0, "num_turns": 0, "duration_ms": 0, "result": ""}
     cmd = ["claude", "-p", prompt, "--output-format", "json",
-           "--permission-mode", "bypassPermissions",
+           "--permission-mode", "bypassPermissions", "--settings", SETTINGS,
            "--setting-sources", "project,local",
            "--max-turns", str(max_turns)]
     cmd += ["--session-id", session] if first else ["--resume", session]
     if model:
         cmd += ["--model", model]
-    p = sh(cmd, ws, timeout=3600)
+    p = subprocess.run(cmd, cwd=ws, capture_output=True, text=True, timeout=3600, stdin=subprocess.DEVNULL)
     try:
         return json.loads(p.stdout)
     except json.JSONDecodeError:
@@ -176,6 +183,29 @@ def save_transcript(session: str, out: Path, name: str):
     for t in (Path.home() / ".claude" / "projects").glob(f"*/{session}.jsonl"):
         shutil.copyfile(t, out / name)
         return
+
+
+def touched_hidden(out: Path, name: str):
+    """The tool calls in a saved transcript that name the benchmark's
+    hidden directory: a run whose agent looked there measures nothing."""
+    t = out / name
+    if not t.exists():
+        return []
+    hits = []
+    for line in t.read_text().splitlines():
+        try:
+            ev = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        content = (ev.get("message") or {}).get("content")
+        if not isinstance(content, list):
+            continue
+        for c in content:
+            if isinstance(c, dict) and c.get("type") == "tool_use":
+                blob = json.dumps(c.get("input", {}))
+                if HIDDEN in blob or "/charter/bench" in blob:
+                    hits.append(blob[:300])
+    return hits
 
 
 def save_history(ws: Path, out: Path):
@@ -237,6 +267,9 @@ def questions(bench: Path, ws: Path, out: Path, model: str, dry: bool):
         grade = json.loads(p.stdout)
     except json.JSONDecodeError:
         grade = {"error": "grader printed no JSON", "stdout": p.stdout[-2000:], "stderr": p.stderr[-2000:]}
+    hits = touched_hidden(out, "qa-transcript.jsonl") if not dry else []
+    if hits:
+        grade["invalid"] = "the agent reached for the hidden oracle: " + hits[0]
     return {"agent": usage(res), "grade": grade}
 
 
@@ -286,6 +319,9 @@ def run(args):
         commit(ws, f"task {t['n']}: {t['slug']}")
         if not args.dry_run:
             save_transcript(session, out, "transcript.jsonl")
+            hits = touched_hidden(out, "transcript.jsonl")
+            if hits and not why:
+                why = record["invalid"] = "the agent reached for the hidden oracle: " + hits[0]
         (out / f"task-{t['n']:02d}.json").write_text(json.dumps(record, indent=2))
         summary["tasks"].append({k: record[k] for k in ("task", "kind", "oracle")} |
                                 {"cost": record["agent"].get("total_cost_usd"), "tests_pass": record["checks"]["tests_pass"]})

@@ -38,7 +38,7 @@ The contract and the conditions are in `bench/README.md`.
 
 ## To do, in order
 
-1. **Lock the oracles away.** The hidden tests are in the repository and
+1. **Done: the oracles are locked away.** The harness denies the agent's file tools the bench/ directory through --settings and audits every transcript for the hidden paths, marking a run that reached for them invalid. Running the agents as another user was refused, since it needs the session's credential. Was: The hidden tests are in the repository and
    the agents run with permission checks off. Copy each benchmark's
    `oracle/` and the hidden parts of its tasks to a directory the agents'
    user cannot read, and have the harness score from there.
