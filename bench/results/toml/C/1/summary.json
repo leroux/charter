@@ -1,0 +1,975 @@
+{
+  "bench": "toml",
+  "condition": "C",
+  "run": 1,
+  "session": "564fe1c9-fac3-4091-86df-08725867935d",
+  "model": "",
+  "started": "2026-11-26T06:42:54Z",
+  "tasks": [
+    {
+      "task": 1,
+      "kind": "neutral",
+      "oracle": {
+        "spec": {
+          "passed": 298,
+          "total": 298
+        },
+        "tasks": {
+          "passed": 0,
+          "total": 64
+        },
+        "details": [
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/control/linetab-number-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/control/linetab-number-04.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-04.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/double-dot-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/double-dot-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-dot-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-dot-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-dot-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-e-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-e-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-sign-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-sign-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-leading-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-trailing-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-trailing-us-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-trailing-us-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-capital.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-incomplete-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-incomplete-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-incomplete-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf_underscore.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-dot-neg.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-dot-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-zero.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-zero-neg.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-zero-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-capital.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-incomplete-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-incomplete-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-incomplete-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan_underscore.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-min.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp-minus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-us-exp-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-us-exp-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/us-after-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/us-before-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/integer/arabic-zero-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/integer/arabic-zero-04.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/key/only-float.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "valid/comment/after-literal-no-ws.toml",
+            "reason": "refused: toml: line 1, column 5: floats are not supported"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "valid/float/exponent.toml",
+            "reason": "refused: toml: line 3, column 13: floats are not supported"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "valid/float/exponent-upper.toml",
+            "reason": "refused: toml: line 3, column 14: floats are not supported"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "valid/float/float.toml",
+            "reason": "refused: toml: line 1, column 6: floats are not supported"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "valid/float/inf-and-nan.toml",
+            "reason": "refused: toml: line 3, column 7: floats are not supported"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "valid/float/long.toml",
+            "reason": "refused: toml: line 1, column 10: floats are not supported"
+          },
+          "... 4 more"
+        ]
+      },
+      "cost": 0,
+      "tests_pass": true
+    },
+    {
+      "task": 2,
+      "kind": "neutral",
+      "oracle": {
+        "spec": {
+          "passed": 298,
+          "total": 298
+        },
+        "tasks": {
+          "passed": 0,
+          "total": 107
+        },
+        "details": [
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/control/linetab-number-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "int-bases",
+            "case": "invalid/control/linetab-number-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/control/linetab-number-04.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/arabic-zero-04.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/double-dot-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/double-dot-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-dot-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-dot-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-dot-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-e-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-e-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-sign-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-sign-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-double-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-leading-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-trailing-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-trailing-us-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/exp-trailing-us-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-capital.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-incomplete-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-incomplete-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf-incomplete-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/inf_underscore.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-dot-neg.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-dot-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-zero.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-zero-neg.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/leading-zero-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-capital.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-incomplete-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-incomplete-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan-incomplete-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/nan_underscore.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-min.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-dot-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp-minus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-exp-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-us-exp-01.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/trailing-us-exp-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/us-after-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/float/us-before-dot.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "int-bases",
+            "case": "invalid/integer/arabic-zero-02.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/integer/arabic-zero-03.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "float",
+            "case": "invalid/integer/arabic-zero-04.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "int-bases",
+            "case": "invalid/integer/capital-bin.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "int-bases",
+            "case": "invalid/integer/capital-hex.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "int-bases",
+            "case": "invalid/integer/capital-oct.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "int-bases",
+            "case": "invalid/integer/double-sign-plus.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          {
+            "kind": "tasks",
+            "feature": "int-bases",
+            "case": "invalid/integer/double-us.toml",
+            "reason": "refused, but the feature is not built: no valid case of it passes"
+          },
+          "... 47 more"
+        ]
+      },
+      "cost": 0,
+      "tests_pass": true
+    }
+  ],
+  "qa": {
+    "correct": 0,
+    "total": 20,
+    "matches_code": 0,
+    "details": [
+      {
+        "id": "q01",
+        "feature": "subset",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q02",
+        "feature": "subset",
+        "answer": null,
+        "expected": "integer 2",
+        "reference": "integer 2",
+        "code": "integer 2",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q03",
+        "feature": "subset",
+        "answer": null,
+        "expected": "string C:\\new\\table",
+        "reference": "string C:\\new\\table",
+        "code": "string C:\\new\\table",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q04",
+        "feature": "subset",
+        "answer": null,
+        "expected": "integer 0",
+        "reference": "integer 0",
+        "code": "integer 0",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q05",
+        "feature": "subset",
+        "answer": null,
+        "expected": "valid",
+        "reference": "valid",
+        "code": "valid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q06",
+        "feature": "subset",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q07",
+        "feature": "subset",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q08",
+        "feature": "subset",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q09",
+        "feature": "subset",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q10",
+        "feature": "subset",
+        "answer": null,
+        "expected": "string a#b",
+        "reference": "string a#b",
+        "code": "string a#b",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q11",
+        "feature": "float",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "float 1000.0",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q12",
+        "feature": "float",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q13",
+        "feature": "int-bases",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "integer 255",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q14",
+        "feature": "multiline",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "string abcd",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q15",
+        "feature": "array",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "string x",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q16",
+        "feature": "inline-table",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q17",
+        "feature": "array-of-tables",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "integer 2",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q18",
+        "feature": "datetime",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "datetime 1979-05-27T07:32:00+00:00",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q19",
+        "feature": "date-time-local",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "date-local 1979-05-27",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      },
+      {
+        "id": "q20",
+        "feature": "inline-table",
+        "answer": null,
+        "expected": "invalid",
+        "reference": "invalid",
+        "code": "invalid",
+        "correct": false,
+        "matches_code": false
+      }
+    ]
+  }
+}

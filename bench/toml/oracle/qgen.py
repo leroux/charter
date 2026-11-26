@@ -13,6 +13,7 @@ import sys
 import tomllib
 from pathlib import Path
 
+sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import tomltest as T  # noqa: E402
 

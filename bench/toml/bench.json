@@ -1,0 +1,6 @@
+{
+  "name": "toml",
+  "description": "A greenfield TOML decoder in Go, seeded with a subset of TOML 1.0 and grown by 14 change requests (4 tempting); scored by the official toml-test suite: spec = the seed subset's cases, which must hold after every task; tasks = the cases of the features asked for so far.",
+  "language": "go",
+  "conditions": ["A", "B", "C", "D", "E"]
+}
