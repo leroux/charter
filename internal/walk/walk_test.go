@@ -6,7 +6,6 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 )
 
@@ -28,7 +27,7 @@ func tree(t *testing.T, files ...string) string {
 var all = []string{Go, Python, TypeScript}
 
 func TestHiddenAndUnderscoreDirectoriesAreSkipped(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_036, "hidden-skipped")
+	claims.Verifies(t, claims.CH_036, "hidden-skipped")
 	root := tree(t, "a.go", ".hidden/b.go", "_skip/c.go", "node_modules/d.ts", "vendor/e.go", "pkg/testdata/f.go")
 	got, err := Walk(Options{Root: root, Languages: all})
 	if err != nil {
@@ -40,7 +39,7 @@ func TestHiddenAndUnderscoreDirectoriesAreSkipped(t *testing.T) {
 }
 
 func TestANestedModuleIsWalked(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_036, "nested-module-walked")
+	claims.Verifies(t, claims.CH_036, "nested-module-walked")
 	root := tree(t, "go.mod", "a.go", "proxy/go.mod", "proxy/internal/b.go", "proxy/internal/b_test.go")
 	got, err := Walk(Options{Root: root, Languages: all, Boundary: "claims/charter.toml"})
 	if err != nil {
@@ -52,7 +51,7 @@ func TestANestedModuleIsWalked(t *testing.T) {
 }
 
 func TestAnotherChartersTreeIsSkipped(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_036, "other-charter-skipped")
+	claims.Verifies(t, claims.CH_036, "other-charter-skipped")
 	root := tree(t, "claims/charter.toml", "a.go", "example/claims/charter.toml", "example/limiter/l.go", "example/claims/specs.go")
 	got, err := Walk(Options{Root: root, Languages: all, Boundary: "claims/charter.toml"})
 	if err != nil {
@@ -64,7 +63,7 @@ func TestAnotherChartersTreeIsSkipped(t *testing.T) {
 }
 
 func TestIgnorePatternsMatchAPathOrABaseName(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_036, "ignore-patterns", "only-restricts")
+	claims.Verifies(t, claims.CH_036, "ignore-patterns", "only-restricts")
 	root := tree(t, "a.go", "gen/b.go", "pkg/zz_gen.go", "pkg/c.go", "web/d.ts")
 	got, err := Walk(Options{Root: root, Languages: all, Ignore: []string{"gen", "zz_*.go"}})
 	if err != nil {
@@ -83,8 +82,7 @@ func TestIgnorePatternsMatchAPathOrABaseName(t *testing.T) {
 }
 
 func TestEachLanguageIsListedOnlyWhenNamed(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_036, "typescript-listed", "python-listed")
-	chartertest.Verifies(t, claims.CH_261126_PQ7X, "unnamed-language-unread")
+	claims.Verifies(t, claims.CH_036, "typescript-listed", "python-listed")
 	root := tree(t, "a.go", "dom0/torii/plan.py", "dom0/tests/test_plan.py", "web/a.ts", "web/b.tsx", "web/types.d.ts")
 	got, err := Walk(Options{Root: root, Languages: all})
 	if err != nil {
@@ -96,7 +94,12 @@ func TestEachLanguageIsListedOnlyWhenNamed(t *testing.T) {
 	if want := []string{"dom0/tests/test_plan.py", "dom0/torii/plan.py"}; !slices.Equal(got[Python], want) {
 		t.Errorf("python = %v, want %v", got[Python], want)
 	}
-	got, err = Walk(Options{Root: root, Languages: []string{Go}})
+}
+
+func TestALanguageTheCharterDoesNotNameIsNotRead(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_PQ7X, "unnamed-language-unread")
+	root := tree(t, "a.go", "dom0/torii/plan.py", "web/a.ts")
+	got, err := Walk(Options{Root: root, Languages: []string{Go}})
 	if err != nil {
 		t.Fatal(err)
 	}

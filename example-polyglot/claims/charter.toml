@@ -1,0 +1,15 @@
+# slugs' charter: a Go service and a Python tool that must agree on a slug.
+# There is no go.mod at this root: the Go is the module in svc/, the Python
+# the package in tool/.
+name = "slugs"
+env-patterns = ["^SLUGS_[A-Z0-9_]+$"]
+
+[go]
+module = "example.com/slugs/claims"
+dir = "svc"
+test = "go test -count=1 ./..."
+
+[python]
+dir = "tool"
+test = "PYTHONPATH=../claims python3 -m unittest -q"
+env = "tool/slugs/env.py"

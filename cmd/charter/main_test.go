@@ -2,12 +2,12 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 )
 
@@ -29,7 +29,7 @@ func charterIn(t *testing.T, area string) string {
 }
 
 func TestCheckSetsItsExitStatus(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_037, "exit-status")
+	claims.Verifies(t, claims.CH_037, "exit-status")
 	var out, errOut bytes.Buffer
 	if code := run([]string{"check"}, charterIn(t, planned), &out, &errOut); code != 0 || out.Len() != 0 {
 		t.Errorf("a clean tree: exit %d, output %q %q", code, out.String(), errOut.String())
@@ -42,7 +42,7 @@ func TestCheckSetsItsExitStatus(t *testing.T) {
 }
 
 func TestEveryVerbWorksOnTheCharterFoundAbove(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_040, "verbs-on-the-found-charter")
+	claims.Verifies(t, claims.CH_040, "verbs-on-the-found-charter")
 	root := charterIn(t, planned)
 	deep := filepath.Join(root, "pkg", "a")
 	if err := os.MkdirAll(deep, 0o755); err != nil {
@@ -61,7 +61,7 @@ func TestEveryVerbWorksOnTheCharterFoundAbove(t *testing.T) {
 }
 
 func TestQuestionsListsEachOpenQuestion(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261009_4B3B, "questions-verb-lists")
+	claims.Verifies(t, claims.CH_261009_4B3B, "questions-verb-lists")
 	root := charterIn(t, planned)
 	q := "# Questions\n\n## Q-261009-M4TK Does it rule?\nAsked-by: agent\nEntry: SW-010\nProvisional: yes\n\n## Q-261009-N7PR Is it whole?\nAsked-by: owner\nEntry: SW-010\nProvisional: no\nAnswer: 2026-10-09, owner: yes\n"
 	if err := os.WriteFile(filepath.Join(root, "claims", "questions.md"), []byte(q), 0o644); err != nil {
@@ -76,5 +76,117 @@ func TestQuestionsListsEachOpenQuestion(t *testing.T) {
 	run([]string{"questions", "-all"}, root, &out, &errOut)
 	if !strings.Contains(out.String(), "Q-261009-N7PR  SW-010") || !strings.Contains(out.String(), "  answer: 2026-10-09, owner: yes\n") || !strings.HasSuffix(out.String(), "1 open\n") {
 		t.Errorf("questions -all =\n%s", out.String())
+	}
+}
+
+// goCharter is a charter of Go: an active decision, its code and its test.
+func goCharter(t *testing.T) string {
+	t.Helper()
+	root := t.TempDir()
+	for rel, src := range map[string]string{
+		"go.mod":              "module example.com/fx\n\ngo 1.21\n\nrequire example.com/fx/claims v0.0.0\n\nreplace example.com/fx/claims => ./claims\n",
+		"claims/charter.toml": "name = \"fx\"\n\n[go]\nmodule = \"example.com/fx/claims\"\ndir = \".\"\ntest = \"go test ./...\"\n",
+		"claims/refill.md":    "# Refill\nCode: pkg/a\n\nHow the bucket refills.\n\n## SW-010 The bucket refills\nStatus: active\nServes: SW-011\n\nIt refills.\n\nWhy: a caller that waits is let through.\n\nScenarios:\n1. `refills` (owner, #1): it refills.\n\n## SW-011 A planned rule\nStatus: planned\n\nLater.\n\nWhy: someone needs it.\n",
+		"claims/waivers.txt":  "SW-010/refills\tidle on purpose\n",
+		"pkg/a/a.go":          "package a\n\n// Refill refills.\n//\n//charter:realizes SW-010\nfunc Refill() {}\n",
+		"pkg/a/a_test.go":     "package a\n\nimport (\n\t\"testing\"\n\n\t\"example.com/fx/claims\"\n)\n\nfunc TestRefill(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_010, \"refills\")\n}\n",
+	} {
+		p := filepath.Join(root, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(p, []byte(src), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return root
+}
+
+func TestGenWritesFromTheDocumentsAlone(t *testing.T) {
+	claims.Verifies(t, claims.CH_040, "gen-from-documents-alone")
+	root := goCharter(t)
+	// No generated file yet, and a test that cannot compile without one.
+	var out, errOut bytes.Buffer
+	if code := run([]string{"gen"}, root, &out, &errOut); code != 0 {
+		t.Fatalf("gen with no generated file: exit %d %s", code, errOut.String())
+	}
+	if err := os.WriteFile(filepath.Join(root, "claims", "specs.go"), []byte("package claims\n\nthis does not parse\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if code := run([]string{"gen"}, root, &out, &errOut); code != 0 {
+		t.Fatalf("gen over a broken specs.go: exit %d %s", code, errOut.String())
+	}
+	specs, err := os.ReadFile(filepath.Join(root, "claims", "specs.go"))
+	if err != nil || !strings.Contains(string(specs), "var SW_010 = &Spec{") || strings.Contains(string(specs), "this does not parse") {
+		t.Errorf("gen did not rewrite specs.go from the documents: %v\n%s", err, specs)
+	}
+}
+
+func TestAnchorsListsTheCodeAndTheTestsOfAnEntry(t *testing.T) {
+	claims.Verifies(t, claims.CH_002, "anchors-and-citations-listed")
+	root := goCharter(t)
+	var out, errOut bytes.Buffer
+	run([]string{"gen"}, root, &out, &errOut)
+	out.Reset()
+	if code := run([]string{"anchors", "SW-010"}, root, &out, &errOut); code != 0 {
+		t.Fatalf("anchors: exit %d %s", code, errOut.String())
+	}
+	var got map[string]struct {
+		Title    string
+		Realizes []struct {
+			File, Decl string
+			Line       int
+		}
+		Verifies []struct {
+			File, Test string
+			Handles    []string
+		}
+		Serves []string
+	}
+	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
+		t.Fatal(err)
+	}
+	e := got["SW-010"]
+	if e.Title != "The bucket refills" || len(e.Realizes) != 1 || e.Realizes[0].File != "pkg/a/a.go" || e.Realizes[0].Decl != "func Refill" || e.Realizes[0].Line != 5 ||
+		len(e.Verifies) != 1 || e.Verifies[0].Test != "TestRefill" || len(e.Verifies[0].Handles) != 1 || e.Verifies[0].Handles[0] != "refills" || len(e.Serves) != 1 {
+		t.Errorf("anchors SW-010 = %+v", e)
+	}
+}
+
+func TestExportGivesEveryPartOfTheRecord(t *testing.T) {
+	claims.Verifies(t, claims.CH_040, "registry-lists-everything")
+	root := goCharter(t)
+	var out, errOut bytes.Buffer
+	run([]string{"gen"}, root, &out, &errOut)
+	out.Reset()
+	run([]string{"export"}, root, &out, &errOut)
+	var got struct {
+		Areas []struct {
+			File, Title, Summary string
+			Code                 []string
+		}
+		Waivers []struct{ Pattern, Reason string }
+		Entries []struct {
+			ID        string
+			Scenarios []struct{ Handle, Provenance string }
+			Anchors   []struct{ File string }
+			Refs      []struct {
+				Func    string
+				Handles []string
+			}
+		}
+	}
+	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
+		t.Fatalf("%v\n%s", err, out.String())
+	}
+	if len(got.Areas) != 1 || got.Areas[0].Title != "Refill" || got.Areas[0].Code[0] != "pkg/a" || got.Areas[0].Summary != "How the bucket refills." {
+		t.Errorf("areas = %+v", got.Areas)
+	}
+	if len(got.Waivers) != 1 || got.Waivers[0].Reason != "idle on purpose" {
+		t.Errorf("waivers = %+v", got.Waivers)
+	}
+	e := got.Entries[0]
+	if e.ID != "SW-010" || e.Scenarios[0].Handle != "refills" || e.Scenarios[0].Provenance != "owner, #1" || len(e.Anchors) != 1 || len(e.Refs) != 1 || e.Refs[0].Func != "TestRefill" || e.Refs[0].Handles[0] != "refills" {
+		t.Errorf("entry = %+v", e)
 	}
 }

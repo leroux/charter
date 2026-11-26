@@ -1,551 +1,240 @@
-// Code generated from claims by the charter gate. DO NOT EDIT.
-// Regenerate: make claims
+// Code generated from claims by charter gen. DO NOT EDIT.
 
+// Package claims is the charter's record as Go: a symbol per entry and per
+// observation, and the Verifies and Observes a test opens with.
 package claims
 
-import "github.com/leroux/charter"
+import (
+	"encoding/json"
+	"os"
+	"runtime"
+	"sync"
+	"testing"
+)
+
+// Status is an entry's status.
+type Status string
+
+// The statuses an entry may have.
+const (
+	Planned    Status = "planned"
+	Active     Status = "active"
+	Deprecated Status = "deprecated"
+)
+
+// Spec is an entry of the record: a need or a decision.
+type Spec struct {
+	ID, Title string
+	Status    Status
+	Kind      string
+}
+
+// Observation is a fact about a system the code does not own.
+type Observation struct {
+	Name, Subject, Status string
+}
+
+// Verifies opens a test that verifies an entry, naming by handle the
+// scenarios it exercises. With CHARTER_EVENTS set, the test's outcome is
+// recorded for each citation once it ends.
+func Verifies(tb testing.TB, spec *Spec, handles ...string) {
+	tb.Helper()
+	if spec == nil {
+		tb.Fatal("claims: Verifies needs a spec")
+		return
+	}
+	record(tb, spec.ID, handles)
+}
+
+// Observes opens a probe that checks an observation against the live
+// system.
+func Observes(tb testing.TB, o *Observation) {
+	tb.Helper()
+	if o == nil {
+		tb.Fatal("claims: Observes needs an observation")
+		return
+	}
+	record(tb, o.Name, nil)
+}
+
+// event is one line of the events file.
+type event struct {
+	ID      string `json:"id"`
+	Handle  string `json:"handle,omitempty"`
+	Test    string `json:"test"`
+	File    string `json:"file"`
+	Outcome string `json:"outcome"`
+}
+
+var eventsMu sync.Mutex
+
+func record(tb testing.TB, id string, handles []string) {
+	path := os.Getenv("CHARTER_EVENTS")
+	if path == "" {
+		return
+	}
+	_, file, _, _ := runtime.Caller(2)
+	if len(handles) == 0 {
+		handles = []string{""}
+	}
+	tb.Cleanup(func() {
+		outcome := "passed"
+		switch {
+		case tb.Failed():
+			outcome = "failed"
+		case tb.Skipped():
+			outcome = "skipped"
+		}
+		eventsMu.Lock()
+		defer eventsMu.Unlock()
+		f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+		if err != nil {
+			tb.Errorf("claims: the events file: %v", err)
+			return
+		}
+		defer f.Close()
+		for _, h := range handles {
+			line, _ := json.Marshal(event{ID: id, Handle: h, Test: tb.Name(), File: file, Outcome: outcome})
+			// One write per line, opened to append: a line is never split
+			// by another process's.
+			if _, err := f.Write(append(line, '\n')); err != nil {
+				tb.Errorf("claims: the events file: %v", err)
+			}
+		}
+	})
+}
 
 // CH_001 is CH-001: A reviewer can judge a change by its entries and their tests, not by reading the code
-//
-// Every clause of an active decision is a scenario, every scenario has a
-// test that names it, and the gate fails on the first one that does not, so
-// the reviewer reads the area document diff and the gate's verdict and
-// opens the code only where the review points. The gate is static and runs
-// in seconds, and its verdict is the same on every machine.
-var CH_001 = &charter.Spec{ID: "CH-001", Title: "A reviewer can judge a change by its entries and their tests, not by reading the code", Status: charter.Active}
+var CH_001 = &Spec{ID: "CH-001", Title: "A reviewer can judge a change by its entries and their tests, not by reading the code", Status: Active}
 
 // CH_002 is CH-002: A builder reaches the code and the tests from an id, and the gate names the fix for every problem
-//
-// From an entry's id the tooling lists the code that realizes it, by file,
-// line and declaration, and the tests that verify it, by file, test and
-// scenario. Every problem the gate reports names a file, a line and what to
-// do. Symbols are generated in each language the charter reads, so a citation
-// of an entry that does not exist fails to compile or to import.
-var CH_002 = &charter.Spec{ID: "CH-002", Title: "A builder reaches the code and the tests from an id, and the gate names the fix for every problem", Status: charter.Active}
+var CH_002 = &Spec{ID: "CH-002", Title: "A builder reaches the code and the tests from an id, and the gate names the fix for every problem", Status: Active}
 
 // CH_003 is CH-003: The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated
-//
-// An entry keeps its id for life; a retired one stays in its document with
-// its status and its changes, and its symbol still builds, so the strip can
-// follow at its own pace. Two entries with one id, anywhere in the charter,
-// fail. A change to an entry is a dated line in its Changes.
-var CH_003 = &charter.Spec{ID: "CH-003", Title: "The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated", Status: charter.Active}
+var CH_003 = &Spec{ID: "CH-003", Title: "The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated", Status: Active}
 
 // CH_004 is CH-004: No surface exists that an entry does not own, and the baseline only shrinks
-//
-// Every environment variable the tree reads, and every surface of a kind
-// the charter declares, is named by an entry's Accounts, or listed with a reason
-// in a baseline that predates the charter. The gate fails a surface neither
-// names, a baseline line whose surface is gone or now accounted for, and a
-// read of an environment variable that goes through anything but a named
-// constant.
-var CH_004 = &charter.Spec{ID: "CH-004", Title: "No surface exists that an entry does not own, and the baseline only shrinks", Status: charter.Active}
+var CH_004 = &Spec{ID: "CH-004", Title: "No surface exists that an entry does not own, and the baseline only shrinks", Status: Active}
 
 // CH_005 is CH-005: An external system's fact is recorded with its source and date, and no active entry rests on one found false
-//
-// An observation records a fact about a system the code does not own, with
-// its subject, where it was read or when a probe last saw it true, and the
-// entries that rest on it. Probes check observations and nothing else; tests
-// cite entries and never observations. A broken observation under an active
-// entry fails the gate.
-var CH_005 = &charter.Spec{ID: "CH-005", Title: "An external system's fact is recorded with its source and date, and no active entry rests on one found false", Status: charter.Active}
+var CH_005 = &Spec{ID: "CH-005", Title: "An external system's fact is recorded with its source and date, and no active entry rests on one found false", Status: Active}
 
 // CH_006 is CH-006: The charter specifies itself, and its own gate is green
-//
-// The tooling's decisions are entries in this directory, in the form the
-// charter asks of any adopter, realized by the tooling and verified by its
-// tests, and checked by a gate of their own over the tooling alone.
-var CH_006 = &charter.Spec{ID: "CH-006", Title: "The charter specifies itself, and its own gate is green", Status: charter.Active}
+var CH_006 = &Spec{ID: "CH-006", Title: "The charter specifies itself, and its own gate is green", Status: Active}
 
 // CH_010 is CH-010: An entry is a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes in order
-//
-// An area document is a markdown file whose header is a title and an
-// optional Code line, and whose entries are headings of the form
-// "## ID Title". The lines after the heading, up to a blank line, are
-// fields: Status, Kind, Serves, See and Accounts, each at most once; the
-// values a Status takes are CH-013's. The body is paragraphs: the text
-// first, then paragraphs opened by Why, Scenarios, Guidance and Changes, in
-// that order and each at most once; the text and Why are required, and an
-// active entry lists at least one scenario. A scenario is a numbered item
-// with a handle in backticks, lower-case kebab, unique in the entry, and a
-// sentence; a change is a dated item; a continuation line is indented. Every
-// form problem names the document, the line and the form to write. The
-// header, before the first entry, may hold prose, a vocabulary list, tables
-// and diagrams that orient the reader; it is not parsed beyond its title and
-// Code line and has no section headings, and a line inside a fenced block,
-// in the header or in an entry, is text and never a heading.
-var CH_010 = &charter.Spec{ID: "CH-010", Title: "An entry is a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes in order", Status: charter.Active}
+var CH_010 = &Spec{ID: "CH-010", Title: "An entry is a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes in order", Status: Active}
 
 // CH_011 is CH-011: A need lives in needs.md and has no Kind, Serves or Guidance
-//
-// An entry of the document named needs.md is a need. A need serves nothing,
-// carries no kind and no guidance; each of those is a form problem.
-var CH_011 = &charter.Spec{ID: "CH-011", Title: "A need lives in needs.md and has no Kind, Serves or Guidance", Status: charter.Active}
+var CH_011 = &Spec{ID: "CH-011", Title: "A need lives in needs.md and has no Kind, Serves or Guidance", Status: Active}
 
 // CH_012 is CH-012: An id is declared once; a new one is its prefix, the day it was taken and a random code
-//
-// An id is a prefix and then either a number, as SW-118, or the day it was
-// taken and a code, as SW-261001-K7Q2; a heading whose id is neither is a
-// form problem. The day is the UTC date as six digits, year, month and
-// day; the code is four characters of BCDFGHJKMNPQRSTVWXYZ23456789, the
-// consonants and digits that spell no word and are not read as one
-// another. The numbered ids stand as they are, and next gives every new
-// id, of the second kind and one the tree does not hold, as CH-040 rules.
-// Ids are unique across the area documents; a second declaration fails naming both places and saying that the entry
-// that has not landed takes a new id. The entries of the area documents are
-// ordered by prefix, and within one the numbered ids first, by number, then
-// the dated ones by date and code, and every generated file declares
-// them in that order.
-var CH_012 = &charter.Spec{ID: "CH-012", Title: "An id is declared once; a new one is its prefix, the day it was taken and a random code", Status: charter.Active}
+var CH_012 = &Spec{ID: "CH-012", Title: "An id is declared once; a new one is its prefix, the day it was taken and a random code", Status: Active}
 
 // CH_013 is CH-013: Status is planned, active or deprecated, every status generates a symbol, and coverage is asked of active entries only
-//
-// An entry's Status is planned, active or deprecated, and any other is a
-// form problem. A planned entry is ruled and not built; its symbol is
-// generated, a test may cite it, and the gate asks nothing else of it. An
-// active entry must be covered. A deprecated entry is retired; its symbol
-// is generated, and the gate asks nothing of it. How the generated files
-// mark a planned or a deprecated entry is CH-020's.
-var CH_013 = &charter.Spec{ID: "CH-013", Title: "Status is planned, active or deprecated, every status generates a symbol, and coverage is asked of active entries only", Status: charter.Active}
+var CH_013 = &Spec{ID: "CH-013", Title: "Status is planned, active or deprecated, every status generates a symbol, and coverage is asked of active entries only", Status: Active}
 
 // CH_014 is CH-014: The earlier form, one file per spec, is read beside the area documents until it is migrated
 //
-// A spec file in the spec directory, named for its numbered id, never a
-// dated one, with a lens and a slug, is parsed into the same registry as an
-// area entry: its fields in their fixed order, its Realizes counting as
-// Serves, and its links pointing at the target's current file. The directory
-// may be absent.
-//
 // Deprecated: CH-014 is retired; see its Changes in claims/form.md. Add no new anchors.
-var CH_014 = &charter.Spec{ID: "CH-014", Title: "The earlier form, one file per spec, is read beside the area documents until it is migrated", Status: charter.Deprecated}
+var CH_014 = &Spec{ID: "CH-014", Title: "The earlier form, one file per spec, is read beside the area documents until it is migrated", Status: Deprecated}
 
 // CH_015 is CH-015: Serves and See name existing entries, a need serves nothing, and nothing names itself
-//
-// Every id under Serves or See names an entry the charter holds, and an
-// entry naming itself fails. An observation's Supports names existing
-// entries too.
-var CH_015 = &charter.Spec{ID: "CH-015", Title: "Serves and See name existing entries, a need serves nothing, and nothing names itself", Status: charter.Active}
+var CH_015 = &Spec{ID: "CH-015", Title: "Serves and See name existing entries, a need serves nothing, and nothing names itself", Status: Active}
 
 // CH_020 is CH-020: Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment
-//
-// For each language charter.toml names, charter gen writes one file in the
-// claims directory declaring a symbol per entry of any status, named by the
-// id with each hyphen as an underscore, holding the id, the title, the
-// status and the kind, with the title as its doc comment; a planned entry is
-// marked planned, a deprecated one carries a deprecation notice naming its
-// document. Each file is self-contained: it declares the types, the verifies
-// and the observes it offers and imports nothing outside its language's
-// standard library. For Go the file is specs.go in a module of its own whose
-// go.mod requires nothing, for TypeScript index.ts, for Python claims.py.
-// The order the files declare the entries in is CH-012's. charter check
-// fails a file that differs from its rendering, or is missing, naming
-// charter gen, and never writes one.
-var CH_020 = &charter.Spec{ID: "CH-020", Title: "Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment", Status: charter.Active}
+var CH_020 = &Spec{ID: "CH-020", Title: "Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment", Status: Active}
 
 // CH_021 is CH-021: Production code anchors an entry in a Go doc comment, a TypeScript line comment, or above a Python def
-//
-// A Go directive is a comment line "//charter:realizes ID, ..." or
-// "//charter:concerns ID, ...", with or without a space after the slashes,
-// in the doc comment of a package clause or of a declaration; the anchor
-// records the kind, the file, the line and the declaration it documents. A
-// TypeScript directive is the same text in a line comment of a file that is
-// not a test; the anchor records the file and the line. A Python directive
-// is "# charter:realizes ID, ..." or "# charter:concerns ID, ..." on the
-// comment lines directly above a def or a class, or above its decorators,
-// in a file that is not a test; the anchor records the file, the line and
-// the declaration, and a Python directive anywhere else fails naming the
-// declaration to move it above.
-var CH_021 = &charter.Spec{ID: "CH-021", Title: "Production code anchors an entry in a Go doc comment, a TypeScript line comment, or above a Python def", Status: charter.Active}
+var CH_021 = &Spec{ID: "CH-021", Title: "Production code anchors an entry in a Go doc comment, a TypeScript line comment, or above a Python def", Status: Active}
 
 // CH_022 is CH-022: An anchor names an entry that exists and is not planned, and concerns never counts toward coverage
-//
-// A directive naming an id that is not an entry fails; one naming a planned
-// entry fails, saying to set it active as its work begins; a directive with
-// no id fails. A concerns anchor is navigation: an active decision with only
-// a concerns anchor is unrealized.
-var CH_022 = &charter.Spec{ID: "CH-022", Title: "An anchor names an entry that exists and is not planned, and concerns never counts toward coverage", Status: charter.Active}
+var CH_022 = &Spec{ID: "CH-022", Title: "An anchor names an entry that exists and is not planned, and concerns never counts toward coverage", Status: Active}
 
 // CH_023 is CH-023: A test cites an entry by a Verifies statement in a test function, naming by handle the scenarios it exercises
-//
-// A Go citation is a call of Verifies inside a function whose name starts
-// with Test, whose second argument is the entry's symbol and whose further
-// arguments are string literals naming the entry's scenarios. A TypeScript
-// citation is a call of verifies inside a test call, and a Python one a
-// call of verifies in a test_ method of a unittest.TestCase, its first
-// argument self, or in a pytest test_ function, its first argument None,
-// each with the same shape. The calls open the test, or a subtest it runs:
-// they are its first statements, one after another, and a call that
-// anything precedes or encloses, or in a function its runner never runs,
-// such as Go's Testx, fails. A TypeScript call in a test
-// marked skip, fixme, fail or todo, or to a verifies the test file declares
-// itself, fails. A call anywhere else, a spec named by anything but its
-// symbol, a handle that is not a literal, or a handle the entry does not
-// list, each fail naming the file and the line. Any other reference to an entry from a test
-// file is a reference, not a citation.
-var CH_023 = &charter.Spec{ID: "CH-023", Title: "A test cites an entry by a Verifies statement in a test function, naming by handle the scenarios it exercises", Status: charter.Active}
+var CH_023 = &Spec{ID: "CH-023", Title: "A test cites an entry by a Verifies statement in a test function, naming by handle the scenarios it exercises", Status: Active}
 
 // CH_024 is CH-024: Each language's verifies records each citation and its test's outcome as a JSON line in the events file
-//
-// When CHARTER_EVENTS names a file, the generated verifies of every language
-// appends to it, once the test ends, one JSON line per citation: the id, the
-// handle when one is named, the test, its file and its outcome, passed,
-// failed or skipped. With the variable unset it records nothing and the test
-// runs as it would. Lines appended by tests running at once are each whole.
-// A nil or missing symbol is refused at run time. The report reads these
-// lines.
-var CH_024 = &charter.Spec{ID: "CH-024", Title: "Each language's verifies records each citation and its test's outcome as a JSON line in the events file", Status: charter.Active}
+var CH_024 = &Spec{ID: "CH-024", Title: "Each language's verifies records each citation and its test's outcome as a JSON line in the events file", Status: Active}
 
 // CH_025 is CH-025: The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry
-//
-// Beside the markdown of the record and charter.toml, the claims directory
-// holds only the files charter gen writes; a source file there that gen did
-// not write fails, saying entries and observations are written in markdown.
-// No test file assigns to an entry or a field of one, and no Go test
-// dot-imports the generated package.
-var CH_025 = &charter.Spec{ID: "CH-025", Title: "The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry", Status: charter.Active}
+var CH_025 = &Spec{ID: "CH-025", Title: "The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry", Status: Active}
 
 // CH_030 is CH-030: An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor
-//
-// An active decision with no realizes anchor fails, and nothing waives it;
-// that a concerns anchor is not one is CH-022's. An active entry with
-// scenarios fails for each scenario no citation names, naming the document,
-// the line and the call to write; one without scenarios fails when no
-// citation names it at all. The waiver file lists, one per line with a
-// reason after a tab, an id or a scenario as ID/handle, never a glob; a
-// matching line absorbs the missing test; a line that absorbs nothing, gives
-// no reason or is a glob fails.
-var CH_030 = &charter.Spec{ID: "CH-030", Title: "An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor", Status: charter.Active, Kind: "invariant"}
+var CH_030 = &Spec{ID: "CH-030", Title: "An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor", Status: Active, Kind: "invariant"}
 
 // CH_031 is CH-031: A need needs no anchor and is verified only from the stakeholder's side
-//
-// A need is realized by the decisions that serve it, so the gate asks no
-// anchor of it. When charter.toml names the test files on the stakeholder's
-// side, a citation of a need from any other file fails naming the file, and
-// does not count; when they name none, any test file counts.
-var CH_031 = &charter.Spec{ID: "CH-031", Title: "A need needs no anchor and is verified only from the stakeholder's side", Status: charter.Active}
+var CH_031 = &Spec{ID: "CH-031", Title: "A need needs no anchor and is verified only from the stakeholder's side", Status: Active}
 
 // CH_032 is CH-032: A probe cites observations only, and a test never cites an observation
-//
-// A probe is a test file under a path charter.toml names for probes, in any
-// language the charter reads. A probe referencing an entry fails, and its
-// references are no citations; a test file that is not a probe referencing
-// an observation fails. Without a probe path in charter.toml, observations
-// are one configuration problem and no probe rule runs.
-var CH_032 = &charter.Spec{ID: "CH-032", Title: "A probe cites observations only, and a test never cites an observation", Status: charter.Active}
+var CH_032 = &Spec{ID: "CH-032", Title: "A probe cites observations only, and a test never cites an observation", Status: Active}
 
 // CH_033 is CH-033: Every surface is enumerated, and accounted for by an entry or listed in a baseline of only live, unaccounted surfaces
-//
-// The surfaces are the environment variables, the values of the string
-// constants of each language's constants module that charter.toml names,
-// and the keys of each kind charter.toml declares (CH-261126-NTRR). A surface no entry accounts for and the baseline does not list
-// fails; an entry accounting for a surface nothing enumerates fails; a
-// baseline line whose surface is gone, or which an entry now accounts for,
-// or which appears twice, or which lacks a reason, fails. A constants
-// module charter.toml names that declares nothing is a misconfiguration. With the update variable set the gate rewrites the
-// baseline with every unaccounted surface, keeping the reasons it had. A
-// deprecated entry's Accounts own nothing: what it accounted for is a live
-// entry's to claim, or the baseline's.
-var CH_033 = &charter.Spec{ID: "CH-033", Title: "Every surface is enumerated, and accounted for by an entry or listed in a baseline of only live, unaccounted surfaces", Status: charter.Active, Kind: "invariant"}
+var CH_033 = &Spec{ID: "CH-033", Title: "Every surface is enumerated, and accounted for by an entry or listed in a baseline of only live, unaccounted surfaces", Status: Active, Kind: "invariant"}
 
 // CH_034 is CH-034: An environment variable is read through a named constant, or under a dynamic directive, and no literal names one
-//
-// Outside the constants modules and outside test files, a read of the
-// environment takes a constant of a constants module as its argument, or its
-// line carries the dynamic directive. In Go a read is a call of a configured
-// reader, os.Getenv and os.LookupEnv by default; in Python os.getenv,
-// os.environ.get or os.environ[...]; in TypeScript process.env. A string
-// literal equal to a declared variable's value, or matching a pattern
-// charter.toml gives, fails.
-var CH_034 = &charter.Spec{ID: "CH-034", Title: "An environment variable is read through a named constant, or under a dynamic directive, and no literal names one", Status: charter.Active, Kind: "invariant"}
+var CH_034 = &Spec{ID: "CH-034", Title: "An environment variable is read through a named constant, or under a dynamic directive, and no literal names one", Status: Active, Kind: "invariant"}
 
 // CH_035 is CH-035: Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails
-//
-// Every observation names a subject. An observed one has a calendar date and
-// at least one citing probe; a documented one has a source; any date given
-// is a calendar date. A broken observation supporting an active entry fails;
-// under a planned or a deprecated entry it does not.
-var CH_035 = &charter.Spec{ID: "CH-035", Title: "Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails", Status: charter.Active}
+var CH_035 = &Spec{ID: "CH-035", Title: "Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails", Status: Active}
 
 // CH_036 is CH-036: The walk covers every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores
-//
-// The walk reads every file under the root of each language charter.toml
-// names: .go files, .py files, and .ts and .tsx files that are not
-// declaration files. It crosses into nested Go modules. It skips .git,
-// node_modules, vendor and testdata, hidden and underscore directories, a
-// directory below the root that holds its own claims/charter.toml, every
-// ignore pattern matched against the path and the base name, and everything
-// outside only when only names paths.
-var CH_036 = &charter.Spec{ID: "CH-036", Title: "The walk covers every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores", Status: charter.Active}
+var CH_036 = &Spec{ID: "CH-036", Title: "The walk covers every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores", Status: Active}
 
 // CH_037 is CH-037: The gate reports every problem, sorted, with its file, line, rule and fix, and passes on a clean tree
-//
-// charter check prints each problem on a line of its own, sorted, and exits
-// non-zero when it prints any; on a clean tree it prints nothing and exits
-// zero. How it finds the root and checks the configuration is
-// CH-261126-33GK's.
-var CH_037 = &charter.Spec{ID: "CH-037", Title: "The gate reports every problem, sorted, with its file, line, rule and fix, and passes on a clean tree", Status: charter.Active}
+var CH_037 = &Spec{ID: "CH-037", Title: "The gate reports every problem, sorted, with its file, line, rule and fix, and passes on a clean tree", Status: Active}
 
 // CH_040 is CH-040: One charter command generates, checks, lints, gives ids and lists anchors, and an adopter writes no main
-//
-// charter gen writes the generated files from the documents alone, so it
-// works when one is stale or missing. check runs the gate (CH-037), lint
-// prints the gate's problems and then the advice, report and diff are
-// CH-042's and CH-261009-QQC8's, and export is CH-261015-9ZTY's. next prints
-// a new id for a prefix, the day's UTC date and a code drawn at random,
-// drawn again when the tree already holds that id, or as many as the count
-// after the prefix asks for, each different. anchors prints, per id, the
-// document, the title, the status, the scenarios, the realizing and
-// concerning sites with their declarations, the verifying tests with the
-// handles each names, and the relations. Every verb works on the charter
-// CH-261126-33GK finds, and an adopter writes or builds nothing of its own
-// to run them.
-var CH_040 = &charter.Spec{ID: "CH-040", Title: "One charter command generates, checks, lints, gives ids and lists anchors, and an adopter writes no main", Status: charter.Active}
+var CH_040 = &Spec{ID: "CH-040", Title: "One charter command generates, checks, lints, gives ids and lists anchors, and an adopter writes no main", Status: Active}
 
 // CH_041 is CH-041: Lint advises on what the gate does not fail
-//
-// Lint runs the whole gate first and prints every problem it fails on,
-// then one line counting the open questions of the question file, then
-// its advice: a decision that serves nothing, a planned entry each of
-// whose scenarios is verified, a deprecated entry
-// still anchored or cited, an active decision realized only by a package
-// clause unless its kind is structure, and a citation of an entry with
-// scenarios that names none. Then it checks the style a reader would
-// stumble on, by the bars of the README's Style, in the live entries of
-// the area documents and the needs: a word retired.txt in the entries
-// directory retires; a title over twenty words; a text over six sentences;
-// a scenario sentence over thirty words; a Why under twenty-five words that
-// names a story, a ruling or a review; and a test whose citations name
-// scenarios of two or more live decisions and no need. A retired word is
-// read in a title, a text, a Why, a scenario's sentence and a document's
-// header, never in a code span or a double-quoted string, and is kept
-// where the line or the sentence holding it holds one of the word's
-// phrases. The file holds a word a line: a pattern matched at word
-// boundaries whatever the case, then -> and the word to write, then | and
-// the phrases, separated by semicolons. Each style check that finds
-// anything prints one line, after the rest, counting what it found and
-// naming the command that lists it; with -style, lint lists every finding
-// at its line in their place, a retired word with the word to write and a
-// test once, at the test.
-var CH_041 = &charter.Spec{ID: "CH-041", Title: "Lint advises on what the gate does not fail", Status: charter.Active}
+var CH_041 = &Spec{ID: "CH-041", Title: "Lint advises on what the gate does not fail", Status: Active}
 
 // CH_042 is CH-042: A report joins each test's markers to its scenarios and says which passed, failed, were skipped or have none
-//
-// The report sets CHARTER_EVENTS to a file of its own, runs the test command
-// of each language charter.toml names in that language's directory, and
-// reads the lines the markers wrote. It writes, per entry and per scenario,
-// the citing tests and their result: passed when a citing test passed and
-// none failed, failed when one failed, skipped when every one was skipped,
-// none when no citing test ran. A command that cannot start, or fails having
-// written no line, fails the report naming the language and its output. An
-// active scenario, or an active entry without scenarios, that did not pass
-// is unverified, and the report fails on any. Each scenario is shown with
-// who ruled it, and the active scenarios are counted by it: the owner's, a
-// delegate's, an agent's provisional. A markdown rendering opens with that
-// count, lists the unverified ones first, then every entry.
-var CH_042 = &charter.Spec{ID: "CH-042", Title: "A report joins each test's markers to its scenarios and says which passed, failed, were skipped or have none", Status: charter.Active}
+var CH_042 = &Spec{ID: "CH-042", Title: "A report joins each test's markers to its scenarios and says which passed, failed, were skipped or have none", Status: Active}
 
 // CH_261005_6ZBS is CH-261005-6ZBS: The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why
-//
-// The digest is one generated markdown file. It lists each active need
-// under the area whose active decisions most often reach it through what
-// they serve, the area earlier in the reading order on a tie, and the
-// needs no active decision reaches apart. A map gives each area in the
-// reading order with the first sentence of its header and its count of
-// active and planned decisions, then, for each need, the areas that serve
-// it with how many decisions. Then, area by area, each active decision in
-// the order of its document: its id linked to its heading, its title, its
-// Kind, and the first sentence of its Why; planned and deprecated ones are
-// counted, not listed. The reading order is a file listing the area
-// documents one a line; one it leaves out, or a line that names none or
-// names one twice, fails the gate. charter gen writes the digest beside the
-// generated symbols, and charter check fails a digest that is missing or
-// differs from the documents, naming charter gen.
-var CH_261005_6ZBS = &charter.Spec{ID: "CH-261005-6ZBS", Title: "The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why", Status: charter.Active}
+var CH_261005_6ZBS = &Spec{ID: "CH-261005-6ZBS", Title: "The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why", Status: Active}
 
 // CH_261005_VFJR is CH-261005-VFJR: mutate breaks an entry's realizing code and says, per scenario, whether the tests that cite it noticed
 //
-// mutate takes active entries by id, or the active entries whose realizing
-// Go functions a diff since a revision touched, and makes small changes
-// inside those functions alone: a comparison or a logical operator flipped,
-// a condition negated or its branch emptied, a call dropped, an error
-// returned as nil, a boolean flipped, an integer moved by one, a break
-// swapped with a continue; a diff-scoped run changes only the lines the
-// diff changed. A mutant a caller wrote, an exact replacement in a file,
-// runs beside them. Each mutant runs only the tests that cite its entry,
-// through an overlay so no file of the tree is written: it is killed when
-// one of them fails or times out, survives when all pass, and is counted
-// apart when it does not build. The citing tests first run unmutated, and
-// an entry whose tests fail then is reported unsteady and none of its
-// mutants runs. The result gives, per entry, the mutants killed, survived
-// and unbuilt, the survivors with their place and change, and the
-// realizing anchors it could not mutate; per scenario, the mutants its
-// tests killed, a scenario whose tests killed none being hollow. A run
-// after which the tree holds a file it did not hold before fails, naming
-// the file; a survivor never fails it.
-//
 // Deprecated: CH-261005-VFJR is retired; see its Changes in claims/tooling.md. Add no new anchors.
-var CH_261005_VFJR = &charter.Spec{ID: "CH-261005-VFJR", Title: "mutate breaks an entry's realizing code and says, per scenario, whether the tests that cite it noticed", Status: charter.Deprecated}
+var CH_261005_VFJR = &Spec{ID: "CH-261005-VFJR", Title: "mutate breaks an entry's realizing code and says, per scenario, whether the tests that cite it noticed", Status: Deprecated}
 
 // CH_261009_3FHW is CH-261009-3FHW: A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named
-//
-// Every scenario says who ruled it: the owner, with what the ruling cites;
-// a named delegate; or an agent whose choice nobody has ruled on, which a
-// scenario with nothing written is. The registry and the report carry it,
-// and the report counts the active scenarios by who ruled them. A change to
-// the record that its Changes lines do not say, an entry removed, unbuilt
-// or retired without a line, text or a scenario changed without one, or a
-// ruling lost, is named against the revision it was made from.
-var CH_261009_3FHW = &charter.Spec{ID: "CH-261009-3FHW", Title: "A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named", Status: charter.Active}
+var CH_261009_3FHW = &Spec{ID: "CH-261009-3FHW", Title: "A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named", Status: Active}
 
 // CH_261009_4B3B is CH-261009-4B3B: The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered
-//
-// questions.md in the entries directory holds one question per heading,
-// "## Q-ID question", with field lines Asked-by, Entry (an id, or an id and
-// a scenario as ID/handle), Provisional (the answer taken meanwhile) and,
-// once a person has answered, Answer, opening with the date and who
-// answered. A question without Asked-by, Entry or Provisional, naming an
-// entry or scenario the record does not hold, with an Answer that does not
-// open with a date, or with an id declared twice, is a form problem naming
-// the line. A question is never deleted. Lint prints one line, at the
-// question file's first line, saying how many questions are open and naming
-// the command that lists them; with none open it prints none. claimsgen
-// questions lists each open question with its id, the entry it is about,
-// its text, the provisional answer and who asked, then how many are open;
-// with -all it lists the answered ones too, each with its answer.
-var CH_261009_4B3B = &charter.Spec{ID: "CH-261009-4B3B", Title: "The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered", Status: charter.Active}
+var CH_261009_4B3B = &Spec{ID: "CH-261009-4B3B", Title: "The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered", Status: Active}
 
 // CH_261009_QQC8 is CH-261009-QQC8: charter diff names what a change did to the record that its Changes lines do not say
-//
-// Given a git revision, charter diff reads the area documents as they
-// were there and as they are, and names, by id: an entry removed; an active
-// entry made planned; an entry deprecated, or its text, Kind or a scenario
-// changed or removed, with no Changes line the revision lacked; and a
-// scenario whose ruling was the owner's or a delegate's and is now an
-// agent's. An entry only set active, or changed with a new dated line, is
-// not named. It exits 1 when it names anything.
-var CH_261009_QQC8 = &charter.Spec{ID: "CH-261009-QQC8", Title: "charter diff names what a change did to the record that its Changes lines do not say", Status: charter.Active}
+var CH_261009_QQC8 = &Spec{ID: "CH-261009-QQC8", Title: "charter diff names what a change did to the record that its Changes lines do not say", Status: Active}
 
 // CH_261009_SNX2 is CH-261009-SNX2: lint -baseline fails when a style check's count exceeds its count in the style baseline, naming both counts
 //
-// lint -baseline reads style-baseline.txt in the entries directory, a line
-// per style check holding its name and a whole count, blank lines and lines
-// opening with # skipped. The checks are retired-words,
-// titles-over-twenty-words, texts-over-six-sentences,
-// scenario-sentences-over-thirty-words, pointing-whys and shared-tests, and
-// a check the file leaves out has a baseline of zero. It runs the six style
-// checks and, for each whose count exceeds its baseline, prints one line at
-// the check's line in the file, or at its first line for a check it leaves
-// out, naming both counts and what to do, and exits non-zero; when none grew
-// it prints nothing. A line naming an unknown check or one counted already,
-// or whose count is not a whole number, is a lint line of its own, and a
-// missing file is an error saying there is no baseline. The gate's problems
-// are not part of it, and -baseline with -style is refused.
-//
 // Deprecated: CH-261009-SNX2 is retired; see its Changes in claims/tooling.md. Add no new anchors.
-var CH_261009_SNX2 = &charter.Spec{ID: "CH-261009-SNX2", Title: "lint -baseline fails when a style check's count exceeds its count in the style baseline, naming both counts", Status: charter.Deprecated, Kind: "bound"}
+var CH_261009_SNX2 = &Spec{ID: "CH-261009-SNX2", Title: "lint -baseline fails when a style check's count exceeds its count in the style baseline, naming both counts", Status: Deprecated, Kind: "bound"}
 
 // CH_261009_VY5C is CH-261009-VY5C: A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional
-//
-// A scenario's handle may be followed, in parentheses, by who ruled it:
-// "owner", with what the ruling cites after a comma; "delegate" with the
-// delegate's name and, after a comma, what it cites; or "agent,
-// provisional". Nothing written is an agent's, provisional, and the
-// registry says it was not written. Anything else is a form problem naming
-// the line and the three forms. The provenance is part of the scenario as
-// the registry gives it.
-var CH_261009_VY5C = &charter.Spec{ID: "CH-261009-VY5C", Title: "A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional", Status: charter.Active}
+var CH_261009_VY5C = &Spec{ID: "CH-261009-VY5C", Title: "A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional", Status: Active}
 
 // CH_261015_9ZTY is CH-261015-9ZTY: A charter exports as one file, which the viewer shows as linked pages in its reading order
-//
-// charter export writes the charter it finds to one file: each area document in the
-// reading order with its header, each entry with its fields, text, Why,
-// scenarios and who ruled each, Guidance and Changes, its anchors and its
-// citations by handle, the waivers, the observations and the gate's
-// problems. A charter the gate fails on is still exported, its problems
-// printed apart. The viewer reads that file, or one dropped on the page,
-// and names no charter's areas or ids, so the charter's own charter reads
-// as an adopter's does. Its pages walk the areas in the reading order,
-// place each need under its area as the digest does, show each area
-// document with coverage beside each entry and each entry with what it
-// serves and what serves it, and search the record, an exact id opening its
-// entry; each page is a link that opens it again. A scenario shows tested
-// when a test cites it, waived when a waiver accepts it and untested
-// otherwise, and passed or failed only from a report beside the file.
-//
-// Planned: CH-261015-9ZTY is ruled and not built; see claims/tooling.md.
-var CH_261015_9ZTY = &charter.Spec{ID: "CH-261015-9ZTY", Title: "A charter exports as one file, which the viewer shows as linked pages in its reading order", Status: charter.Planned}
+var CH_261015_9ZTY = &Spec{ID: "CH-261015-9ZTY", Title: "A charter exports as one file, which the viewer shows as linked pages in its reading order", Status: Planned}
 
 // CH_261126_33GK is CH-261126-33GK: charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know
-//
-// The command walks up from the working directory to the first directory
-// holding claims/charter.toml, and that directory is the root; with none it
-// fails, naming where it started. The file holds the charter's name; each
-// language it reads, a table with the directory its tests run in, the
-// command that runs them, its constants module and, for Go, the generated
-// module's path; the stakeholder tests, the probe path, the ignore and only
-// patterns and the environment patterns; the digest; and the declared
-// surface kinds. A key it does not know, a value of the wrong type, or a
-// language table without its test command fails naming the line. Its paths
-// are relative to the root.
-var CH_261126_33GK = &charter.Spec{ID: "CH-261126-33GK", Title: "charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know", Status: charter.Active}
+var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know", Status: Active}
 
 // CH_261126_5JMD is CH-261126-5JMD: The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
-//
-// The claims skills, draft, implement, review, audit and probe, ship as a
-// Claude Code plugin of this repository, which an adopter installs. A skill
-// names the commands of the method and finds the adopter's layout, the
-// claims directory, the languages and their test commands, in charter.toml;
-// it names no file of one repository's layout. The method's document gives
-// the section an adopter puts in its CLAUDE.md as a template.
-//
-// Planned: CH-261126-5JMD is ruled and not built; see claims/tooling.md.
-var CH_261126_5JMD = &charter.Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: charter.Planned}
+var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Planned}
 
 // CH_261126_HK6S is CH-261126-HK6S: An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
-//
-// observations.md in the claims directory holds one observation per heading,
-// "## Name", the name an upper-camel word unique among the observations,
-// then its text, what was seen or read. Its field lines are Subject, Status
-// (observed, documented, broken or unsure), Observed (a date), Source and
-// Supports, the entries that rest on it. An unknown field, a field twice, a
-// status outside the four or a name declared twice is a form problem naming
-// the line. Each language's generated file declares a symbol per
-// observation, by its name, and an observes its probes call.
-var CH_261126_HK6S = &charter.Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: charter.Active}
+var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}
 
 // CH_261126_NS7T is CH-261126-NS7T: An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling
-//
-// A repository takes the charter up by writing its entries and a
-// charter.toml in its own claims directory and running the charter command
-// over it. Its code imports nothing of the tooling: its tests cite through
-// the files the command generates. The layout is the repository's own: Go
-// modules nested anywhere, Python and TypeScript beside them, and no go.mod
-// at the root. The examples in this repository are kept so, each checked
-// with the tooling's tests.
-var CH_261126_NS7T = &charter.Spec{ID: "CH-261126-NS7T", Title: "An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling", Status: charter.Active}
+var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling", Status: Active}
 
 // CH_261126_NTRR is CH-261126-NTRR: A declared surface kind is a command run from the root whose output lines are its keys
-//
-// A [[surface]] table in charter.toml names a kind, a lower-case word, and a
-// command, which charter check runs from the root through the shell. Each
-// non-empty line the command prints is a key of that kind, written kind:key
-// in Accounts and in the baseline. A command that exits non-zero, or prints
-// a line twice, fails naming the kind and what it printed. A kind declared
-// twice, named env, or not a lower-case word is a configuration problem
-// naming its line.
-var CH_261126_NTRR = &charter.Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: charter.Active}
+var CH_261126_NTRR = &Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: Active}
 
 // CH_261126_PQ7X is CH-261126-PQ7X: A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
-//
-// The charter supports Go, Python and TypeScript, each by three parts built
-// into the command: a reader that turns its source files into facts, the
-// anchors, citations, references, environment reads and refused directives
-// with their files and lines; a generator that writes its symbol file; and a
-// marker, the verifies its tests call. The gate's rules read the facts alone
-// and name no language, so a rule holds the same way in each. A language
-// charter.toml does not name is not read, and nothing it needs is run.
-// Python is parsed by python3 over the standard ast module and TypeScript by
-// the typescript package charter.toml names; a missing one fails naming that
-// language's table. Another language is a change to the charter, not a
-// plug-in.
-var CH_261126_PQ7X = &charter.Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: charter.Active, Kind: "structure"}
+var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: Active, Kind: "structure"}

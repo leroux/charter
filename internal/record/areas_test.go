@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 )
 
@@ -41,7 +40,7 @@ func anyContains(list []string, want string) bool {
 }
 
 func TestParseAreaReadsEveryPart(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_010, "every-part-read")
+	claims.Verifies(t, claims.CH_010, "every-part-read")
 	doc, entries, problems := parseArea("claims/refill.md", sampleArea)
 	if len(problems) != 0 {
 		t.Fatalf("problems: %v", problems)
@@ -78,8 +77,8 @@ func TestParseAreaReadsEveryPart(t *testing.T) {
 }
 
 func TestParseAreaForm(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_010, "heading-form", "fields-checked", "required-parts", "scenario-form", "parts-in-order", "change-form", "problems-locate")
-	chartertest.Verifies(t, claims.CH_002, "problems-name-file-line-and-fix")
+	claims.Verifies(t, claims.CH_010, "heading-form", "fields-checked", "required-parts", "scenario-form", "parts-in-order", "change-form", "problems-locate")
+	claims.Verifies(t, claims.CH_002, "problems-name-file-line-and-fix")
 	for _, tc := range []struct{ name, old, repl, want string }{
 		{"heading", "## SW-010 The bucket", "## The bucket", `an entry's heading is "## ID Title"`},
 		{"unknown field", "Kind: invariant", "Lens: SW", `"Lens" is not a field of an entry`},
@@ -120,7 +119,7 @@ func TestParseAreaForm(t *testing.T) {
 // A status outside planned, active and deprecated is a form problem at the
 // status line, and the three are none.
 func TestAStatusOutsideTheThreeIsAFormProblem(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_013, "status-form")
+	claims.Verifies(t, claims.CH_013, "status-form")
 	for _, status := range []string{"planned", "active", "deprecated"} {
 		if _, _, problems := parseArea("claims/refill.md", strings.Replace(sampleArea, "Status: active", "Status: "+status, 1)); len(problems) != 0 {
 			t.Errorf("status %s: problems %v", status, problems)
@@ -135,7 +134,7 @@ func TestAStatusOutsideTheThreeIsAFormProblem(t *testing.T) {
 // The header orients the reader and is not parsed beyond its title and
 // Code line; a section heading in it is a form problem.
 func TestTheHeaderIsProse(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_010, "header-is-prose")
+	claims.Verifies(t, claims.CH_010, "header-is-prose")
 	header := "# Refill\nCode: pkg/a\n\n" +
 		"A bucket reads the clock at each request.\n\n" +
 		"- **burst**: the most tokens a bucket holds.\n" +
@@ -165,7 +164,7 @@ func TestTheHeaderIsProse(t *testing.T) {
 
 // A line inside a fenced block in an entry is text, never a heading.
 func TestAHeadingInAFenceIsText(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_010, "heading-in-fence-is-text")
+	claims.Verifies(t, claims.CH_010, "heading-in-fence-is-text")
 	for _, fenced := range []string{
 		"```sh\n# a comment\n## SW-011 not an entry\nmake claims\n```\n",
 		"~~~~\n# a comment\n~~~\n## still inside\n~~~~\n",
@@ -198,7 +197,7 @@ func TestAHeadingInAFenceIsText(t *testing.T) {
 
 // A need has no Kind, Serves or Guidance, and lives in needs.md.
 func TestANeedHasNoKindServesOrGuidance(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_011, "need-by-document", "need-fields-refused")
+	claims.Verifies(t, claims.CH_011, "need-by-document", "need-fields-refused")
 	src := strings.Replace(sampleArea, "## SW-010", "## STK-010", 1)
 	_, entries, problems := parseArea("claims/needs.md", src)
 	if len(entries) != 1 || !entries[0].Need {
@@ -215,7 +214,7 @@ func TestANeedHasNoKindServesOrGuidance(t *testing.T) {
 // realizes it, and a Go test beside that code verifies it.
 
 func TestAScenarioCarriesWhoRuledIt(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261009_VY5C, "owner-read", "delegate-read", "default-is-provisional", "malformed-refused")
+	claims.Verifies(t, claims.CH_261009_VY5C, "owner-read", "delegate-read", "default-is-provisional", "malformed-refused")
 	src := strings.Replace(sampleArea, "1. `waited-request-passes`: a request", "1. `waited-request-passes` (owner, #444): a request", 1)
 	src = strings.Replace(src, "2. `burst-caps-tokens`: a long wait", "2. `burst-caps-tokens` (delegate alice, #12 R3): a long wait", 1)
 	src = strings.Replace(src, "   and the excess is not kept.\n", "   and the excess is not kept.\n3. `denial-spends-nothing` (agent, provisional): a denied request spends nothing.\n4. `state-carries`: the tokens carry across.\n", 1)
@@ -265,7 +264,7 @@ func TestAScenarioCarriesWhoRuledIt(t *testing.T) {
 // An id is numbered or dated; a dated id's day is on the calendar and its
 // code is four characters of the alphabet.
 func TestAnIDIsNumberedOrDated(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_012, "id-form")
+	claims.Verifies(t, claims.CH_012, "id-form")
 	for id, want := range map[string]Entry{
 		"SW-010":         {Symbol: "SW_010", Prefix: "SW", Number: 10},
 		"SW-261001-K7Q2": {Symbol: "SW_261001_K7Q2", Prefix: "SW", Day: "261001", Code: "K7Q2"},

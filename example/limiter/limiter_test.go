@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"example.com/ratelimit/claims"
-	"github.com/leroux/charter/chartertest"
 )
 
 // fakeClock is a clock a test moves by hand.
@@ -37,7 +36,7 @@ func allowed(l *Limiter, key string, n int) int {
 }
 
 func TestANewKeyBurstsThenIsDenied(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_VX8Z, "starts-full")
+	claims.Verifies(t, claims.SW_261126_VX8Z, "starts-full")
 	l, _ := newLimiter(t, 1, 3)
 	if got := allowed(l, "a", 4); got != 3 {
 		t.Errorf("%d of 4 requests at once went through, want the burst of 3", got)
@@ -45,7 +44,7 @@ func TestANewKeyBurstsThenIsDenied(t *testing.T) {
 }
 
 func TestAnEmptyBucketEarnsTheRate(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_VX8Z, "earns-the-rate")
+	claims.Verifies(t, claims.SW_261126_VX8Z, "earns-the-rate")
 	l, c := newLimiter(t, 2, 3)
 	allowed(l, "a", 3)
 	c.advance(time.Second)
@@ -55,7 +54,7 @@ func TestAnEmptyBucketEarnsTheRate(t *testing.T) {
 }
 
 func TestAQuietKeyIsCappedAtTheBurst(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_VX8Z, "capped-at-burst")
+	claims.Verifies(t, claims.SW_261126_VX8Z, "capped-at-burst")
 	l, c := newLimiter(t, 10, 4)
 	allowed(l, "a", 4)
 	c.advance(time.Hour)
@@ -65,7 +64,7 @@ func TestAQuietKeyIsCappedAtTheBurst(t *testing.T) {
 }
 
 func TestADenialSpendsNothing(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_VX8Z, "denial-spends-nothing")
+	claims.Verifies(t, claims.SW_261126_VX8Z, "denial-spends-nothing")
 	l, c := newLimiter(t, 1, 1)
 	allowed(l, "a", 1)
 	c.advance(500 * time.Millisecond)
@@ -79,7 +78,7 @@ func TestADenialSpendsNothing(t *testing.T) {
 }
 
 func TestAnEmptyKeyLeavesANewKeyItsBurst(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_39F6, "keys-independent")
+	claims.Verifies(t, claims.SW_261126_39F6, "keys-independent")
 	l, _ := newLimiter(t, 1, 2)
 	allowed(l, "noisy", 10)
 	if got := allowed(l, "quiet", 3); got != 2 {
@@ -88,7 +87,7 @@ func TestAnEmptyKeyLeavesANewKeyItsBurst(t *testing.T) {
 }
 
 func TestConcurrentKeysEachGetTheirBurst(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_39F6, "concurrent-keys")
+	claims.Verifies(t, claims.SW_261126_39F6, "concurrent-keys")
 	l, _ := newLimiter(t, 1, 5)
 	keys := []string{"a", "b", "c", "d", "e", "f", "g", "h"}
 	counts := make([]int, len(keys))
@@ -112,7 +111,7 @@ func TestConcurrentKeysEachGetTheirBurst(t *testing.T) {
 }
 
 func TestAStillClockEarnsNothing(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_2XG8, "time-from-clock")
+	claims.Verifies(t, claims.SW_261126_2XG8, "time-from-clock")
 	l, _ := newLimiter(t, 1000, 1)
 	allowed(l, "a", 1)
 	time.Sleep(20 * time.Millisecond) // twenty tokens of wall time

@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"example.com/ratelimit/claims"
-	"github.com/leroux/charter/chartertest"
 )
 
 // stillClock never moves, so a run's requests all fall at one instant.
@@ -39,7 +38,7 @@ func verdictsOf(t *testing.T, vars map[string]string, keys ...string) []string {
 }
 
 func TestAQuietCallerBurstsAndTheNextIsDenied(t *testing.T) {
-	chartertest.Verifies(t, claims.STK_261126_H2SW, "burst-then-deny")
+	claims.Verifies(t, claims.STK_261126_H2SW, "burst-then-deny")
 	got := verdictsOf(t, nil, "alice", "alice", "alice", "alice", "alice", "alice")
 	want := []string{"allow alice", "allow alice", "allow alice", "allow alice", "allow alice", "deny alice"}
 	if strings.Join(got, ",") != strings.Join(want, ",") {
@@ -48,7 +47,7 @@ func TestAQuietCallerBurstsAndTheNextIsDenied(t *testing.T) {
 }
 
 func TestASpentCallerDoesNotStopAnother(t *testing.T) {
-	chartertest.Verifies(t, claims.STK_261126_H2SW, "callers-apart")
+	claims.Verifies(t, claims.STK_261126_H2SW, "callers-apart")
 	keys := []string{"alice", "alice", "alice", "alice", "alice", "alice", "alice", "bob"}
 	got := verdictsOf(t, nil, keys...)
 	if got[len(got)-1] != "allow bob" {
@@ -57,7 +56,7 @@ func TestASpentCallerDoesNotStopAnother(t *testing.T) {
 }
 
 func TestAnOperatorSetsTheBurst(t *testing.T) {
-	chartertest.Verifies(t, claims.STK_261126_T2BD, "burst-set")
+	claims.Verifies(t, claims.STK_261126_T2BD, "burst-set")
 	got := verdictsOf(t, map[string]string{"RATELIMIT_BURST": "2"}, "a", "a", "a")
 	if got[2] != "deny a" {
 		t.Errorf("verdicts %q, want the third denied under a burst of 2", got)
@@ -65,7 +64,7 @@ func TestAnOperatorSetsTheBurst(t *testing.T) {
 }
 
 func TestABadSettingStopsTheStart(t *testing.T) {
-	chartertest.Verifies(t, claims.STK_261126_T2BD, "bad-setting-stops")
+	claims.Verifies(t, claims.STK_261126_T2BD, "bad-setting-stops")
 	got, stderr, code := drive(t, map[string]string{"RATELIMIT_RATE": "fast"}, "a")
 	if code == 0 || len(got) != 0 || !strings.Contains(stderr, "RATELIMIT_RATE") {
 		t.Errorf("exit %d, verdicts %q, stderr %q; want a failing exit, no verdict and the setting named", code, got, stderr)
@@ -73,7 +72,7 @@ func TestABadSettingStopsTheStart(t *testing.T) {
 }
 
 func TestTheDefaultsAreOneASecondAndABurstOfFive(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_CMTG, "defaults")
+	claims.Verifies(t, claims.SW_261126_CMTG, "defaults")
 	rate, burst, err := config(func(string) string { return "" })
 	if err != nil || rate != 1 || burst != 5 {
 		t.Errorf("config() = %v, %v, %v; want 1, 5", rate, burst, err)
@@ -81,7 +80,7 @@ func TestTheDefaultsAreOneASecondAndABurstOfFive(t *testing.T) {
 }
 
 func TestTheEnvironmentSetsTheLimits(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_CMTG, "set-from-env")
+	claims.Verifies(t, claims.SW_261126_CMTG, "set-from-env")
 	for _, tc := range []struct {
 		rate, burst string
 		wantRate    float64
@@ -99,7 +98,7 @@ func TestTheEnvironmentSetsTheLimits(t *testing.T) {
 }
 
 func TestAnUnreadableSettingIsRefusedBeforeAnyKey(t *testing.T) {
-	chartertest.Verifies(t, claims.SW_261126_CMTG, "unreadable-refused")
+	claims.Verifies(t, claims.SW_261126_CMTG, "unreadable-refused")
 	for _, tc := range []struct {
 		name, value string
 	}{

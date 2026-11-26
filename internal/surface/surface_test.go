@@ -7,7 +7,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/config"
 )
@@ -29,7 +28,7 @@ func charter(t *testing.T, src string) *config.Config {
 }
 
 func TestEachLineADeclaredCommandPrintsIsAKey(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_NTRR, "lines-are-keys")
+	claims.Verifies(t, claims.CH_261126_NTRR, "lines-are-keys")
 	c := charter(t, "[[surface]]\nkind = \"key\"\ncommand = \"printf 'outbound.internet\\\\n\\\\nproxy\\\\n'\"\n")
 	keys, problems := Declared(c)
 	if len(problems) != 0 || !slices.Equal(keys, []string{"key:outbound.internet", "key:proxy"}) {
@@ -46,7 +45,7 @@ func TestEachLineADeclaredCommandPrintsIsAKey(t *testing.T) {
 }
 
 func TestAFailingCommandIsNamed(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_NTRR, "failing-command-named")
+	claims.Verifies(t, claims.CH_261126_NTRR, "failing-command-named")
 	c := charter(t, "\n[[surface]]\nkind = \"key\"\ncommand = \"echo no schema >&2; exit 3\"\n")
 	_, problems := Declared(c)
 	if len(problems) != 1 || !strings.HasPrefix(problems[0], "claims/charter.toml:2: rule 9: the key command \"echo no schema >&2; exit 3\" failed") || !strings.Contains(problems[0], "no schema") {
@@ -55,7 +54,7 @@ func TestAFailingCommandIsNamed(t *testing.T) {
 }
 
 func TestADuplicateKeyIsNamed(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_NTRR, "duplicate-key-named")
+	claims.Verifies(t, claims.CH_261126_NTRR, "duplicate-key-named")
 	c := charter(t, "[[surface]]\nkind = \"key\"\ncommand = \"printf 'a\\\\na\\\\n'\"\n")
 	keys, problems := Declared(c)
 	if len(problems) != 1 || !strings.Contains(problems[0], "the key command printed a twice") || !slices.Equal(keys, []string{"key:a"}) {
@@ -64,7 +63,7 @@ func TestADuplicateKeyIsNamed(t *testing.T) {
 }
 
 func TestAKindsFormIsChecked(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_NTRR, "kind-form-checked")
+	claims.Verifies(t, claims.CH_261126_NTRR, "kind-form-checked")
 	for _, tc := range []struct{ src, want string }{
 		{"[[surface]]\nkind = \"key\"\ncommand = \"true\"\n[[surface]]\nkind = \"key\"\ncommand = \"true\"\n", "the surface kind key is declared twice"},
 		{"[[surface]]\nkind = \"env\"\ncommand = \"true\"\n", "the surface kind env is built in"},

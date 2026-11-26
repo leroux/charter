@@ -9,7 +9,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/config"
 )
@@ -109,23 +108,23 @@ func replace(t *testing.T, file, old, new string) map[string]string {
 }
 
 func TestTheCleanFixturePasses(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_037, "clean-fixture-passes")
-	chartertest.Verifies(t, claims.CH_001, "clean-tree-passes")
-	chartertest.Verifies(t, claims.CH_031, "need-without-anchor-passes", "onside-citation-counts")
+	claims.Verifies(t, claims.CH_037, "clean-fixture-passes")
+	claims.Verifies(t, claims.CH_001, "clean-tree-passes")
+	claims.Verifies(t, claims.CH_031, "need-without-anchor-passes", "onside-citation-counts")
 	if ps := problems(t, build(t, fixture())); len(ps) != 0 {
 		t.Errorf("the clean fixture:\n%s", strings.Join(ps, "\n"))
 	}
 }
 
 func TestAMissingScenarioIsNamed(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_030, "scenario-unverified")
-	chartertest.Verifies(t, claims.CH_001, "missing-scenario-named")
+	claims.Verifies(t, claims.CH_030, "scenario-unverified")
+	claims.Verifies(t, claims.CH_001, "missing-scenario-named")
 	reports(t, replace(t, "pkg/a/a_test.go", ", \"burst-caps-tokens\")", ")"),
 		"claims/refill.md:18: rule 25: scenario burst-caps-tokens of SW-010 is verified by no test; cite it with verifies(claims.SW_010, \"burst-caps-tokens\") as a test's first statement, or waive SW-010/burst-caps-tokens in claims/waivers.txt with a reason")
 }
 
 func TestAnActiveDecisionNeedsARealizesAnchor(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_030, "not-realized")
+	claims.Verifies(t, claims.CH_030, "not-realized")
 	reports(t, replace(t, "pkg/a/a.go", "//charter:realizes SW-010", "//charter:concerns SW-010"),
 		"claims/refill.md:6: rule 25: active entry SW-010 is realized by no code; add charter:realizes SW-010 where it is implemented")
 	reports(t, replace(t, "pkg/a/a.go", "//\n//charter:realizes SW-010\n", ""),
@@ -133,26 +132,26 @@ func TestAnActiveDecisionNeedsARealizesAnchor(t *testing.T) {
 }
 
 func TestAConcernsAnchorRealizesNothing(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_022, "concerns-is-not-realized")
+	claims.Verifies(t, claims.CH_022, "concerns-is-not-realized")
 	reports(t, replace(t, "pkg/a/a.go", "//charter:realizes SW-010", "//charter:concerns SW-010"), "active entry SW-010 is realized by no code")
 }
 
 func TestAnAnchorNamesAnEntryThatExistsAndIsNotPlanned(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_022, "unknown-id-refused", "planned-refused")
+	claims.Verifies(t, claims.CH_022, "unknown-id-refused", "planned-refused")
 	reports(t, replace(t, "pkg/a/a.go", "//charter:realizes SW-010", "//charter:realizes SW-010, SW-999, SW-011"),
 		"pkg/a/a.go:11: rule 24: charter:realizes names SW-999, which is not an entry of the record",
 		"pkg/a/a.go:11: rule 24: charter:realizes names planned entry SW-011; set it active as its work begins")
 }
 
 func TestAnEntryWithoutScenariosIsCitedWhole(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_030, "spec-unverified")
+	claims.Verifies(t, claims.CH_030, "spec-unverified")
 	f := replace(t, "claims/refill.md", "Status: planned\nServes: STK-001\n", "Status: active\nServes: STK-001\n")
 	f["pkg/a/a.go"] = strings.Replace(f["pkg/a/a.go"], "SW-010", "SW-010, SW-011", 1)
 	reports(t, f, "claims/refill.md:20: rule 25: active entry SW-011 is verified by no test")
 }
 
 func TestAWaiverAbsorbsAScenarioAndNeverAnAnchor(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_030, "waiver-absorbs-a-scenario", "waiver-never-absorbs-an-anchor", "idle-waiver-fails", "glob-refused")
+	claims.Verifies(t, claims.CH_030, "waiver-absorbs-a-scenario", "waiver-never-absorbs-an-anchor", "idle-waiver-fails", "glob-refused")
 	f := replace(t, "pkg/a/a_test.go", ", \"burst-caps-tokens\")", ")")
 	f["claims/waivers.txt"] = "SW-010/burst-caps-tokens\tneeds a clock we cannot drive yet\n"
 	if ps := problems(t, build(t, f)); len(ps) != 0 {
@@ -169,13 +168,13 @@ func TestAWaiverAbsorbsAScenarioAndNeverAnAnchor(t *testing.T) {
 }
 
 func TestAHandleTheEntryDoesNotListIsRefused(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_023, "unknown-handle-refused")
+	claims.Verifies(t, claims.CH_023, "unknown-handle-refused")
 	reports(t, replace(t, "pkg/a/a_test.go", "\"burst-caps-tokens\")", "\"burst-caps-tokens\", \"no-such\")"),
 		"pkg/a/a_test.go:10: rule 24: SW-010 has no scenario \"no-such\"")
 }
 
 func TestANeedIsVerifiedFromTheStakeholdersSide(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_031, "offside-citation-refused")
+	claims.Verifies(t, claims.CH_031, "offside-citation-refused")
 	f := fixture()
 	f["pkg/a/need_test.go"] = strings.Replace(f["cmd/fx_test.go"], "package cmd", "package a", 1)
 	f["cmd/fx_test.go"] = ""
@@ -185,8 +184,8 @@ func TestANeedIsVerifiedFromTheStakeholdersSide(t *testing.T) {
 }
 
 func TestProbesAndTestsStayApart(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_032, "probe-reference-is-no-citation", "test-citing-an-observation-fails", "probe-by-path")
-	chartertest.Verifies(t, claims.CH_005, "probes-and-tests-stay-apart")
+	claims.Verifies(t, claims.CH_032, "probe-reference-is-no-citation", "test-citing-an-observation-fails", "probe-by-path")
+	claims.Verifies(t, claims.CH_005, "probes-and-tests-stay-apart")
 	f := fixture()
 	f["probes/clock_test.go"] = strings.Replace(f["probes/clock_test.go"], "claims.Observes(t, claims.ClockIsMonotonic)", "claims.Observes(t, claims.ClockIsMonotonic)\n\t_ = claims.SW_010", 1)
 	f["probes/refill_test.go"] = strings.Replace(f["pkg/a/a_test.go"], "package a", "package probes", 1)
@@ -199,14 +198,14 @@ func TestProbesAndTestsStayApart(t *testing.T) {
 }
 
 func TestObservationsNeedAProbePath(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_032, "probe-path-required")
+	claims.Verifies(t, claims.CH_032, "probe-path-required")
 	reports(t, replace(t, "claims/charter.toml", "probes = [\"probes\"]\n", ""),
 		"claims/charter.toml:1: rule 11: the record holds observations and charter.toml names no probe path")
 }
 
 func TestObservationsCarryTheirStatussFields(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_035, "observed-needs-date-and-probe", "documented-needs-source", "subject-required", "broken-under-active")
-	chartertest.Verifies(t, claims.CH_005, "observed-fact-has-a-date-and-a-probe", "broken-fact-under-active-fails")
+	claims.Verifies(t, claims.CH_035, "observed-needs-date-and-probe", "documented-needs-source", "subject-required", "broken-under-active")
+	claims.Verifies(t, claims.CH_005, "observed-fact-has-a-date-and-a-probe", "broken-fact-under-active-fails")
 	reports(t, replace(t, "claims/observations.md", "Observed: 2026-11-01\n", "Observed: 2026-13-01\n"), "claims/observations.md:1: rule 11: ClockIsMonotonic has Observed \"2026-13-01\"; want YYYY-MM-DD")
 	reports(t, replace(t, "claims/observations.md", "Observed: 2026-11-01\n", ""), "rule 11: ClockIsMonotonic is observed and has no Observed date")
 	reports(t, with(map[string]string{"probes/clock_test.go": ""}), "rule 11: observed observation ClockIsMonotonic is cited by no probe")
@@ -224,7 +223,7 @@ func TestObservationsCarryTheirStatussFields(t *testing.T) {
 }
 
 func TestRelationsNameEntriesTheRecordHolds(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_015, "unknown-target", "self-relation", "observation-supports-existing")
+	claims.Verifies(t, claims.CH_015, "unknown-target", "self-relation", "observation-supports-existing")
 	reports(t, replace(t, "claims/refill.md", "Serves: STK-001\nAccounts", "Serves: STK-001, SW-999\nSee: SW-010\nAccounts"),
 		"claims/refill.md:6: rule 23: SW-010 serves SW-999, which is not an entry",
 		"claims/refill.md:6: rule 23: SW-010 sees itself")
@@ -233,8 +232,8 @@ func TestRelationsNameEntriesTheRecordHolds(t *testing.T) {
 }
 
 func TestEverySurfaceIsAccountedForOrBaselined(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_033, "surfaces-enumerated", "unaccounted-fails", "accounts-must-exist", "baseline-holds-live-gaps-once", "deprecated-accounts-nothing")
-	chartertest.Verifies(t, claims.CH_004, "unaccounted-surface-fails", "baseline-holds-only-live-gaps")
+	claims.Verifies(t, claims.CH_033, "surfaces-enumerated", "unaccounted-fails", "accounts-must-exist", "baseline-holds-live-gaps-once", "deprecated-accounts-nothing")
+	claims.Verifies(t, claims.CH_004, "unaccounted-surface-fails", "baseline-holds-only-live-gaps")
 	reports(t, replace(t, "claims/charter.toml", "command = \"echo refill\"", "command = \"printf 'refill\\\\ndrain\\\\n'\""),
 		"rule 6: op:drain is neither accounted for by an entry nor listed in claims/baseline.txt")
 	reports(t, replace(t, "claims/refill.md", "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE, op:refill, op:gone"),
@@ -252,7 +251,7 @@ func TestEverySurfaceIsAccountedForOrBaselined(t *testing.T) {
 }
 
 func TestTheUpdateVariableRebuildsTheBaseline(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_033, "update-rebuilds")
+	claims.Verifies(t, claims.CH_033, "update-rebuilds")
 	f := replace(t, "claims/charter.toml", "command = \"echo refill\"", "command = \"printf 'refill\\\\ndrain\\\\nfill\\\\n'\"")
 	f["claims/baseline.txt"] = "op:fill\tkept reason\n"
 	c := build(t, f)
@@ -276,7 +275,7 @@ func TestTheUpdateVariableRebuildsTheBaseline(t *testing.T) {
 }
 
 func TestAnEmptyConstantsModuleIsAConfigurationProblem(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_033, "empty-enumerator")
+	claims.Verifies(t, claims.CH_033, "empty-enumerator")
 	f := replace(t, "env/env.go", "// Rate is the rate.\nconst Rate = \"FX_RATE\"\n", "")
 	f["pkg/a/a.go"] = strings.Replace(strings.Replace(f["pkg/a/a.go"], "os.Getenv(env.Rate)", "\"\"", 1), "\t\"os\"\n\n\t\"example.com/fx/env\"\n", "", 1)
 	f["claims/refill.md"] = strings.Replace(f["claims/refill.md"], "env:FX_RATE, ", "", 1)
@@ -284,8 +283,8 @@ func TestAnEmptyConstantsModuleIsAConfigurationProblem(t *testing.T) {
 }
 
 func TestAnEnvironmentReadGoesThroughAConstant(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_034, "literal-argument", "variable-argument", "duplicated-name", "undeclared-pattern", "dynamic-directive")
-	chartertest.Verifies(t, claims.CH_004, "env-read-through-a-constant")
+	claims.Verifies(t, claims.CH_034, "literal-argument", "variable-argument", "duplicated-name", "undeclared-pattern", "dynamic-directive")
+	claims.Verifies(t, claims.CH_004, "env-read-through-a-constant")
 	reports(t, replace(t, "pkg/a/a.go", "os.Getenv(env.Rate)", "os.Getenv(\"FX_RATE\")"),
 		"pkg/a/a.go:12: rule 8: an environment read names \"FX_RATE\" by a literal; read it through env.Rate",
 		"pkg/a/a.go:12: rule 8: literal \"FX_RATE\" duplicates env.Rate; use the constant")
@@ -302,13 +301,13 @@ func TestAnEnvironmentReadGoesThroughAConstant(t *testing.T) {
 }
 
 func TestAHandWrittenSourceInTheClaimsDirectoryIsRefused(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_025, "hand-written-source-refused")
+	claims.Verifies(t, claims.CH_025, "hand-written-source-refused")
 	reports(t, with(map[string]string{"claims/facts.go": "package claims\n\nvar Extra = 1\n"}),
 		"claims/facts.go:1: rule 1: claims/facts.go is written by hand in the claims directory, which holds the record and the generated files; entries and observations are written in markdown")
 }
 
 func TestAStaleGeneratedFileNamesCharterGen(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_020, "stale-generated-fails", "gen-writes")
+	claims.Verifies(t, claims.CH_020, "stale-generated-fails", "gen-writes")
 	c := build(t, fixture())
 	specs := filepath.Join(c.Root, "claims", "specs.go")
 	before, _ := os.ReadFile(specs)
@@ -335,7 +334,7 @@ func TestAStaleGeneratedFileNamesCharterGen(t *testing.T) {
 }
 
 func TestEveryRuleHasAMutationThatTripsIt(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_001, "every-rule-has-a-mutation")
+	claims.Verifies(t, claims.CH_001, "every-rule-has-a-mutation")
 	tripped := map[string]bool{}
 	for _, f := range []map[string]string{
 		with(map[string]string{"claims/facts.go": "package claims\n"}),
@@ -407,7 +406,7 @@ func gateRules(t *testing.T) []string {
 }
 
 func TestTheGatesRulesImportNoLanguage(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_PQ7X, "rules-name-no-language")
+	claims.Verifies(t, claims.CH_261126_PQ7X, "rules-name-no-language")
 	pkgs, err := parser.ParseDir(token.NewFileSet(), "../gate", nil, parser.ImportsOnly)
 	if err != nil {
 		t.Fatal(err)
@@ -425,7 +424,7 @@ func TestTheGatesRulesImportNoLanguage(t *testing.T) {
 }
 
 func TestTheSameRuleSaysTheSameInEveryLanguage(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_PQ7X, "same-rule-every-language")
+	claims.Verifies(t, claims.CH_261126_PQ7X, "same-rule-every-language")
 	compiler, _ := filepath.Abs("../../node_modules/typescript")
 	want := "claims/refill.md:18: rule 25: scenario burst-caps-tokens of SW-010 is verified by no test; cite it with verifies(claims.SW_010, \"burst-caps-tokens\") as a test's first statement, or waive SW-010/burst-caps-tokens in claims/waivers.txt with a reason"
 	for _, tc := range []struct {
@@ -452,7 +451,7 @@ func TestTheSameRuleSaysTheSameInEveryLanguage(t *testing.T) {
 }
 
 func TestAStaleDigestFailsTheGateAndGenWritesIt(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261005_6ZBS, "stale-digest-fails")
+	claims.Verifies(t, claims.CH_261005_6ZBS, "stale-digest-fails")
 	c := build(t, replace(t, "claims/charter.toml", "name = \"fx\"\n", "name = \"fx\"\ndigest = \"DIGEST.md\"\n"))
 	if ps := problems(t, c); len(ps) != 0 {
 		t.Fatalf("after charter gen: %q", ps)
@@ -469,5 +468,67 @@ func TestAStaleDigestFailsTheGateAndGenWritesIt(t *testing.T) {
 	}
 	if ps := problems(t, c); len(ps) != 1 || !strings.Contains(ps[0], "claims/DIGEST.md is missing; run charter gen") {
 		t.Errorf("a missing digest: %q", ps)
+	}
+}
+
+func TestAPlannedEntryMayBeCitedBeforeItsCode(t *testing.T) {
+	claims.Verifies(t, claims.CH_013, "planned-cited-freely")
+	claims.Verifies(t, claims.CH_002, "planned-entry-cited-first")
+	f := fixture()
+	f["pkg/a/b_test.go"] = strings.Replace(f["pkg/a/a_test.go"], "claims.SW_010, \"waited-request-passes\", \"burst-caps-tokens\"", "claims.SW_011", 1)
+	f["pkg/a/b_test.go"] = strings.Replace(f["pkg/a/b_test.go"], "TestRefill", "TestPlanned", 1)
+	if ps := problems(t, build(t, f)); len(ps) != 0 {
+		t.Errorf("a test citing a planned entry: %q", ps)
+	}
+}
+
+func TestARetiredEntryStillBuildsAndIsAskedNothing(t *testing.T) {
+	claims.Verifies(t, claims.CH_003, "retired-entry-still-builds")
+	f := replace(t, "claims/refill.md", "## SW-011 A planned rule\nStatus: planned\n", "## SW-011 A planned rule\nStatus: deprecated\n")
+	c := build(t, f)
+	if ps := problems(t, c); len(ps) != 0 {
+		t.Errorf("a deprecated entry with no code or test: %q", ps)
+	}
+	specs, err := os.ReadFile(filepath.Join(c.Root, "claims", "specs.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(specs), "// Deprecated: SW-011 is retired; see its Changes in claims/refill.md.") || !strings.Contains(string(specs), "var SW_011 = &Spec{") {
+		t.Errorf("specs.go does not declare SW_011 with its notice")
+	}
+}
+
+func TestAnObservationIsASymbolProbedInEveryLanguage(t *testing.T) {
+	claims.Verifies(t, claims.CH_261126_HK6S, "observation-symbol-generated")
+	compiler, _ := filepath.Abs("../../node_modules/typescript")
+	f := with(map[string]string{
+		"claims/charter.toml": fixture()["claims/charter.toml"] +
+			"\n[python]\ndir = \"py\"\ntest = \"python3 -m unittest\"\n" +
+			"\n[typescript]\ndir = \"web\"\ntest = \"vitest run\"\ncompiler = \"" + compiler + "\"\nimport = \"@fx/claims\"\n",
+		"probes/test_clock.py": "import unittest\n\nimport claims\n\n\nclass T(unittest.TestCase):\n    def test_clock(self):\n        claims.observes(self, claims.ClockIsMonotonic)\n",
+		"probes/clock.test.ts": "import { claims, observes } from \"@fx/claims\";\n\ntest(\"clock\", () => {\n  observes(claims.ClockIsMonotonic);\n});\n",
+	})
+	c := build(t, f)
+	if ps := problems(t, c); len(ps) != 0 {
+		t.Fatalf("problems: %q", ps)
+	}
+	tree, err := Load(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	seen := map[string]bool{}
+	for _, ct := range tree.Facts.Citations {
+		if ct.Observes && ct.Symbol == "ClockIsMonotonic" {
+			seen[filepath.Ext(ct.File)] = true
+		}
+	}
+	if !seen[".go"] || !seen[".py"] || !seen[".ts"] {
+		t.Errorf("observes read from %v; want Go, Python and TypeScript probes", seen)
+	}
+	for file, want := range map[string]string{"specs.go": "var ClockIsMonotonic = &Observation{", "claims.py": "ClockIsMonotonic = Observation(", "index.ts": "ClockIsMonotonic: \"ClockIsMonotonic\""} {
+		src, err := os.ReadFile(filepath.Join(c.Root, "claims", file))
+		if err != nil || !strings.Contains(string(src), want) {
+			t.Errorf("claims/%s does not declare the observation: %v", file, err)
+		}
 	}
 }

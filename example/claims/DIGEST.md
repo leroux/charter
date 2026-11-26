@@ -1,4 +1,4 @@
-<!-- Generated from the charter's documents. DO NOT EDIT. Regenerate: go run ./cmd/claimsgen -->
+<!-- Generated from the charter's documents. DO NOT EDIT. Regenerate: charter gen -->
 
 # The charter, read through
 

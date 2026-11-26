@@ -8,7 +8,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 )
 
@@ -68,7 +67,7 @@ const sampleQuestions = "# Questions\n\n" +
 	"Answer: 2026-10-09, owner: yes, the whole file.\n"
 
 func TestTheQuestionFileHoldsWhatNobodyRuled(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261009_4B3B, "question-read", "unknown-entry-refused", "missing-parts-refused")
+	claims.Verifies(t, claims.CH_261009_4B3B, "question-read", "unknown-entry-refused", "missing-parts-refused")
 	r := writeRecord(t, map[string]string{"refill.md": sampleArea, "questions.md": sampleQuestions})
 	if len(r.Problems) != 0 {
 		t.Fatalf("problems %q", r.Problems)
@@ -102,8 +101,8 @@ func TestTheQuestionFileHoldsWhatNobodyRuled(t *testing.T) {
 }
 
 func TestANewIDIsItsDayAndACodeTheRecordDoesNotHold(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_040, "next-free")
-	chartertest.Verifies(t, claims.CH_003, "next-free-id")
+	claims.Verifies(t, claims.CH_040, "next-free")
+	claims.Verifies(t, claims.CH_003, "next-free-id")
 	r := writeRecord(t, map[string]string{"refill.md": strings.Replace(sampleArea, "## SW-010", "## SW-261002-BBBB", 1)})
 	for _, tc := range []struct {
 		name, prefix string
@@ -126,7 +125,7 @@ func TestANewIDIsItsDayAndACodeTheRecordDoesNotHold(t *testing.T) {
 }
 
 func TestNextGivesAsManyDifferentIDsAsAsked(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_040, "next-count")
+	claims.Verifies(t, claims.CH_040, "next-count")
 	r := writeRecord(t, nil)
 	got, err := r.NewIDs("SW", 2, lateInTheWest, scripted(t, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1))
 	if want := []string{"SW-261002-BBBB", "SW-261002-CCCC"}; err != nil || !slices.Equal(got, want) {
@@ -140,8 +139,8 @@ func TestNextGivesAsManyDifferentIDsAsAsked(t *testing.T) {
 }
 
 func TestAnIdIsDeclaredOnce(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_012, "declared-once")
-	chartertest.Verifies(t, claims.CH_003, "id-declared-once")
+	claims.Verifies(t, claims.CH_012, "declared-once")
+	claims.Verifies(t, claims.CH_003, "id-declared-once")
 	again := strings.Replace(sampleArea, "# Refill", "# Again", 1)
 	r := writeRecord(t, map[string]string{"refill.md": sampleArea, "zz.md": again})
 	if !anyContains(r.Problems, "claims/zz.md:4: form: SW-010 is declared twice, in claims/refill.md and claims/zz.md; the entry that has not landed takes a new id: charter next SW") {
@@ -167,7 +166,7 @@ const sampleObservations = "# Observations\n\n" +
 	"The upstream health endpoint answers JSON.\n"
 
 func TestAnObservationIsReadWithItsFields(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_HK6S, "observation-read")
+	claims.Verifies(t, claims.CH_261126_HK6S, "observation-read")
 	r := writeRecord(t, map[string]string{"refill.md": sampleArea, "observations.md": sampleObservations})
 	if len(r.Problems) != 0 {
 		t.Fatalf("problems %q", r.Problems)
@@ -189,7 +188,7 @@ func TestAnObservationIsReadWithItsFields(t *testing.T) {
 }
 
 func TestAnObservationsFormIsChecked(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_HK6S, "observation-form-checked")
+	claims.Verifies(t, claims.CH_261126_HK6S, "observation-form-checked")
 	head := "## LockIsAdvisory\nSubject: os\n"
 	for _, tc := range []struct{ src, want string }{
 		{head + "Status: documented\nVendor: linux\n\nText.\n", `claims/observations.md:4: form: "Vendor" is not a field of an observation`},
@@ -206,7 +205,7 @@ func TestAnObservationsFormIsChecked(t *testing.T) {
 }
 
 func TestTheReadingOrderNamesEveryAreaOnce(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261005_6ZBS, "reading-order-complete")
+	claims.Verifies(t, claims.CH_261005_6ZBS, "reading-order-complete")
 	second := strings.Replace(strings.Replace(sampleArea, "# Refill", "# Limits", 1), "SW-010", "SW-011", 1)
 	files := map[string]string{"refill.md": sampleArea, "limits.md": second}
 	files["reading-order.txt"] = "# the order\nrefill.md\nlimits.md\n"
@@ -236,5 +235,42 @@ func TestTheChartersOwnRecordReadsClean(t *testing.T) {
 	}
 	if r.Entry("CH-261126-HK6S") == nil || len(r.Questions) == 0 {
 		t.Errorf("the record lacks CH-261126-HK6S or its questions")
+	}
+}
+
+func TestEntriesAreOrderedByPrefixThenNumberThenDay(t *testing.T) {
+	claims.Verifies(t, claims.CH_012, "ordered-by-date")
+	entry := func(id string) string {
+		return "## " + id + " An entry\nStatus: planned\n\nWhat it rules.\n\nWhy: someone needed it.\n\n"
+	}
+	r := writeRecord(t, map[string]string{
+		"b.md": "# B\n\n" + entry("SW-261002-BBBB") + entry("SW-010") + entry("CH-002"),
+		"a.md": "# A\n\n" + entry("SW-261001-ZZZZ") + entry("SW-002") + entry("SW-261002-BBBC"),
+	})
+	var got []string
+	for _, e := range r.Entries {
+		got = append(got, e.ID)
+	}
+	if want := []string{"CH-002", "SW-002", "SW-010", "SW-261001-ZZZZ", "SW-261002-BBBB", "SW-261002-BBBC"}; !slices.Equal(got, want) {
+		t.Errorf("order = %v, want %v", got, want)
+	}
+}
+
+func TestBlankLinesMayOpenTheFieldsAndTheReadmeIsNoDocument(t *testing.T) {
+	claims.Verifies(t, claims.CH_010, "blank-lines-before-fields", "readme-is-not-a-document")
+	src := strings.Replace(sampleArea, "## SW-010 The bucket refills from its last request at the rate\n", "## SW-010 The bucket refills from its last request at the rate\n\n\n", 1)
+	r := writeRecord(t, map[string]string{"refill.md": src, "README.md": "# How to write\n\n## Not an entry\n\nprose\n"})
+	if len(r.Problems) != 0 || len(r.Entries) != 1 || r.Entries[0].Status != "active" || len(r.Areas) != 1 {
+		t.Errorf("problems %q, %d entries, %d areas", r.Problems, len(r.Entries), len(r.Areas))
+	}
+}
+
+func TestTheRecordGivesEachScenariosProvenance(t *testing.T) {
+	claims.Verifies(t, claims.CH_261009_3FHW, "provenance-in-the-registry")
+	src := strings.Replace(sampleArea, "1. `waited-request-passes`: a request", "1. `waited-request-passes` (owner, #444): a request", 1)
+	r := writeRecord(t, map[string]string{"refill.md": src})
+	e := r.Entry("SW-010")
+	if e == nil || e.Scenarios[0].Provenance != (Provenance{Who: "owner", Ref: "#444", Written: true}) || e.Scenarios[1].Provenance != (Provenance{Who: "agent"}) || e.Scenarios[1].Provenance.Written {
+		t.Errorf("provenance: %+v", e)
 	}
 }

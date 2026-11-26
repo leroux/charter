@@ -1,0 +1,16 @@
+# ratelimit's charter: the needs of a caller and an operator, and the
+# decisions of the limiter and its configuration.
+name = "ratelimit"
+# A need is verified from the caller's side: the command, driven as a person
+# or a script would drive it.
+stakeholder-tests = ["cmd/ratelimit/*_test.go"]
+# A string that looks like one of ratelimit's variables, outside env, is a
+# variable nobody accounted for.
+env-patterns = ["^RATELIMIT_[A-Z0-9_]+$"]
+digest = "DIGEST.md"
+
+[go]
+module = "example.com/ratelimit/claims"
+dir = "."
+test = "go test -count=1 ./..."
+env = "env"

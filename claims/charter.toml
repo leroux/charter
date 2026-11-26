@@ -1,0 +1,12 @@
+# The charter's own charter: the tooling, specified by the method it
+# implements. The examples and the benchmarks' seeds are charters of their
+# own; the viewer is checked by its own tests.
+name = "charter"
+ignore = ["bench", "claims-viewer"]
+env-patterns = ["^CHARTER_[A-Z0-9_]+$"]
+
+[go]
+module = "github.com/leroux/charter/claims"
+dir = "."
+test = "go test -count=1 ./..."
+env = "internal/env"

@@ -7,7 +7,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/config"
 	"github.com/leroux/charter/internal/record"
@@ -71,8 +70,8 @@ func writeFile(t *testing.T, root, rel, src string) {
 
 // History names what a change did to the record that no Changes line says.
 func TestHistoryNamesWhatTheChangesLinesDoNotSay(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261009_QQC8, "removed-named", "unbuilt-named", "unrecorded-change-named", "ruling-lost-named", "recorded-change-passes")
-	chartertest.Verifies(t, claims.CH_261009_3FHW, "unrecorded-change-named")
+	claims.Verifies(t, claims.CH_261009_QQC8, "removed-named", "unbuilt-named", "unrecorded-change-named", "ruling-lost-named", "recorded-change-passes")
+	claims.Verifies(t, claims.CH_261009_3FHW, "unrecorded-change-named")
 	base := strings.Replace(sampleArea, "1. `waited-request-passes`: a request", "1. `waited-request-passes` (owner, #444): a request", 1)
 	prev := mapOf(t, base)
 	order := []string{"SW-010"}

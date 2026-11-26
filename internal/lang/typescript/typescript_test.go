@@ -10,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/gate"
@@ -83,7 +82,7 @@ verifies(claims.SW_010);
 `
 
 func TestATypeScriptCitationOpensATest(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_023, "typescript-citation-read", "disabled-ts-refused")
+	claims.Verifies(t, claims.CH_023, "typescript-citation-read", "disabled-ts-refused")
 	set := read(t, map[string]string{"web/a.test.ts": testFile})
 	if len(set.Citations) != 1 {
 		t.Fatalf("citations = %+v\n%s", set.Citations, refused(set))
@@ -105,7 +104,7 @@ func TestATypeScriptCitationOpensATest(t *testing.T) {
 }
 
 func TestAVerifiesTheTestDeclaresIsRefused(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_023, "local-verifies-refused")
+	claims.Verifies(t, claims.CH_023, "local-verifies-refused")
 	set := read(t, map[string]string{"web/a.test.ts": `import { test } from "vitest";
 import { claims } from "@fx/claims";
 
@@ -121,7 +120,7 @@ test("refills", () => {
 }
 
 func TestATypeScriptDirectiveNamingAnUnknownIDFails(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_021, "typescript-anchor-resolves")
+	claims.Verifies(t, claims.CH_021, "typescript-anchor-resolves")
 	root := t.TempDir()
 	write(t, root, map[string]string{"claims/area.md": "# Area\n\n## SW-010 A rule\nStatus: active\n\nIt rules.\n\nWhy: someone needs it.\n\nScenarios:\n1. `rules`: it rules.\n"})
 	rec, err := record.Read(root, "claims")
@@ -139,7 +138,7 @@ func TestATypeScriptDirectiveNamingAnUnknownIDFails(t *testing.T) {
 }
 
 func TestTypeScriptEnvironmentReadsAreFacts(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_034, "typescript-read-checked")
+	claims.Verifies(t, claims.CH_034, "typescript-read-checked")
 	set := read(t, map[string]string{
 		"web/env.ts":  "export const RATE = \"FX_RATE\";\nconst hidden = \"FX_HIDDEN\";\n",
 		"web/main.ts": "import * as env from \"./env\";\nimport { RATE } from \"./env.ts\";\n\nconst a = process.env[env.RATE];\nconst b = process.env[RATE];\nconst c = process.env.FX_RATE;\nconst d = process.env[name]; // charter:dynamic\nconst e = process.env[name];\nconst name = \"x\";\n",
@@ -154,7 +153,7 @@ func TestTypeScriptEnvironmentReadsAreFacts(t *testing.T) {
 }
 
 func TestAMissingCompilerNamesTheTable(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_PQ7X, "parser-missing-named")
+	claims.Verifies(t, claims.CH_261126_PQ7X, "parser-missing-named")
 	root := t.TempDir()
 	write(t, root, map[string]string{"a.ts": "export const a = 1;\n"})
 	_, err := Reader{Root: root, Compiler: "node_modules/typescript", Table: "claims/charter.toml:5"}.Read([]string{"a.ts"})
@@ -180,7 +179,7 @@ func generated(t *testing.T, root string) []byte {
 }
 
 func TestTheGeneratedModuleEqualsTheFixture(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_020, "typescript-module-rendered")
+	claims.Verifies(t, claims.CH_020, "typescript-module-rendered")
 	got := generated(t, t.TempDir())
 	golden := filepath.Join("testdata", "index.ts")
 	if os.Getenv("CHARTER_UPDATE_GOLDEN") != "" {
@@ -203,7 +202,7 @@ func TestTheGeneratedModuleEqualsTheFixture(t *testing.T) {
 }
 
 func TestATypeScriptTestRecordsItsOutcomeInTheEventsFile(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_024, "event-per-citation", "outcome-recorded", "unset-records-nothing")
+	claims.Verifies(t, claims.CH_024, "event-per-citation", "outcome-recorded", "unset-records-nothing")
 	vitest := filepath.Join(repo, "claims-viewer", "node_modules", ".bin", "vitest")
 	if _, err := os.Stat(vitest); err != nil {
 		t.Fatalf("vitest is not installed at %s; run pnpm install", vitest)

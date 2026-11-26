@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/record"
 )
@@ -86,7 +85,7 @@ func inOrder(t *testing.T, text string, parts ...string) {
 }
 
 func TestTheDigestListsEachNeedUnderTheAreaThatServesItMost(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261005_6ZBS, "needs-under-their-area")
+	claims.Verifies(t, claims.CH_261005_6ZBS, "needs-under-their-area")
 	needs := section(digestOf(t, digestFiles()), "## What people need")
 	// STK-010 is reached by SW-010 and, through it, SW-011 in a (2), and
 	// by SW-020 in b (1): it sits under a. STK-011 only b reaches. STK-012
@@ -108,7 +107,7 @@ func TestTheDigestListsEachNeedUnderTheAreaThatServesItMost(t *testing.T) {
 }
 
 func TestTheDigestMapsTheAreasAndTheNeedsTheyServe(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261005_6ZBS, "area-map")
+	claims.Verifies(t, claims.CH_261005_6ZBS, "area-map")
 	areas := section(digestOf(t, digestFiles()), "## The areas")
 	inOrder(t, areas,
 		"| 1 | [Views: what a person sees](b.md) | What the dashboard shows. | 1, 1 planned |",
@@ -119,7 +118,7 @@ func TestTheDigestMapsTheAreasAndTheNeedsTheyServe(t *testing.T) {
 }
 
 func TestTheDigestReadsEachAreasDecisionsInOrderWithTheirWhy(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261005_6ZBS, "decisions-in-order")
+	claims.Verifies(t, claims.CH_261005_6ZBS, "decisions-in-order")
 	d := section(digestOf(t, digestFiles()), "## The decisions, area by area")
 	inOrder(t, d,
 		"### 1. Views: what a person sees", "What the dashboard shows.",

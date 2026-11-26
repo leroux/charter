@@ -10,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/record"
@@ -63,7 +62,7 @@ func readFixture(t *testing.T, files map[string]string) *facts.Set {
 const importClaims = "import (\n\t\"testing\"\n\n\t\"example.com/fx/claims\"\n)\n\n"
 
 func TestAGoDirectiveAnchorsTheDeclarationItDocuments(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_021, "go-anchor-recorded", "spaced-directive-counts", "comment-elsewhere-refused")
+	claims.Verifies(t, claims.CH_021, "go-anchor-recorded", "spaced-directive-counts", "comment-elsewhere-refused")
 	set := readFixture(t, map[string]string{
 		"pkg/a/a.go": "// Package a refills.\n//\n//charter:realizes SW-010\npackage a\n\n" +
 			"// Refill adds the tokens earned.\n//\n// charter:realizes SW-010, SW-012\nfunc (b *Bucket) Refill() {}\n\n" +
@@ -89,7 +88,7 @@ func TestAGoDirectiveAnchorsTheDeclarationItDocuments(t *testing.T) {
 }
 
 func TestAGoCitationIsReadFromTheTestItOpens(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_023, "go-citation-read", "alias-followed", "reference-is-not-citation", "later-statement-refused")
+	claims.Verifies(t, claims.CH_023, "go-citation-read", "alias-followed", "reference-is-not-citation", "later-statement-refused")
 	set := readFixture(t, map[string]string{
 		"pkg/a/a_test.go": "package a\n\n" + strings.Replace(importClaims, "\"example.com/fx/claims\"", "spec \"example.com/fx/claims\"", 1) +
 			"func TestRefill(t *testing.T) {\n\tspec.Verifies(t, spec.SW_010, \"waited-request-passes\", \"burst-caps-tokens\")\n\t_ = spec.SW_011\n" +
@@ -119,7 +118,7 @@ func TestAGoCitationIsReadFromTheTestItOpens(t *testing.T) {
 }
 
 func TestAGoCitationOutsideARunTestIsRefused(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_023, "outside-a-test-refused", "non-test-name-refused", "literal-arguments")
+	claims.Verifies(t, claims.CH_023, "outside-a-test-refused", "non-test-name-refused", "literal-arguments")
 	for _, tc := range []struct{ body, want string }{
 		{"func helper(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_010)\n}\n", "Verifies sits outside a test function"},
 		{"func Testrefill(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_010)\n}\n", "Verifies sits in Testrefill, which go test never runs"},
@@ -140,7 +139,7 @@ func TestAGoCitationOutsideARunTestIsRefused(t *testing.T) {
 }
 
 func TestATestMayNeitherAssignNorDotImportTheClaims(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_025, "assignment-refused", "dot-import-refused")
+	claims.Verifies(t, claims.CH_025, "assignment-refused", "dot-import-refused")
 	set := readFixture(t, map[string]string{
 		"pkg/a/a_test.go": "package a\n\n" + importClaims + "func TestA(t *testing.T) {\n\tclaims.SW_010.Title = \"x\"\n}\n",
 		"pkg/b/b_test.go": "package b\n\nimport . \"example.com/fx/claims\"\n\nvar _ = SW_010\n",
@@ -156,7 +155,7 @@ func TestATestMayNeitherAssignNorDotImportTheClaims(t *testing.T) {
 }
 
 func TestEnvironmentReadsAreFacts(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_034, "literal-argument", "variable-argument", "dynamic-directive")
+	claims.Verifies(t, claims.CH_034, "literal-argument", "variable-argument", "dynamic-directive")
 	set := readFixture(t, map[string]string{
 		"env/env.go": "package env\n\nconst (\n\tRate = \"FX_RATE\"\n\ttyped string = \"FX_TYPED\"\n)\n",
 		"cmd/a/a.go": "package main\n\nimport (\n\t\"os\"\n\n\t\"example.com/fx/env\"\n)\n\nfunc main() {\n\t_ = os.Getenv(env.Rate)\n\t_ = os.Getenv(\"FX_BURST\")\n\tv := \"x\"\n\t_ = os.Getenv(v)\n\t_ = os.Getenv(v) //charter:dynamic\n}\n",
@@ -201,7 +200,7 @@ func generated(t *testing.T, root string) (gomod, specs []byte) {
 }
 
 func TestTheGeneratedModuleDeclaresEveryEntry(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_020, "bare-symbol-declared", "planned-and-deprecated-marked", "title-only-comment", "go-module-self-contained")
+	claims.Verifies(t, claims.CH_020, "bare-symbol-declared", "planned-and-deprecated-marked", "title-only-comment", "go-module-self-contained")
 	gomod, specs := generated(t, t.TempDir())
 	src := string(specs)
 	for _, want := range []string{
@@ -262,7 +261,7 @@ func readEvents(t *testing.T, path string) []line {
 }
 
 func TestAGoTestRecordsItsOutcomeInTheEventsFile(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_024, "event-per-citation", "outcome-recorded", "unset-records-nothing", "concurrent-lines-whole", "nil-spec-refused")
+	claims.Verifies(t, claims.CH_024, "event-per-citation", "outcome-recorded", "unset-records-nothing", "concurrent-lines-whole", "nil-spec-refused")
 	if testing.Short() {
 		t.Skip("builds and runs a module")
 	}

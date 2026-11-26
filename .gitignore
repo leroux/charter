@@ -2,3 +2,4 @@ node_modules/
 claims-viewer/dist/
 claims-viewer/public/
 __pycache__/
+build/

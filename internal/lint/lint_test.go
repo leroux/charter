@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/check"
 	"github.com/leroux/charter/internal/config"
@@ -84,7 +83,7 @@ func TestTheCleanFixtureLintsClean(t *testing.T) {
 }
 
 func TestLintAdvises(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_041, "serves-nothing", "planned-verified", "deprecated-still-anchored", "package-clause-only", "no-scenario-named", "gate-problems-first")
+	claims.Verifies(t, claims.CH_041, "serves-nothing", "planned-verified", "deprecated-still-anchored", "package-clause-only", "no-scenario-named", "gate-problems-first")
 	has(t, lint(t, edit(t, "claims/refill.md", "Status: active\nServes: STK-001\n", "Status: active\n"), false), "claims/refill.md:5: lint: SW-010 serves nothing")
 	fs := files()
 	fs["pkg/a/a_test.go"] += "\nfunc TestPlanned(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_011, \"planned-rule\")\n}\n"
@@ -99,7 +98,7 @@ func TestLintAdvises(t *testing.T) {
 }
 
 func TestTheStyleIsCountedAndListed(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_041, "retired-word-named", "long-title-named", "long-text-named", "long-scenario-named", "pointing-why-named")
+	claims.Verifies(t, claims.CH_041, "retired-word-named", "long-title-named", "long-text-named", "long-scenario-named", "pointing-why-named")
 	fs := files()
 	fs["claims/retired.txt"] = "quotas? -> bucket | quota defaults\n"
 	fs["claims/refill.md"] = strings.Replace(area, "At each request the bucket reads the clock.", "At each request the quota reads the clock. One. Two. Three. Four. Five. Six. `e.g. code.`", 1)
@@ -129,7 +128,7 @@ func TestTheStyleIsCountedAndListed(t *testing.T) {
 }
 
 func TestATestTwoDecisionsShareIsNamed(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_041, "shared-test-named")
+	claims.Verifies(t, claims.CH_041, "shared-test-named")
 	fs := edit(t, "claims/refill.md", "## SW-011 A rule that is planned\nStatus: planned", "## SW-011 A rule that is planned\nStatus: active")
 	fs["pkg/a/a.go"] = strings.Replace(fs["pkg/a/a.go"], "SW-010", "SW-010, SW-011", 1)
 	fs["pkg/a/a_test.go"] = strings.Replace(fs["pkg/a/a_test.go"], "\"burst-caps-tokens\")\n", "\"burst-caps-tokens\")\n\tclaims.Verifies(t, claims.SW_011, \"planned-rule\")\n", 1)
@@ -143,7 +142,7 @@ func TestATestTwoDecisionsShareIsNamed(t *testing.T) {
 }
 
 func TestLintCountsTheOpenQuestionsInOneLine(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261009_4B3B, "open-listed")
+	claims.Verifies(t, claims.CH_261009_4B3B, "open-listed")
 	fs := files()
 	q := "## Q-261009-M4TK A question?\nAsked-by: agent\nEntry: SW-010\nProvisional: yes\n\n"
 	fs["claims/questions.md"] = "# Questions\n\n" + q + strings.Replace(q, "M4TK", "N7PR", 1)

@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/check"
 	"github.com/leroux/charter/internal/config"
@@ -33,7 +32,7 @@ func build(t *testing.T, extra map[string]string) *config.Config {
 		"pkg/a/a_test.go": "package a\n\nimport (\n\t\"testing\"\n\n\t\"example.com/fx/claims\"\n)\n\n" +
 			"func TestGo(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_010, \"go-passes\", \"one-fails\")\n}\n\n" +
 			"func TestSkipped(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_010, \"all-skipped\")\n\tt.Skip(\"on purpose\")\n}\n",
-		"py/test_refill.py": "import unittest\n\nimport claims\n\n\nclass T(unittest.TestCase):\n    def test_python(self):\n        claims.verifies(self, claims.SW_010, \"python-passes\", \"one-fails\")\n        self.fail(\"on purpose\")\n\n    def test_skipped(self):\n        claims.verifies(self, claims.SW_010, \"all-skipped\")\n        self.skipTest(\"on purpose\")\n",
+		"py/test_refill.py":  "import unittest\n\nimport claims\n\n\nclass T(unittest.TestCase):\n    def test_python(self):\n        claims.verifies(self, claims.SW_010, \"python-passes\", \"one-fails\")\n        self.fail(\"on purpose\")\n\n    def test_skipped(self):\n        claims.verifies(self, claims.SW_010, \"all-skipped\")\n        self.skipTest(\"on purpose\")\n",
 		"web/refill.test.ts": "import { claims, verifies } from \"../claims/index.ts\";\n\ntest(\"typescript\", () => {\n  verifies(claims.SW_010, \"typescript-passes\");\n});\n",
 	}
 	for k, v := range extra {
@@ -59,7 +58,8 @@ func build(t *testing.T, extra map[string]string) *config.Config {
 }
 
 func TestTheReportJoinsEveryLanguagesOutcomes(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_042, "results-joined", "skipped-scenario-fails", "markdown-rendered", "provenance-and-profile")
+	claims.Verifies(t, claims.CH_042, "results-joined", "skipped-scenario-fails", "markdown-rendered", "provenance-and-profile")
+	claims.Verifies(t, claims.CH_261009_3FHW, "report-counts-who-ruled")
 	rep, err := Run(build(t, nil))
 	if err != nil {
 		t.Fatal(err)
@@ -97,7 +97,7 @@ func TestTheReportJoinsEveryLanguagesOutcomes(t *testing.T) {
 }
 
 func TestATestCommandThatCannotRunIsNamed(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_042, "command-failure-named")
+	claims.Verifies(t, claims.CH_042, "command-failure-named")
 	c := build(t, nil)
 	c.Python.Test = "python3 -c 'import sys; print(\"no such suite\"); sys.exit(4)'"
 	_, err := Run(c)

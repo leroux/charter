@@ -11,7 +11,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/record"
@@ -57,7 +56,7 @@ func messages(set *facts.Set) string {
 }
 
 func TestAPythonDirectiveAnchorsTheDefBelowIt(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_021, "python-anchor-recorded", "python-comment-elsewhere-refused")
+	claims.Verifies(t, claims.CH_021, "python-anchor-recorded", "python-comment-elsewhere-refused")
 	set := read(t, map[string]string{"dom0/torii/plan.py": `import functools
 
 # Derives the policy from the machine file.
@@ -132,7 +131,7 @@ def test_handle_variable():
 `
 
 func TestAPythonCitationOpensAUnittestOrPytestTest(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_023, "python-citation-read", "python-later-statement-refused")
+	claims.Verifies(t, claims.CH_023, "python-citation-read", "python-later-statement-refused")
 	set := read(t, map[string]string{"dom0/tests/test_plan.py": unittestFile})
 	if len(set.Citations) != 3 {
 		t.Fatalf("citations = %+v\n%s", set.Citations, messages(set))
@@ -164,7 +163,7 @@ func TestAPythonCitationOpensAUnittestOrPytestTest(t *testing.T) {
 }
 
 func TestPythonEnvironmentReadsAreFacts(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_034, "python-read-checked")
+	claims.Verifies(t, claims.CH_034, "python-read-checked")
 	set := read(t, map[string]string{
 		"dom0/torii/env.py": "BUNDLE = \"TORII_BUNDLE\"\n_private = \"TORII_X\"\n",
 		"dom0/torii/apply.py": "import os\nfrom torii import env\nfrom torii.env import BUNDLE\n\n" +
@@ -186,7 +185,7 @@ func TestPythonEnvironmentReadsAreFacts(t *testing.T) {
 }
 
 func TestAMissingPython3NamesTheTable(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_PQ7X, "parser-missing-named")
+	claims.Verifies(t, claims.CH_261126_PQ7X, "parser-missing-named")
 	old := Interpreter
 	Interpreter = "python3-not-installed-here"
 	defer func() { Interpreter = old }()
@@ -217,7 +216,7 @@ func generated(t *testing.T, root string) []byte {
 }
 
 func TestTheGeneratedModuleEqualsTheFixture(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_020, "python-module-rendered")
+	claims.Verifies(t, claims.CH_020, "python-module-rendered")
 	got := generated(t, t.TempDir())
 	golden := filepath.Join("testdata", "claims.py")
 	if os.Getenv("CHARTER_UPDATE_GOLDEN") != "" {
@@ -269,7 +268,7 @@ func events(t *testing.T, p string) []line {
 }
 
 func TestAPythonTestRecordsItsOutcomeInTheEventsFile(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_024, "event-per-citation", "outcome-recorded", "unset-records-nothing")
+	claims.Verifies(t, claims.CH_024, "event-per-citation", "outcome-recorded", "unset-records-nothing")
 	root := t.TempDir()
 	generated(t, root)
 	write(t, root, map[string]string{

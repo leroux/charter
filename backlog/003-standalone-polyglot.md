@@ -1,6 +1,6 @@
 # 003. The charter is a binary over a whole repository, any module and any language, configured by a file beside the record
 
-Status: in progress · Size: L · See: 001
+Status: in progress · Size: L · See: 001, 002
 
 The gate today is a Go test inside one Go module: its options are a Go
 variable, its root is the nearest go.mod, its walk skips nested modules,
@@ -54,21 +54,26 @@ Ruled by the owner, 2026-11-26.
 | 31 | Which TOML parser? | github.com/BurntSushi/toml, the binary's one dependency. |
 | 32 | In what order does it land? | Bottom-up, one commit a step with its tests: config, record and facts; the Go language; gate, walk and surfaces; Python and TypeScript; gen, report, lint, diff, digest and export; then claims/ and example/ move to charter.toml, the old packages go, and the gate is green. |
 
+## Done
+
+- The rewrite, built against the record (rulings 1 to 32): `cmd/charter`
+  and `internal/`, Go, Python and TypeScript, `claims/charter.toml`, the
+  repository walk, the events file, observations in markdown, declared
+  surface kinds; the old packages removed. The charter's own gate is green
+  and its report passes every active scenario.
+- Both examples in the new form: ratelimit, and slugs (`example-polyglot/`),
+  a nested Go module and Python with no go.mod at its root, whose need is
+  verified across the two languages.
+
 ## To do, in order
 
-1. Draft the CH entries from the ruling (`claims-draft`): changes to
-   CH-020 to CH-025 (symbols, anchors, citations, markers, now per
-   language), CH-031, CH-033, CH-036, CH-037, CH-040 and the rest of
-   `tooling.md` that name the Go options or claimsgen; CH-261005-VFJR
-   deprecated; new entries for charter.toml, the repository walk, the
-   three parts of a language, Python and the command-based surface kind.
-   The owner reviews them before any code.
-2. The rewrite (`claims-implement`): the core and the three languages,
-   built entry by entry against the record, the old packages removed as
-   their entries move; then `claims/` and `example/` in the new form.
-3. The Go and Python example.
-4. The skills as a plugin and the CLAUDE.md template (001, 3 and 4).
-5. Onboard torii: its own story there, from the plan ruled with the owner
+1. The skills as a plugin and the CLAUDE.md template (001, 3 and 4):
+   CH-261126-5JMD, planned. The skills still name `claimsgen`.
+2. The benchmarks' seeds (002) are adopters of the earlier, go-test form:
+   their `@CHARTER@` replace now reaches a tree without `chartertest`.
+   Move them to charter.toml, or pin the harness to the commit before the
+   rewrite.
+3. Onboard torii: its own story there, from the plan ruled with the owner
    on 2026-11-26 (`claims/` at its root, STK and SW, six needs, ten areas
    with verdict active first, design.md's Decisions reduced to a map,
    machine-file keys as a surface when that area goes active, no CI yet).
@@ -77,7 +82,7 @@ Ruled by the owner, 2026-11-26.
 
 Drafted 2026-11-26 and approved by the owner the same day in design review, before any build.
 
-New, planned:
+New, active since the build, but CH-261126-5JMD, still planned:
 
 - CH-261126-33GK charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know (`config.md`)
 - CH-261126-PQ7X A language is a reader, a generator and a marker, built in, and read only when charter.toml names it (`languages.md`)

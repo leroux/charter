@@ -1,2 +1,0 @@
-op:GET /health	nobody claims the health check yet
-tag:desktop	packaging goes with R2

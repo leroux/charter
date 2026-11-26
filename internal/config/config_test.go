@@ -8,7 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/leroux/charter/chartertest"
 	"github.com/leroux/charter/claims"
 )
 
@@ -24,7 +23,7 @@ func writeCharter(t *testing.T, root, src string) {
 }
 
 func TestFindWalksUpToTheRoot(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_33GK, "found-walking-up")
+	claims.Verifies(t, claims.CH_261126_33GK, "found-walking-up")
 	root := t.TempDir()
 	writeCharter(t, root, "name = \"outer\"\n")
 	deep := filepath.Join(root, "a", "b", "c")
@@ -41,7 +40,7 @@ func TestFindWalksUpToTheRoot(t *testing.T) {
 }
 
 func TestTheNearestCharterWins(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_33GK, "nearest-wins")
+	claims.Verifies(t, claims.CH_261126_33GK, "nearest-wins")
 	root := t.TempDir()
 	writeCharter(t, root, "name = \"outer\"\n")
 	inner := filepath.Join(root, "example")
@@ -60,7 +59,7 @@ func TestTheNearestCharterWins(t *testing.T) {
 }
 
 func TestNoCharterNamesWhereTheSearchStarted(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_33GK, "none-found-named")
+	claims.Verifies(t, claims.CH_261126_33GK, "none-found-named")
 	dir := t.TempDir()
 	_, err := Find(dir)
 	if !errors.Is(err, ErrNotFound) {
@@ -103,7 +102,7 @@ command = "python3 -m torii keys"
 `
 
 func TestEveryKeyIsRead(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_33GK, "keys-read")
+	claims.Verifies(t, claims.CH_261126_33GK, "keys-read")
 	root := t.TempDir()
 	writeCharter(t, root, everyKey)
 	c, err := Load(root)
@@ -131,7 +130,7 @@ func TestEveryKeyIsRead(t *testing.T) {
 }
 
 func TestBadKeysAreRefusedNamingTheLine(t *testing.T) {
-	chartertest.Verifies(t, claims.CH_261126_33GK, "unknown-key-refused")
+	claims.Verifies(t, claims.CH_261126_33GK, "unknown-key-refused")
 	for _, tc := range []struct{ name, src, want string }{
 		{"unknown key", "name = \"x\"\n\nlanguages = [\"go\"]\n", "3: unknown key \"languages\""},
 		{"unknown key in a table", "[python]\ndir = \"dom0\"\ntest = \"t\"\nrunner = \"pytest\"\n", "4: unknown key \"python.runner\""},

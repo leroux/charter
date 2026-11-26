@@ -1,8 +1,9 @@
 # The charter's checks on every pull request and on main: the tooling's
-# tests with the charter's own gate among them, what a change did to the
-# record that its Changes lines do not say, the baseline ratchet, the
-# charter's own report, read from the tooling's test run, which fails the job
-# when an active scenario has no passing test, and the viewer's build.
+# tests with the charter's own gate and the examples' among them, what a
+# change did to the record that its Changes lines do not say, the baseline
+# ratchet, the charter's own report, which runs the tests again and fails
+# the job when an active scenario has no passing test, and the viewer's
+# build.
 # The judge runs on pull requests when the repository holds a Claude Code
 # OAuth token (CLAUDE_CODE_OAUTH_TOKEN, from `claude setup-token`), posts
 # one comment, and fails the job on a verdict that blocks under
@@ -40,17 +41,19 @@ jobs:
         with:
           node-version: "22"
           cache: pnpm
-      # The gate parses TypeScript citations with the root's compiler.
+      # The TypeScript reader's tests parse with the root's compiler, and
+      # its marker's tests run vitest.
       - run: pnpm install --frozen-lockfile
-      # The charter's own gate is among the tooling's tests. The stream is
-      # kept for the report; jq prints what go test would, build errors too.
-      - name: The charter's own gate and the tooling's tests
-        shell: bash
-        run: go test -json -count=1 ./... | tee tooling.json | jq -rj 'select(.Action == "output" or .Action == "build-output") | .Output'
+      # The tooling's tests, the charter's own gate and the examples' among
+      # them, then the gate as an adopter runs it.
+      - name: The tooling's tests and the charter's own gate
+        run: make check-go
+      - name: The examples, each a charter of its own
+        run: make examples
       - name: A change to the record is recorded
         if: github.event_name == 'pull_request'
         run: |
-          go run ./cmd/claimsgen diff "origin/${{ github.base_ref }}"
+          go run ./cmd/charter diff "origin/${{ github.base_ref }}"
       - name: The baseline only shrinks
         if: github.event_name == 'pull_request'
         run: |
@@ -64,7 +67,7 @@ jobs:
         shell: bash
         run: |
           printf '%s\n\n' "## The charter's own report" >> "$GITHUB_STEP_SUMMARY"
-          go run ./cmd/claimsgen report -md -go tooling.json | tee -a "$GITHUB_STEP_SUMMARY"
+          go run ./cmd/charter report -md | tee -a "$GITHUB_STEP_SUMMARY"
       - name: The viewer
         run: make viewer
 
@@ -91,8 +94,8 @@ jobs:
         with:
           node-version: "22"
           cache: pnpm
-      # The claimsgen verbs the judge calls (anchors, lint) parse TypeScript
-      # citations with the root's compiler, and the agent may not run pnpm.
+      # The charter verbs the judge calls run the readers, and the agent may
+      # not run pnpm.
       - run: pnpm install --frozen-lockfile
       - name: Is the token there
         id: token
@@ -114,7 +117,7 @@ jobs:
             request with `gh pr comment`. If there is no finding, the file
             and the comment say so in one line.
           claude_args: >-
-            --allowedTools "Read,Grep,Glob,Write(charter-review.md),Bash(git diff:*),Bash(git log:*),Bash(go run ./cmd/claimsgen:*),Bash(gh pr comment:*),Bash(gh pr view:*),Bash(gh pr diff:*)"
+            --allowedTools "Read,Grep,Glob,Write(charter-review.md),Bash(git diff:*),Bash(git log:*),Bash(go run ./cmd/charter:*),Bash(gh pr comment:*),Bash(gh pr view:*),Bash(gh pr diff:*)"
       # A review that is missing or empty is no verdict, so it fails too.
       # A verdict line may be indented, as in the skill's own example.
       - name: A blocking verdict fails the job
@@ -151,8 +154,7 @@ jobs:
         with:
           node-version: "22"
           cache: pnpm
-      # The claimsgen verbs the audit calls and the gates it runs with go
-      # test parse TypeScript citations with the root's compiler.
+      # The charter verbs the audit calls run the readers.
       - run: pnpm install --frozen-lockfile
       - name: Is the token there
         id: token
@@ -173,4 +175,4 @@ jobs:
             `gh issue create`. Change nothing else; the questions the audit
             files go in the issue, not in claims/questions.md.
           claude_args: >-
-            --allowedTools "Read,Grep,Glob,Write(claims/audit.md),Bash(git log:*),Bash(git diff:*),Bash(go run ./cmd/claimsgen:*),Bash(go test:*),Bash(gh issue create:*)"
+            --allowedTools "Read,Grep,Glob,Write(claims/audit.md),Bash(git log:*),Bash(git diff:*),Bash(go run ./cmd/charter:*),Bash(go test:*),Bash(gh issue create:*)"
