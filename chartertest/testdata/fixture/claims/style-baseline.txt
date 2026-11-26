@@ -1,0 +1,9 @@
+# The fixture's style baseline: a style check's name and the count lint
+# -baseline holds it to, a line. A check left out, here
+# texts-over-six-sentences and pointing-whys, is held to zero.
+
+retired-words 11
+titles-over-twenty-words 1
+scenario-sentences-over-thirty-words 1
+
+shared-tests 1

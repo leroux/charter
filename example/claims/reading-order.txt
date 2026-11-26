@@ -1,0 +1,4 @@
+# The order the digest reads the area documents in: how a request is
+# decided, then how the operator sets the limits.
+limiter.md
+config.md

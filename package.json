@@ -1,0 +1,8 @@
+{
+  "name": "charter",
+  "private": true,
+  "description": "The JavaScript workspace: the TypeScript compiler the gate's citation extractor parses with, and claims-viewer.",
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,3 @@
+# A scenario a test does not verify yet, with the reason; the gate fails a
+# line that absorbs nothing. Never a missing anchor.
+CH-042/typescript-joined	TypeScript runners' annotations are joined once a runner's results are read, which the example does not exercise yet

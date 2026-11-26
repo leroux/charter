@@ -1,0 +1,5 @@
+# The fixture's retired words, one a line: a pattern, -> and the word to
+# write, then | and the phrases whose line or sentence keeps the word.
+quotas? -> bucket | quota defaults; quotas panel
+upsert(s|ed|ing)? -> counter update
+read model -> the views

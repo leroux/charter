@@ -1,0 +1,24 @@
+# One workspace and one lockfile for the JavaScript in this repository: the
+# root package holds the TypeScript compiler the gate's citation extractor
+# parses with, and claims-viewer is the viewer.
+packages:
+  - claims-viewer
+
+catalogMode: strict
+saveExact: true
+catalog:
+  "@types/node": 24.13.4
+  "@types/react": 19.2.18
+  "@types/react-dom": 19.2.7
+  "@vitejs/plugin-react": 5.2.0
+  react: 19.2.8
+  react-dom: 19.2.8
+  typescript: 5.9.3
+  vite: 7.3.6
+  vitest: 5.0.3
+
+minimumReleaseAge: 1440
+blockExoticSubdeps: true
+strictPeerDependencies: true
+allowBuilds:
+  esbuild: true

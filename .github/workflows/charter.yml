@@ -1,0 +1,176 @@
+# The charter's checks on every pull request and on main: the tooling's
+# tests with the charter's own gate among them, what a change did to the
+# record that its Changes lines do not say, the baseline ratchet, the
+# charter's own report, read from the tooling's test run, which fails the job
+# when an active scenario has no passing test, and the viewer's build.
+# The judge runs on pull requests when the repository holds a Claude Code
+# OAuth token (CLAUDE_CODE_OAUTH_TOKEN, from `claude setup-token`), posts
+# one comment, and fails the job on a verdict that blocks under
+# claims/policy.md, or when it wrote no review.
+# The audit runs on the first of each month, or by hand, when the token is
+# there: the claims-audit skill over the whole record, its report opened
+# as an issue.
+name: Charter
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 1 * *"
+  workflow_dispatch:
+
+jobs:
+  gates:
+    name: Gates, history and report
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.1"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      # The gate parses TypeScript citations with the root's compiler.
+      - run: pnpm install --frozen-lockfile
+      # The charter's own gate is among the tooling's tests. The stream is
+      # kept for the report; jq prints what go test would, build errors too.
+      - name: The charter's own gate and the tooling's tests
+        shell: bash
+        run: go test -json -count=1 ./... | tee tooling.json | jq -rj 'select(.Action == "output" or .Action == "build-output") | .Output'
+      - name: A change to the record is recorded
+        if: github.event_name == 'pull_request'
+        run: |
+          go run ./cmd/claimsgen diff "origin/${{ github.base_ref }}"
+      - name: The baseline only shrinks
+        if: github.event_name == 'pull_request'
+        run: |
+          git show "origin/${{ github.base_ref }}:claims/baseline.txt" | grep -v '^#' | cut -f1 | sort > base.txt || true
+          grep -v '^#' claims/baseline.txt | cut -f1 | sort > head.txt || true
+          if added=$(comm -13 base.txt head.txt) && [ -n "$added" ]; then
+            echo "::error file=claims/baseline.txt::the baseline gained $(echo "$added" | tr '\n' ' '); a new surface is accounted for by the decision that owns it, not by the baseline"
+            exit 1
+          fi
+      - name: The charter's own report
+        shell: bash
+        run: |
+          printf '%s\n\n' "## The charter's own report" >> "$GITHUB_STEP_SUMMARY"
+          go run ./cmd/claimsgen report -md -go tooling.json | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: The viewer
+        run: make viewer
+
+  judge:
+    name: The judge
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.1"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      # The claimsgen verbs the judge calls (anchors, lint) parse TypeScript
+      # citations with the root's compiler, and the agent may not run pnpm.
+      - run: pnpm install --frozen-lockfile
+      - name: Is the token there
+        id: token
+        run: echo "present=${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
+      - name: Nothing to run without the token
+        if: steps.token.outputs.present != 'true'
+        run: echo "CLAUDE_CODE_OAUTH_TOKEN is not set; run 'claude setup-token' and add the token as a repository secret to enable the judge"
+      - uses: anthropics/claude-code-action@v1
+        if: steps.token.outputs.present == 'true'
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: >-
+            Run the claims-review skill, the judge, over pull request
+            ${{ github.repository }}#${{ github.event.pull_request.number }}
+            (the diff against origin/${{ github.base_ref }}). Write the
+            verdicts and the summary to charter-review.md in the working
+            directory, then post the same text as one comment on the pull
+            request with `gh pr comment`. If there is no finding, the file
+            and the comment say so in one line.
+          claude_args: >-
+            --allowedTools "Read,Grep,Glob,Write(charter-review.md),Bash(git diff:*),Bash(git log:*),Bash(go run ./cmd/claimsgen:*),Bash(gh pr comment:*),Bash(gh pr view:*),Bash(gh pr diff:*)"
+      # A review that is missing or empty is no verdict, so it fails too.
+      # A verdict line may be indented, as in the skill's own example.
+      - name: A blocking verdict fails the job
+        if: steps.token.outputs.present == 'true'
+        run: |
+          if [ ! -s charter-review.md ]; then
+            echo "::error::the judge wrote no review to charter-review.md, so there is no verdict; see the judge's step log"
+            exit 1
+          fi
+          if grep -Eq '^[[:space:]]*Verdict:[[:space:]]+block' charter-review.md; then
+            echo "::error::the judge found what claims/policy.md blocks on; see its comment on the pull request"
+            exit 1
+          fi
+
+  audit:
+    name: The audit
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.1"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+      # The claimsgen verbs the audit calls and the gates it runs with go
+      # test parse TypeScript citations with the root's compiler.
+      - run: pnpm install --frozen-lockfile
+      - name: Is the token there
+        id: token
+        run: echo "present=${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
+      - name: Nothing to run without the token
+        if: steps.token.outputs.present != 'true'
+        run: echo "CLAUDE_CODE_OAUTH_TOKEN is not set; run 'claude setup-token' and add the token as a repository secret to enable the audit"
+      - uses: anthropics/claude-code-action@v1
+        if: steps.token.outputs.present == 'true'
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: >-
+            Run the claims-audit skill over the whole record. Write the
+            report to claims/audit.md as the skill says, then open one
+            issue titled "Charter audit YYYY-MM-DD" (today's date) whose
+            body is the report's summary and its findings, with
+            `gh issue create`. Change nothing else; the questions the audit
+            files go in the issue, not in claims/questions.md.
+          claude_args: >-
+            --allowedTools "Read,Grep,Glob,Write(claims/audit.md),Bash(git log:*),Bash(git diff:*),Bash(go run ./cmd/claimsgen:*),Bash(go test:*),Bash(gh issue create:*)"
