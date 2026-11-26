@@ -5,25 +5,29 @@ Code: chartertest, the charter package
 How code and tests name the entries, and what the compiler and the gate
 hold those names to.
 
-## CH-020 Every entry has a generated Go and TypeScript symbol, its id with underscores for hyphens, its title the doc comment
+## CH-020 Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment
 
 Status: active
 Serves: CH-002, CH-003
-See: CH-012
-Accounts: env:CHARTER_UPDATE_SPECS, env:CHARTER_UPDATE_TYPESCRIPT
+See: CH-012, CH-261126-PQ7X
 
-The entries package's generated Go declares one variable per entry of any
-status, named by the id with each hyphen as an underscore, holding the id,
-the title, the status and the kind, with the title and the text as its
-doc comment; a planned entry is marked planned, a deprecated one carries a
-deprecation notice naming its document. The TypeScript module maps the
-same symbols to the ids, grouped by prefix, with the title as a doc
-comment. The order both declare the entries in is CH-012's. Each file must
-equal its rendering, or the gate names the command to run; a variable of
-each name makes the gate write the file instead.
+For each language charter.toml names, charter gen writes one file in the
+claims directory declaring a symbol per entry of any status, named by the
+id with each hyphen as an underscore, holding the id, the title, the
+status and the kind, with the title as its doc comment; a planned entry is
+marked planned, a deprecated one carries a deprecation notice naming its
+document. Each file is self-contained: it declares the types, the verifies
+and the observes it offers and imports nothing outside its language's
+standard library. For Go the file is specs.go in a module of its own whose
+go.mod requires nothing, for TypeScript index.ts, for Python claims.py.
+The order the files declare the entries in is CH-012's. charter check
+fails a file that differs from its rendering, or is missing, naming
+charter gen, and never writes one.
 
-Why: a symbol the compiler checks is the link that cannot rot; a symbol
-without the slug is one a title can be refined under.
+Why: a symbol the compiler or the import checks is the link that cannot
+rot, and one without the slug is one a title can be refined under; a file
+that imports nothing of the tooling is one an adopter's build never
+fetches.
 
 Scenarios:
 1. `bare-symbol-declared`: the generated Go declares each entry as its id
@@ -33,12 +37,21 @@ Scenarios:
    planned; a deprecated one carries a deprecation notice naming its
    document.
 3. `typescript-module-rendered`: the TypeScript module equals the
-   committed fixture module, escapes a comment closer in a title, and
-   maps each symbol to its id.
-4. `stale-generated-fails`: a generated Go or TypeScript file that differs
-   from its rendering, or is missing, fails naming the command to run.
-5. `update-writes`: with the update variable set the gate writes the
-   module and a second run is a fixed point.
+   committed fixture module, escapes a comment closer in a title, and maps
+   each symbol to its id.
+4. `python-module-rendered` (owner, backlog 003): the Python module equals
+   the committed fixture module, declares each entry as its symbol, and
+   imports only the standard library.
+5. `go-module-self-contained` (owner, backlog 003): the generated Go
+   module's go.mod requires nothing, and its file imports only the
+   standard library.
+6. `title-only-comment` (owner, backlog 003): each symbol's doc comment is
+   its entry's title, and no generated file holds an entry's text.
+7. `stale-generated-fails` (owner, backlog 003): a generated file of any
+   language that differs from its rendering, or is missing, fails naming
+   charter gen.
+8. `gen-writes` (owner, backlog 003): charter gen writes every generated
+   file, a second run changes nothing, and charter check writes none.
 
 Changes:
 - 2026-10-01: a dated id holds two hyphens, each an underscore in its
@@ -55,8 +68,15 @@ Changes:
   restated planned-and-deprecated-marked and is dropped, its test citing
   this one, which now names the notice's document as the dropped one
   did, and so does the text.
+- 2026-11-26: the symbols are generated per language charter.toml names,
+  Python's claims.py beside Go's and TypeScript's, each file
+  self-contained and Go's in a module of its own (backlog 003). A symbol's
+  doc comment is its title (Q-261015-CPW5). charter gen is the one writer,
+  so the update variables and their Accounts are gone and `update-writes`
+  is dropped for `gen-writes` (Q-261015-Y682); `stale-generated-fails`
+  names any language and the command.
 
-## CH-021 Production code anchors an entry by a directive in a declaration's or package's doc comment, or a TypeScript line comment
+## CH-021 Production code anchors an entry in a Go doc comment, a TypeScript line comment, or above a Python def
 
 Status: active
 Serves: CH-002
@@ -66,7 +86,12 @@ A Go directive is a comment line "//charter:realizes ID, ..." or
 in the doc comment of a package clause or of a declaration; the anchor
 records the kind, the file, the line and the declaration it documents. A
 TypeScript directive is the same text in a line comment of a file that is
-not a test; the anchor records the file and the line.
+not a test; the anchor records the file and the line. A Python directive
+is "# charter:realizes ID, ..." or "# charter:concerns ID, ..." on the
+comment lines directly above a def or a class, or above its decorators,
+in a file that is not a test; the anchor records the file, the line and
+the declaration, and a Python directive anywhere else fails naming the
+declaration to move it above.
 
 Why: the anchor is the pointer from the decision to the code, and the
 declaration it sits on is the place an agent is sent to.
@@ -82,12 +107,21 @@ Scenarios:
    comment that documents no declaration, inside a function or stray in a
    file, fails naming the doc comment to move it to, and counts for
    nothing.
+5. `python-anchor-recorded` (owner, backlog 003): a Python directive above
+   a def, or above its decorators, is recorded as that def's anchor with
+   its file and line.
+6. `python-comment-elsewhere-refused` (owner, backlog 003): a Python
+   directive in a body, parted from its def by a blank line, or stray in a
+   file fails and counts for nothing.
 
 Changes:
 - 2026-10-09: a directive outside a declaration's doc comment was read as
   an anchor on nothing; it is refused.
 - 2026-10-09: the title reworded to twenty words or fewer; the ruling is
   unchanged.
+- 2026-11-26: Python is read: a directive on the comment lines directly
+  above a def or a class, or its decorators, anchors it, and one anywhere
+  else is refused (backlog 003).
 
 ## CH-022 An anchor names an entry that exists and is not planned, and concerns never counts toward coverage
 
@@ -124,10 +158,13 @@ Serves: CH-001, CH-002
 A Go citation is a call of Verifies inside a function whose name starts
 with Test, whose second argument is the entry's symbol and whose further
 arguments are string literals naming the entry's scenarios. A TypeScript
-citation is a call of verifies inside a test call, with the same shape.
-The calls open the test, or a subtest it runs: they are its first
-statements, one after another, and a call that anything precedes or
-encloses, or in a function go test never runs, such as Testx, fails. A TypeScript call in a test
+citation is a call of verifies inside a test call, and a Python one a
+call of verifies in a test_ method of a unittest.TestCase, its first
+argument self, or in a pytest test_ function, its first argument None,
+each with the same shape. The calls open the test, or a subtest it runs:
+they are its first statements, one after another, and a call that
+anything precedes or encloses, or in a function its runner never runs,
+such as Go's Testx, fails. A TypeScript call in a test
 marked skip, fixme, fail or todo, or to a verifies the test file declares
 itself, fails. A call anywhere else, a spec named by anything but its
 symbol, a handle that is not a literal, or a handle the entry does not
@@ -162,6 +199,12 @@ Scenarios:
     test marked skip, fixme or fail fails and counts for nothing.
 11. `local-verifies-refused` (owner): a verifies declared in
     the test file itself fails and counts for nothing.
+12. `python-citation-read` (owner, backlog 003): a verifies opening a
+    unittest test_ method, or a pytest test_ function, is a citation with
+    its file, test, line and handles.
+13. `python-later-statement-refused` (owner, backlog 003): a Python
+    verifies that another statement precedes, or in a method or function
+    the runner does not collect, fails and counts for nothing.
 
 Changes:
 - 2026-10-09: a citation counted wherever it sat in a test, after a skip,
@@ -169,46 +212,75 @@ Changes:
   TypeScript test or through a verifies the test declared; each is refused.
 - 2026-10-09: the title reworded to twenty words or fewer; the ruling is
   unchanged.
+- 2026-11-26: Python is read: a verifies opening a unittest test_ method
+  or a pytest test_ function is a citation, held to the same refusals as
+  Go's and TypeScript's (backlog 003).
 
-## CH-024 Verifies and verifies mark the running test with each citation, "ID" or "ID/handle", in the runner's structured output
+## CH-024 Each language's verifies records each citation and its test's outcome as a JSON line in the events file
 
 Status: active
 Serves: CH-001
+Accounts: env:CHARTER_EVENTS
 
-The Go marker is a test attribute per citation, which go test's JSON
-stream reports as an attr event on the test before its result; the
-helper a TypeScript test runner calls may annotate the running test the
-same way. A nil spec is refused at run time. The report reads these events.
+When CHARTER_EVENTS names a file, the generated verifies of every language
+appends to it, once the test ends, one JSON line per citation: the id, the
+handle when one is named, the test, its file and its outcome, passed,
+failed or skipped. With the variable unset it records nothing and the test
+runs as it would. Lines appended by tests running at once are each whole.
+A nil or missing symbol is refused at run time. The report reads these
+lines.
 
-Why: the attribute is what turns coverage from a static claim into a
-sensor: one run says which scenarios passed, failed or were skipped.
+Why: the line turns coverage from a static claim into a sensor: one run
+says which scenarios passed, failed or were skipped, and one format
+written by every language is one join for the report, not one per runner.
 
 Scenarios:
-1. `attr-per-citation`: a test citing an entry emits an attr event with
-   its id, and one naming a handle emits "ID/handle"; a skipped subtest
-   reports its attr before its skip.
-2. `nil-spec-refused`: Verifies with a nil spec fails the test.
+1. `event-per-citation` (owner, backlog 003): a Go, a Python and a
+   TypeScript test citing a scenario each append a line with the id, the
+   handle, the test, the file and the outcome.
+2. `outcome-recorded` (owner, backlog 003): a passing, a failing and a
+   skipped test record passed, failed and skipped, a skip after the
+   citation included.
+3. `unset-records-nothing` (owner, backlog 003): with CHARTER_EVENTS
+   unset, a citing test writes no file and passes as it would.
+4. `concurrent-lines-whole` (owner, backlog 003): tests running in
+   parallel and appending at once leave every line a whole JSON object.
+5. `nil-spec-refused`: Verifies with a nil spec fails the test.
 
-## CH-025 The entries package holds only observations and the generated file, and no entry is assigned outside its declaration
+Changes:
+- 2026-11-26: the marker is a JSON line per citation in the file
+  CHARTER_EVENTS names, written by every language's generated verifies
+  with the test's outcome, where Go's was a test attribute in go test's
+  JSON stream; `attr-per-citation` is dropped for `event-per-citation`,
+  and `outcome-recorded`, `unset-records-nothing` and
+  `concurrent-lines-whole` are added (backlog 003).
+
+## CH-025 The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry
 
 Status: active
 Serves: CH-003
 
-A hand-written file of the entries package declares observations as
-addressed composite literals with keyed, literal fields and nothing else:
-no function, no other declaration, no spec written in Go. No test file
-assigns to an entry or a field of one, and no test dot-imports the
-package.
+Beside the markdown of the record and charter.toml, the claims directory
+holds only the files charter gen writes; a source file there that gen did
+not write fails, saying entries and observations are written in markdown.
+No test file assigns to an entry or a field of one, and no Go test
+dot-imports the generated package.
 
-Why: the generated file is the registry's Go; anything else written there
-is a spec the documents do not know, and a mutated entry is a lie to every
-test after it.
+Why: the generated files are the registry in each language, and anything
+else written there is a spec or a fact the documents do not know; a
+mutated entry is a lie to every test after it.
 
 Scenarios:
-1. `functions-refused`: a function in the entries package fails.
-2. `spec-in-go-refused`: a hand-written spec value fails, saying a spec is
-   written in a document.
-3. `assignment-refused`: an assignment to an entry, or to one of its
+1. `hand-written-source-refused` (owner, backlog 003): a source file in
+   the claims directory that charter gen did not write fails, saying
+   entries and observations are written in markdown.
+2. `assignment-refused`: an assignment to an entry, or to one of its
    fields, from a test file or from the package's own tests, fails.
-4. `dot-import-refused`: a test file dot-importing the entries package
+3. `dot-import-refused`: a test file dot-importing the entries package
    fails.
+
+Changes:
+- 2026-11-26: observations are markdown (CH-261126-HK6S), so the claims
+  directory holds no hand-written code at all: `functions-refused` and
+  `spec-in-go-refused` are dropped for `hand-written-source-refused`
+  (backlog 003).

@@ -103,7 +103,7 @@ Scenarios:
 
 Status: active
 Serves: CH-003
-See: CH-040, CH-014
+See: CH-040
 
 An id is a prefix and then either a number, as SW-118, or the day it was
 taken and a code, as SW-261001-K7Q2; a heading whose id is neither is a
@@ -112,13 +112,11 @@ day; the code is four characters of BCDFGHJKMNPQRSTVWXYZ23456789, the
 consonants and digits that spell no word and are not read as one
 another. The numbered ids stand as they are, and next gives every new
 id, of the second kind and one the tree does not hold, as CH-040 rules.
-Which ids may name a spec file of the earlier form is CH-014's. Ids are
-unique across the area documents and the spec files of the earlier form;
-a second declaration fails naming both places and saying that the entry
+Ids are unique across the area documents; a second declaration fails naming both places and saying that the entry
 that has not landed takes a new id. The entries of the area documents are
 ordered by prefix, and within one the numbered ids first, by number, then
-the dated ones by date and code, and the generated Go and TypeScript
-module declare them in that order.
+the dated ones by date and code, and every generated file declares
+them in that order.
 
 Why: no state file and no counter to share: the tree is the state. One
 above the highest is the same number on every branch cut from one tree,
@@ -130,14 +128,13 @@ The date adds nothing to that. It is there so that ids read in the order
 they were taken.
 
 Scenarios:
-1. `declared-once`: an id declared in two documents, or a document and a
-   spec file, fails naming both and saying the entry not yet landed takes
-   a new id.
+1. `declared-once`: an id declared in two documents fails naming both and
+   saying the entry not yet landed takes a new id.
 2. `id-form`: numbered and dated ids parse; an off-calendar date or a code
    not four characters of the alphabet is a form problem.
 3. `ordered-by-date`: area entries come by prefix, and within one numbered
-   ids by number before dated ones by date and code, in the generated Go
-   and the TypeScript module alike.
+   ids by number before dated ones by date and code, in every generated
+   file alike.
 
 Changes:
 - 2026-10-01: a new id is the day it was taken and a random code, where
@@ -159,6 +156,10 @@ Changes:
   generated files declare them in with it: CH-020's bare-symbol-declared
   stated it too and now points here, and the text says the generated Go
   and TypeScript module follow it.
+- 2026-11-26: spec files are no longer read (Q-261015-N4HJ), so ids are
+  unique across the area documents alone and `declared-once` names two
+  documents; the order holds in every generated file, Python's among them
+  (backlog 003).
 
 ## CH-013 Status is planned, active or deprecated, every status generates a symbol, and coverage is asked of active entries only
 
@@ -192,7 +193,7 @@ Changes:
 
 ## CH-014 The earlier form, one file per spec, is read beside the area documents until it is migrated
 
-Status: active
+Status: deprecated
 Serves: CH-003
 
 A spec file in the spec directory, named for its numbered id, never a
@@ -219,28 +220,64 @@ Changes:
 - 2026-10-09: that a dated id names no spec file is ruled here alone, a
   spec file's name being this entry's subject: CH-012's id-form stated it
   too and now points here, and the text and file-name-checked say it.
+- 2026-11-26: deprecated (Q-261015-N4HJ): neither charter holds a spec
+  file, so the earlier form is no longer read, and its code goes with the
+  rewrite (backlog 003).
 
 ## CH-015 Serves and See name existing entries, a need serves nothing, and nothing names itself
 
 Status: active
 Serves: CH-002
 
-Every id under Serves or See, and under the earlier form's Realizes,
-Concerns and Related, names an entry the charter holds; an entry naming
-itself fails; a stakeholder spec of the earlier form realizes nothing. An
-observation's Supports names existing entries too.
+Every id under Serves or See names an entry the charter holds, and an
+entry naming itself fails. An observation's Supports names existing
+entries too.
 
 Why: a relation to nothing is a broken link, and the reader following
 it deserves to be told at the gate, not at the end.
 
 Scenarios:
-1. `unknown-target`: a Serves, See or Realizes naming no entry fails
-   naming the relation and the id.
+1. `unknown-target`: a Serves or See naming no entry fails naming the
+   relation and the id.
 2. `self-relation`: an entry that serves itself fails.
-3. `stakeholder-realizes-nothing`: a stakeholder spec of the earlier form
-   with a Realizes fails.
-4. `observation-supports-existing`: an observation supporting an id that
+3. `observation-supports-existing`: an observation supporting an id that
    is not a spec fails.
+
+Changes:
+- 2026-11-26: the earlier form's relations are no longer read
+  (Q-261015-N4HJ): `stakeholder-realizes-nothing` is dropped with them,
+  and `unknown-target` names Serves and See alone.
+
+## CH-261126-HK6S An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
+
+Status: planned
+Serves: CH-005
+See: CH-035, CH-032
+
+observations.md in the claims directory holds one observation per heading,
+"## Name", the name an upper-camel word unique among the observations,
+then its text, what was seen or read. Its field lines are Subject, Status
+(observed, documented, broken or unsure), Observed (a date), Source and
+Supports, the entries that rest on it. An unknown field, a field twice, a
+status outside the four or a name declared twice is a form problem naming
+the line. Each language's generated file declares a symbol per
+observation, by its name, and an observes its probes call.
+
+Why: a fact written as Go could be checked only by a Go probe and read
+only by someone reading Go; written as markdown beside the entries it
+supports, a probe in any language checks it and every reader of the record
+sees it.
+
+Scenarios:
+1. `observation-read` (owner, backlog 003): a well-formed observation
+   yields its name, subject, status, date, source, the entries it supports
+   and its text.
+2. `observation-form-checked` (owner, backlog 003): an unknown field, a
+   field twice, a status outside the four and a name declared twice are
+   form problems naming the line.
+3. `observation-symbol-generated` (owner, backlog 003): each generated
+   file declares a symbol per observation, and a probe's observes naming
+   one is read in Go, Python and TypeScript.
 
 ## CH-261009-VY5C A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional
 

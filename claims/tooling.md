@@ -2,35 +2,36 @@
 
 Code: cli, cmd/claimsgen, chartertest
 
-What claimsgen does for a person or an agent, on any charter its command
-is given.
+What the charter command does for a person or an agent, on the charter
+it finds.
 
-## CH-040 claimsgen generates the files, lints, gives new ids and lists an entry's anchors, on any charter
+## CH-040 One charter command generates, checks, lints, gives ids and lists anchors, and an adopter writes no main
 
 Status: active
 Serves: CH-002
+See: CH-261126-33GK
 
-Without a command claimsgen writes the generated Go and the TypeScript
-module from the documents alone, so it works when a generated file is
-stale or missing. lint prints the gate's problems and then the advice.
-next prints a new id for a prefix, the day's UTC date and a code drawn at
-random, drawn again when the tree already holds that id, or as many as the
-count after the prefix asks for, each different. anchors prints, per id,
-the document, the title, the status, the scenarios, the realizing and
+charter gen writes the generated files from the documents alone, so it
+works when one is stale or missing. check runs the gate (CH-037), lint
+prints the gate's problems and then the advice, report and diff are
+CH-042's and CH-261009-QQC8's, and export is CH-261015-9ZTY's. next prints
+a new id for a prefix, the day's UTC date and a code drawn at random,
+drawn again when the tree already holds that id, or as many as the count
+after the prefix asks for, each different. anchors prints, per id, the
+document, the title, the status, the scenarios, the realizing and
 concerning sites with their declarations, the verifying tests with the
-handles each names, and the relations. A repository's own command passes
-the charters it keeps, each by name with its gate's options; the charter
-flag selects one by name, the first when none is named, and refuses a name
-it was not given. A charter whose options name no root is read from the
-module above the working directory, never the module of the tooling the
-command was built with.
+handles each names, and the relations. Every verb works on the charter
+CH-261126-33GK finds, and an adopter writes or builds nothing of its own
+to run them.
 
 Why: the agent's way in and the person's way to regenerate are one
-command with four verbs.
+command; a command an adopter must write a main for is one they write
+wrong, or let fall behind the tooling.
 
 Scenarios:
-1. `generate-writes-both`: generation writes the Go and the TypeScript
-   module, and the written module equals the committed fixture module.
+1. `gen-from-documents-alone` (owner, backlog 003): charter gen writes
+   every generated file when one of them is missing or stale, reading the
+   documents alone.
 2. `registry-lists-everything`: the registry gives each entry with
    scenarios, anchors and citations by handle, each area document in
    reading order with title, code and summary, and each waiver with its
@@ -40,12 +41,9 @@ Scenarios:
    tree holds.
 4. `next-count`: next with a count gives that many ids, each different,
    and a count that is not a number above zero is refused.
-5. `charter-flag-selects` (agent, provisional): the charter flag selects
-   a charter the command was given by its name, the first when none is
-   named, and a name it was not given is refused.
-6. `root-from-working-directory` (agent, provisional): a charter given
-   without a root is read from the module above the working directory,
-   though the tooling is another module.
+5. `verbs-on-the-found-charter` (owner, backlog 003): run inside an
+   adopter's tree, each verb reads the charter found there, with no
+   command of the adopter's own.
 
 Changes:
 - 2026-10-01: next gives dated ids, where it gave one above the highest,
@@ -73,6 +71,13 @@ Changes:
   from the module above the working directory, since the calling file is
   the tooling's, in another module; `root-from-working-directory` is
   added.
+- 2026-11-26: the verbs are one charter command, the gate's check and
+  claimsmap's export among them, working on the charter it finds above the
+  working directory. An adopter writes no main, so the charter flag and a
+  root given in options are gone, `charter-flag-selects` and
+  `root-from-working-directory` with them; `generate-writes-both` becomes
+  `gen-from-documents-alone`, and `verbs-on-the-found-charter` is added
+  (backlog 003).
 
 ## CH-041 Lint advises on what the gate does not fail
 
@@ -136,7 +141,7 @@ Scenarios:
 11. `pointing-why-named` (owner): a Why under twenty-five
     words naming a story, a ruling or a review is counted, and listed
     under -style; a longer one, or one naming none, is not.
-12. `shared-test-named` (owner): a Go or TypeScript test
+12. `shared-test-named` (owner): a test in any language
     citing scenarios of two decisions and no need is counted, and listed
     once under -style; one also citing a need is not.
 
@@ -151,10 +156,12 @@ Changes:
   over six sentences, scenario sentences over thirty words, a Why that
   only points, and a test two decisions share; by default the style checks
   print their counts, and `lint -style` lists the lines.
+- 2026-11-26: `shared-test-named` holds for a test in any language the
+  charter reads, Python's among them (backlog 003).
 
 ## CH-261009-SNX2 lint -baseline fails when a style check's count exceeds its count in the style baseline, naming both counts
 
-Status: active
+Status: deprecated
 Kind: bound
 Serves: CH-001
 See: CH-041
@@ -195,51 +202,62 @@ Scenarios:
 5. `flags-exclusive`: lint with -baseline and -style
    together is refused, and either alone is taken.
 
+Changes:
+- 2026-11-26: deprecated (Q-261015-5YV3): style is advice, nothing runs
+  the ratchet and the style baseline is not kept, so lint -baseline goes
+  with the rewrite (backlog 003).
+
 ## CH-042 A report joins each test's markers to its scenarios and says which passed, failed, were skipped or have none
 
 Status: active
 Serves: CH-001
+See: CH-024
 
-The report runs the Go suite with structured output, reads the citation
-markers each test emitted, and writes, per entry and per scenario, the
-citing tests and their result: passed when a citing test passed and none
-failed, failed when one failed, skipped when every one was skipped, none
-when no citing test ran. An active scenario, or an active entry without
-scenarios, that did not pass is unverified, and the report fails on any.
-Each scenario is shown with who ruled it, and the active scenarios are
-counted by it: the owner's, a delegate's, an agent's provisional. A
-markdown rendering opens with that count, lists the unverified ones
-first, then every entry. The markers TypeScript test runners emit are
-not yet joined.
+The report sets CHARTER_EVENTS to a file of its own, runs the test command
+of each language charter.toml names in that language's directory, and
+reads the lines the markers wrote. It writes, per entry and per scenario,
+the citing tests and their result: passed when a citing test passed and
+none failed, failed when one failed, skipped when every one was skipped,
+none when no citing test ran. A command that cannot start, or fails having
+written no line, fails the report naming the language and its output. An
+active scenario, or an active entry without scenarios, that did not pass
+is unverified, and the report fails on any. Each scenario is shown with
+who ruled it, and the active scenarios are counted by it: the owner's, a
+delegate's, an agent's provisional. A markdown rendering opens with that
+count, lists the unverified ones first, then every entry.
 
 Why: the gate cannot see whether the tests ran; the report is the sensor
 that closes the loop.
 
 Scenarios:
-1. `go-results-joined`: a run of the Go suite yields, per scenario, the
-   citing tests and pass, fail or skip, folded into one outcome.
+1. `results-joined` (owner, backlog 003): runs of Go, Python and
+   TypeScript tests yield, per scenario, the citing tests and their
+   outcomes, folded into one outcome.
 2. `skipped-scenario-fails`: an active scenario whose every citing test
    was skipped, or that no test ran, is unverified; a planned or a
    deprecated entry is never.
 3. `markdown-rendered`: the markdown lists the unverified scenarios first,
    then each entry with its scenarios, their tests and their outcomes.
-4. `typescript-joined`: the annotations a TypeScript test runner emits,
-   vitest's or Playwright's, are joined the same way.
-5. `provenance-and-profile` (owner): each scenario's
-   provenance is in the report, and the active scenarios are counted by
-   who ruled them, passed and all.
-
-Guidance: the stream is go test -json; the attr events carry "ID" or
-"ID/handle" under the key claim, and the pass, fail and skip events for
-the same package and test follow them.
+4. `provenance-and-profile` (owner): each scenario's provenance is in the
+   report, and the active scenarios are counted by who ruled them, passed
+   and all.
+5. `command-failure-named` (owner, backlog 003): a test command that
+   cannot start, or fails having written no line, fails the report naming
+   the language and the output.
 
 Changes:
 - 2026-10-09: the report shows who ruled each scenario and counts the
   active ones by it.
+- 2026-11-26: the report runs each language's test command from
+  charter.toml and reads the events file every marker writes, where it ran
+  the Go suite and read go test's JSON stream, so TypeScript and Python
+  are joined too: `go-results-joined` and `typescript-joined` are dropped
+  for `results-joined`, `command-failure-named` is added, and the Guidance
+  on the stream goes (backlog 003).
 
 ## CH-261005-VFJR mutate breaks an entry's realizing code and says, per scenario, whether the tests that cite it noticed
 
-Status: active
+Status: deprecated
 Serves: CH-001
 See: CH-042, CH-030
 
@@ -303,13 +321,15 @@ Changes:
   a step of every change, the owner having ruled so when a diff-scoped
   run over one change named 858 mutants and would have run for hours;
   the tool is unchanged.
+- 2026-11-26: deprecated: mutate is dropped with the rewrite, its command
+  and code with it, and may return per language if the benchmarks show it
+  earns its cost (backlog 003).
 
 ## CH-261005-6ZBS The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why
 
 Status: active
 Serves: CH-001
 See: CH-040, CH-010
-Accounts: env:CHARTER_UPDATE_DIGEST
 
 The digest is one generated markdown file. It lists each active need
 under the area whose active decisions most often reach it through what
@@ -322,10 +342,9 @@ the order of its document: its id linked to its heading, its title, its
 Kind, and the first sentence of its Why; planned and deprecated ones are
 counted, not listed. The reading order is a file listing the area
 documents one a line; one it leaves out, or a line that names none or
-names one twice, fails the gate. Generation writes the digest beside the
-generated symbols, and the gate fails a digest that is missing or differs
-from the documents, naming the command that writes it; the gate writes
-it instead when CHARTER_UPDATE_DIGEST is set.
+names one twice, fails the gate. charter gen writes the digest beside the
+generated symbols, and charter check fails a digest that is missing or
+differs from the documents, naming charter gen.
 
 Why: the charter says what the system does in sentences a person can
 read, but in 24 documents in the order they were written, so a reader
@@ -351,21 +370,23 @@ Scenarios:
 Changes:
 - 2026-10-09: the title and three scenarios reworded to the style's bars;
   the ruling is unchanged.
+- 2026-11-26: charter gen is the one writer of the digest, so
+  CHARTER_UPDATE_DIGEST and its Accounts are gone (Q-261015-Y682).
 
-## CH-261015-9ZTY Either charter exports as one file, which the viewer shows as linked pages in the charter's reading order
+## CH-261015-9ZTY A charter exports as one file, which the viewer shows as linked pages in its reading order
 
 Status: planned
 Serves: CH-001, CH-002
 See: CH-040, CH-261005-6ZBS, CH-261009-3FHW
 
-The export writes either charter to one file: each area document in the
+charter export writes the charter it finds to one file: each area document in the
 reading order with its header, each entry with its fields, text, Why,
 scenarios and who ruled each, Guidance and Changes, its anchors and its
 citations by handle, the waivers, the observations and the gate's
 problems. A charter the gate fails on is still exported, its problems
 printed apart. The viewer reads that file, or one dropped on the page,
 and names no charter's areas or ids, so the charter's own charter reads
-as the product's does. Its pages walk the areas in the reading order,
+as an adopter's does. Its pages walk the areas in the reading order,
 place each need under its area as the digest does, show each area
 document with coverage beside each entry and each entry with what it
 serves and what serves it, and search the record, an exact id opening its
@@ -381,7 +402,7 @@ charter keeps working as the record grows and reads the charter's own as
 well, and one that writes nothing cannot drift from what it shows.
 
 Scenarios:
-1. `export-carries-the-record` (agent, provisional): exporting either
+1. `export-carries-the-record` (agent, provisional): exporting a
    charter writes one file with each area in the reading order and each
    entry's text, scenarios, anchors and citations, the waivers and the
    observations.
@@ -393,7 +414,7 @@ Scenarios:
    file.
 4. `any-charter-reads` (agent, provisional): the charter's own
    charter, whose areas and ids the viewer names nowhere, shows its
-   walkthrough, areas and entries as the product's does.
+   walkthrough, areas and entries as an adopter's does.
 5. `pages-in-reading-order` (agent, provisional): the walkthrough lists
    the areas in the reading order, each need sits under the area the
    digest gives it, and an area's previous and next follow the order.
@@ -405,12 +426,18 @@ Scenarios:
    cites shows tested, one a waiver accepts waived, one neither untested,
    and passed or failed only with a report beside the file.
 
-## CH-261009-QQC8 claimsgen diff names what a change did to the record that its Changes lines do not say
+Changes:
+- 2026-11-26: the export is charter export, of the charter the command
+  finds, where claimsmap chose between the product's charter and the
+  charter's own; the text and two scenarios name an adopter's charter for
+  the product's (backlog 003).
+
+## CH-261009-QQC8 charter diff names what a change did to the record that its Changes lines do not say
 
 Status: active
 Serves: CH-261009-3FHW
 
-Given a git revision, claimsgen diff reads the area documents as they
+Given a git revision, charter diff reads the area documents as they
 were there and as they are, and names, by id: an entry removed; an active
 entry made planned; an entry deprecated, or its text, Kind or a scenario
 changed or removed, with no Changes line the revision lacked; and a
@@ -435,3 +462,35 @@ Scenarios:
    or a delegate at the revision and provisional now is named.
 5. `recorded-change-passes` (owner): a change with a new dated
    Changes line, or an entry only set active, names nothing.
+
+Changes:
+- 2026-11-26: the verb is charter diff, of the one charter command
+  (CH-040); the ruling is unchanged (backlog 003).
+
+## CH-261126-5JMD The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
+
+Status: planned
+Serves: CH-261126-NS7T
+See: CH-261126-33GK
+
+The claims skills, draft, implement, review, audit and probe, ship as a
+Claude Code plugin of this repository, which an adopter installs. A skill
+names the commands of the method and finds the adopter's layout, the
+claims directory, the languages and their test commands, in charter.toml;
+it names no file of one repository's layout. The method's document gives
+the section an adopter puts in its CLAUDE.md as a template.
+
+Why: skills written for one product send an agent in another repository to
+files that are not there; skills that read the layout from the file the
+command reads go wherever the charter does, and a plugin is how they get
+there.
+
+Scenarios:
+1. `plugin-lists-the-skills` (owner, backlog 003): the plugin's manifest
+   lists the five skills, and each skill's file is in the plugin.
+2. `no-fixed-layout` (owner, backlog 003): no skill names cmd/claimsgen,
+   claims/README.md or a path of one product, and each one needing the
+   layout reads charter.toml.
+3. `claude-md-template` (owner, backlog 003): the method's document holds
+   the CLAUDE.md section as a template naming the charter command and
+   charter.toml.

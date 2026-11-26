@@ -41,6 +41,15 @@ Ruled by the owner, 2026-11-26.
 | 18 | How is a language supported? | Built in, and only built in: a language is a reader (source files to facts: anchors, citations, references, refused directives), a generator (the symbol file its tests import) and a marker (its runtime record of each citation's outcome). The gate's rules see facts only. A new language is a change to the charter. |
 | 19 | Which languages? | Go, Python and TypeScript, TypeScript ported onto the same three parts. |
 | 20 | What becomes of mutate? | Dropped: CH-261005-VFJR is deprecated, and the command and its code go. It may return, per language, if the benchmarks (002) show it earns its cost. |
+| 21 | Does an adopter's code import the charter? | No. Each language's generated file is self-contained: `claims/specs.go` declares its own Spec and Verifies and `claims/go.mod` requires nothing; `claims/index.ts` exports verifies; `claims/claims.py` as ruling 10. Only the binary depends on this module. |
+| 22 | How does every language report a citation's outcome? | One sink: with `CHARTER_EVENTS` set, every generated verifies, Go's included, appends a JSON line per citation with the test and its outcome. The report sets it and runs each configured command; go test -json is not read. |
+| 23 | How does one charter keep out of another's tree? | A directory below the root that holds its own `claims/charter.toml` is another charter's and the walk skips it; charter.toml's ignore covers the rest. |
+| 24 | What becomes of observations? | They move to `claims/observations.md`, parsed like entries; each language's generated file has observes; a probe is a test under a path charter.toml names. CH-025's Go-literal rules go. |
+| 25 | Which surface kinds are built in? | Environment variables, in all three languages: each reader reports the reads, a read by literal is refused, and charter.toml names each language's constants module. Build tags, OpenAPI operations and event kinds become declared kinds. |
+| 26 | Q-261015-N4HJ | Yes: the one-file-per-spec form is no longer read; CH-014 is deprecated. |
+| 27 | Q-261015-Y682 | Yes: `charter gen` is the one writer of generated files; the update variables go. |
+| 28 | Q-261015-CPW5 | Yes: a generated symbol's doc comment is its entry's title. |
+| 29 | Q-261015-5YV3 | Yes: lint -baseline and the style baseline are retired; CH-261009-SNX2 is deprecated. |
 
 ## To do, in order
 
@@ -60,3 +69,29 @@ Ruled by the owner, 2026-11-26.
    on 2026-11-26 (`claims/` at its root, STK and SW, six needs, ten areas
    with verdict active first, design.md's Decisions reduced to a map,
    machine-file keys as a surface when that area goes active, no CI yet).
+
+## Charter
+
+Drafted 2026-11-26, for the owner's review before any build.
+
+New, planned:
+
+- CH-261126-33GK charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know (`config.md`)
+- CH-261126-PQ7X A language is a reader, a generator and a marker, built in, and read only when charter.toml names it (`languages.md`)
+- CH-261126-NTRR A declared surface kind is a command run from the root whose output lines are its keys (`gate.md`)
+- CH-261126-HK6S An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports (`form.md`)
+- CH-261126-5JMD The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone (`tooling.md`)
+
+Changed, each with a dated line: CH-002, CH-003, CH-004, CH-261126-NS7T
+(`needs.md`); CH-012, CH-015 (`form.md`); CH-020, CH-021, CH-023, CH-024,
+CH-025 (`anchoring.md`); CH-031, CH-032, CH-033, CH-034, CH-036, CH-037
+(`gate.md`); CH-040, CH-041, CH-042, CH-261005-6ZBS, CH-261015-9ZTY,
+CH-261009-QQC8 (`tooling.md`).
+
+Deprecated: CH-014, CH-261009-SNX2, CH-261005-VFJR.
+
+Answered: Q-261015-N4HJ, Q-261015-Y682, Q-261015-CPW5, Q-261015-5YV3.
+
+The changed active entries state the rewrite's behaviour ahead of its
+code, so until the build the gate names their new scenarios as untested,
+the old tests' dropped handles, and the update variables as unaccounted.

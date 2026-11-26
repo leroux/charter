@@ -37,8 +37,8 @@ Status: active
 From an entry's id the tooling lists the code that realizes it, by file,
 line and declaration, and the tests that verify it, by file, test and
 scenario. Every problem the gate reports names a file, a line and what to
-do. Symbols are generated, so a citation of an entry that does not exist
-fails to compile.
+do. Symbols are generated in each language the charter reads, so a citation
+of an entry that does not exist fails to compile or to import.
 
 Why: an agent building to a decision needs the way in and the way to know
 it is done, without reading the whole tree or guessing what a failure
@@ -53,6 +53,12 @@ Scenarios:
 3. `planned-entry-cited-first`: a test may cite a planned entry, so a test
    can be written before the code, and the gate asks nothing else of it.
 
+Changes:
+- 2026-11-26: symbols are generated in each language the charter reads,
+  Go, Python and TypeScript, so a citation of an entry that does not exist
+  fails to compile or to import, where it named Go's compiler alone
+  (backlog 003).
+
 ## CH-003 The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated
 
 Status: active
@@ -66,8 +72,8 @@ Why: everything hangs on the ids: anchors, citations, waivers, the
 backlog. A record that renumbers or forgets is not a record.
 
 Scenarios:
-1. `id-declared-once`: two entries with one id, in one document, in two
-   documents, or in a document and a spec file, fail naming both places.
+1. `id-declared-once`: two entries with one id, in one document or in two
+   documents, fail naming both places.
 2. `retired-entry-still-builds`: a deprecated entry is generated with a
    deprecation notice and the gate asks no coverage of it.
 3. `next-free-id`: a new id with a prefix is one the charter does not
@@ -79,13 +85,16 @@ Changes:
   changed (CH-012).
 - 2026-10-09: the title reworded to twenty words or fewer; the ruling is
   unchanged.
+- 2026-11-26: the earlier form's spec files are no longer read
+  (Q-261015-N4HJ), so `id-declared-once` names two documents, not a
+  document and a spec file.
 
 ## CH-004 No surface exists that an entry does not own, and the baseline only shrinks
 
 Status: active
 
-Every environment variable, build tag, contract operation and event kind
-the tree exposes is named by an entry's Accounts, or listed with a reason
+Every environment variable the tree reads, and every surface of a kind
+the charter declares, is named by an entry's Accounts, or listed with a reason
 in a baseline that predates the charter. The gate fails a surface neither
 names, a baseline line whose surface is gone or now accounted for, and a
 read of an environment variable that goes through anything but a named
@@ -95,12 +104,19 @@ Why: the surfaces are the operator's contract with the system. A variable
 nobody claims is a promise nobody keeps.
 
 Scenarios:
-1. `unaccounted-surface-fails`: a build tag no entry accounts for and the
-   baseline does not list fails naming it.
+1. `unaccounted-surface-fails` (owner, backlog 003): a key of a declared
+   kind that no entry accounts for and the baseline does not list fails
+   naming it.
 2. `baseline-holds-only-live-gaps`: a baseline line for a surface that is
    gone, or that an entry now accounts for, fails naming the entry.
-3. `env-read-through-a-constant`: an environment read whose argument is a
-   string literal, or a variable, fails naming the constant to use.
+3. `env-read-through-a-constant` (owner, backlog 003): an environment read
+   in Go, Python or TypeScript whose argument is a string literal, or a
+   variable, fails naming the constant to use.
+
+Changes:
+- 2026-11-26: environment variables are the one built-in kind, read in Go,
+  Python and TypeScript; build tags, contract operations and event kinds
+  become kinds a charter declares, like any other (backlog 003).
 
 ## CH-005 An external system's fact is recorded with its source and date, and no active entry rests on one found false
 
@@ -153,28 +169,47 @@ Changes:
   the product; the example adopter is a module of its own, which every
   walk skips.
 
-## CH-261126-NS7T An adopter keeps a charter in their own repository with the tooling as a dependency, nothing of it copied
+## CH-261126-NS7T An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling
 
 Status: active
 
-A repository takes the charter up by requiring this module: it writes its
-entries in its own claims directory, its gate as a test that passes its
-options to the gate, and a claimsgen of its own whose main passes the same
-options to the command line. Nothing of the tooling is copied into it,
-and the example adopter in this repository is kept so, its gate run with
-the tooling's tests.
+A repository takes the charter up by writing its entries and a
+charter.toml in its own claims directory and running the charter command
+over it. Its code imports nothing of the tooling: its tests cite through
+the files the command generates. The layout is the repository's own: Go
+modules nested anywhere, Python and TypeScript beside them, and no go.mod
+at the root. The examples in this repository are kept so, each checked
+with the tooling's tests.
 
 Why: a method one repository can use only by copying its tooling is a
 fork, not a method; and an adopter in the same tree is what tells a change
 to the tooling that it broke the people who use it, before they find out.
 
 Scenarios:
-1. `example-gate-passes` (agent, provisional): the example adopter, with
-   the tooling as a dependency, passes its own gate, and its own
-   claimsgen lints its charter clean.
+1. `example-gate-passes` (owner, backlog 003): the ratelimit example
+   passes charter check over its own charter, and charter lint finds
+   nothing it fails on.
 2. `example-untested-scenario-named` (agent, provisional): a copy of the
    example whose test of one scenario no longer cites it fails its gate,
    naming that scenario.
+3. `polyglot-example-passes` (owner, backlog 003): an example of Go in a
+   nested module and Python beside it, with no go.mod at its root, passes
+   charter check over its own charter.
+4. `polyglot-untested-scenario-named` (owner, backlog 003): a copy of that
+   example whose Python test no longer cites a scenario fails charter
+   check, naming the scenario.
+5. `nothing-of-the-tooling-imported` (owner, backlog 003): no file of
+   either example imports a package of the tooling, and no go.mod of
+   theirs requires it.
+
+Changes:
+- 2026-11-26: an adopter keeps claims/charter.toml and runs the charter
+  command, where it required this module and wrote a gate test and a
+  claimsgen of its own, and its code imports nothing of the tooling, the
+  generated files carrying what its tests call. Any layout and the three
+  languages are kept, a second example of Go and Python proving it;
+  `polyglot-example-passes`, `polyglot-untested-scenario-named` and
+  `nothing-of-the-tooling-imported` are added (backlog 003).
 
 ## CH-261009-3FHW A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named
 
