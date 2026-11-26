@@ -228,7 +228,9 @@ var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/ch
 var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Planned}
 
 // CH_261126_G5BX is CH-261126-G5BX: A need names the person it serves, one the needs document declares
-var CH_261126_G5BX = &Spec{ID: "CH-261126-G5BX", Title: "A need names the person it serves, one the needs document declares", Status: Planned}
+//
+// Deprecated: CH-261126-G5BX is retired; see its Changes in claims/intent.md. Add no new anchors.
+var CH_261126_G5BX = &Spec{ID: "CH-261126-G5BX", Title: "A need names the person it serves, one the needs document declares", Status: Deprecated}
 
 // CH_261126_HK6S is CH-261126-HK6S: An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}

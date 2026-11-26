@@ -19,13 +19,13 @@ Ruled by the owner, 2026-11-26.
 | 2 | How are the needs cut? | One a problem, each a person's: CH-261126-PFG5 (P1, new), CH-261126-P2SK (P2, new), CH-001 (P3), CH-261009-3FHW (P4), CH-002 (P5), CH-261126-NS7T (P6). |
 | 3 | What of the needs that were properties? | CH-003, CH-004, CH-005 and CH-006 become decisions serving the need of their problem, ids kept, each with a Changes line. |
 | 4 | How are the areas cut? | One a problem, in that order: intent.md, anchoring.md, gate.md, review.md, provenance.md, adoption.md; form.md, tooling.md, config.md and languages.md are folded into them. Entries move verbatim; each Code line names the packages that exist. |
-| 5 | Whose is a need? | A new primitive, CH-261126-G5BX, planned: needs.md declares the people, and each need names its person with For. |
+| 5 | Whose is a need? | The need's title names its person, as "A reviewer can…" does; no field. CH-261126-G5BX, drafted for a For field, is deprecated unbuilt. |
 
 ## Charter
 
 Drafted 2026-11-26 for the owner's review.
 
-- New, planned: CH-261126-PFG5, CH-261126-P2SK (needs), CH-261126-G5BX (a need names its person).
+- New, planned: CH-261126-PFG5, CH-261126-P2SK (needs). CH-261126-G5BX (a For field on needs) was drafted and is deprecated.
 - Needs made decisions, each with a Changes line and anchored to the code that already carried it: CH-003 (record), CH-004 (gate's surfaces), CH-005 (gate's observations), CH-006 (the walk).
 - Serves re-pointed, each with a Changes line: CH-010, CH-011, CH-030, CH-031.
 - Every other entry moved verbatim to its problem's area.
@@ -44,5 +44,4 @@ Drafted 2026-11-26 for the owner's review.
 
 1. The owner reviews the needs and the areas.
 2. Settle CH-003, CH-004 and CH-005's overlap with their children.
-3. Build CH-261126-G5BX, then give every need its For line.
-4. Verify CH-261126-PFG5 and CH-261126-P2SK from the command's side and set them active.
+3. Verify CH-261126-PFG5 and CH-261126-P2SK from the command's side and set them active.

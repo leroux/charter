@@ -326,7 +326,7 @@ Scenarios:
 
 ## CH-261126-G5BX A need names the person it serves, one the needs document declares
 
-Status: planned
+Status: deprecated
 Serves: CH-261126-PFG5
 See: CH-011
 
@@ -348,3 +348,8 @@ Scenarios:
    naming the line.
 3. `grouped-by-person` (agent, provisional): the digest and the export list
    each person's needs together, in the order the People line gives.
+
+Changes:
+- 2026-11-26: deprecated before it was built: a need's title already names
+  the person it serves, so a For field would add a rule and no information
+  (owner, backlog 004).
