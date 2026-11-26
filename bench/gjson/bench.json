@@ -1,0 +1,6 @@
+{
+  "name": "gjson",
+  "description": "Brownfield: tidwall/gjson at upstream 40764d5 (June 2019), then 15 of its own later commits as change requests (path chaining, multi-array queries, paren queries, subselectors, subqueries, modifier fixes, @this) and 3 tempting requests. Oracle: gjson's own tests at the start (spec) and the tests each upstream commit added (tasks).",
+  "language": "go",
+  "conditions": ["A", "B", "C", "D", "E"]
+}

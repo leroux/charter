@@ -47,42 +47,59 @@ def copy_package(ws: Path, dst: Path):
         p.unlink()
 
 
-def run_one(ws: Path, hidden: Path, tmp: Path):
-    want = names(hidden)
-    d = tmp / hidden.stem
-    copy_package(ws, d)
-    shutil.copy(hidden, d / ("zz_hidden_" + hidden.name))
+def go_test(d: Path, names_):
+    """One go test run of the named tests: (passed, failed, started, log)."""
     env = dict(os.environ, GOPROXY="off", GOFLAGS="")
-    cmd = ["go", "test", "-json", "-count=1", "-vet=off", "-timeout", "100s",
-           "-run", "^(" + "|".join(want) + ")$", "."]
+    cmd = ["go", "test", "-json", "-count=1", "-vet=off", "-timeout", "60s",
+           "-run", "^(" + "|".join(names_) + ")$", "."]
     try:
-        p = subprocess.run(cmd, cwd=d, capture_output=True, text=True, timeout=150, env=env)
-        out = p.stdout
-        err = p.stderr
+        p = subprocess.run(cmd, cwd=d, capture_output=True, text=True, timeout=120, env=env)
+        out, err = p.stdout, p.stderr
     except subprocess.TimeoutExpired as e:
         out = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
         err = "timeout"
-    passed, failed = set(), set()
-    built = False
+    passed, failed, started = set(), set(), set()
     for line in out.splitlines():
         try:
             ev = json.loads(line)
         except json.JSONDecodeError:
             continue
         t = ev.get("Test", "")
-        if ev.get("Action") == "run":
-            built = True
         if not t or "/" in t:
             continue
-        if ev.get("Action") == "pass":
+        a = ev.get("Action")
+        if a == "run":
+            started.add(t)
+        elif a == "pass":
             passed.add(t)
-        elif ev.get("Action") == "fail":
+        elif a == "fail":
             failed.add(t)
+    return passed, failed, started, err + out
+
+
+def run_one(ws: Path, hidden: Path, tmp: Path):
+    """Run one hidden file's tests. A test that panics takes the test binary
+    down with it, so the tests that never started are run again without
+    those that did, until each has a result."""
+    want = names(hidden)
+    d = tmp / hidden.stem
+    copy_package(ws, d)
+    shutil.copy(hidden, d / ("zz_hidden_" + hidden.name))
+    passed, built, log = set(), False, ""
+    remaining = list(want)
+    while remaining:
+        p, f, started, log = go_test(d, remaining)
+        built = built or bool(started)
+        passed |= p
+        done = started | p | f
+        if not done:
+            break
+        remaining = [n for n in remaining if n not in done]
     ok = [n for n in want if n in passed]
     detail = {"file": hidden.stem, "passed": len(ok), "total": len(want), "compiled": built,
               "failed": [n for n in want if n not in passed]}
     if not built:
-        detail["error"] = (err + out)[-800:]
+        detail["error"] = log[-800:]
     return detail
 
 

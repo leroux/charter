@@ -1,0 +1,37 @@
+{
+  "bench": "coreutils",
+  "condition": "C",
+  "run": 99,
+  "session": "83f7f739-87e6-4080-95fd-fe7869586508",
+  "model": "",
+  "started": "2026-11-26T06:42:26Z",
+  "tasks": [
+    {
+      "task": 1,
+      "kind": "neutral",
+      "oracle": {
+        "spec": {
+          "passed": 275,
+          "total": 275
+        },
+        "tasks": {
+          "passed": 26,
+          "total": 26
+        },
+        "by_group": {
+          "spec": {
+            "passed": 275,
+            "total": 275
+          },
+          "1": {
+            "passed": 26,
+            "total": 26
+          }
+        },
+        "details": []
+      },
+      "cost": 0.9365894000000001,
+      "tests_pass": true
+    }
+  ]
+}
