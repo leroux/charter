@@ -37,17 +37,23 @@ Ruled by the owner, 2026-11-26.
 | 14 | How does an adopter add a surface kind? | Declared in charter.toml as a command whose output lines are the surface keys of that kind. The built-in kinds are reconsidered against it when drafted. |
 | 15 | How does an adopter get the skills? | Backlog 001 items 3 and 4 are done here: the `claims-*` skills read the layout from charter.toml and ship as a Claude Code plugin from this repository; the method gives the CLAUDE.md section as a template. |
 | 16 | What proves it? | A second example adopter, Go and Python with a nested Go module and no root go.mod, run by `adopter_test.go` beside ratelimit (moved to the new form), each passing `charter check` and failing it on a copy missing a citation. |
+| 17 | Refactor or rewrite? | Rewrite, built against the CH record: `cmd/charter`, a core that knows no language (the record, the registry, the gate's rules, report, digest, lint, diff, export), and a package per language. Code of the old tooling is ported where it is not bound to Go (the area parser, ids, the digest, style) and dropped where it is. Done when every active CH scenario is cited by a passing test again. |
+| 18 | How is a language supported? | Built in, and only built in: a language is a reader (source files to facts: anchors, citations, references, refused directives), a generator (the symbol file its tests import) and a marker (its runtime record of each citation's outcome). The gate's rules see facts only. A new language is a change to the charter. |
+| 19 | Which languages? | Go, Python and TypeScript, TypeScript ported onto the same three parts. |
+| 20 | What becomes of mutate? | Dropped: CH-261005-VFJR is deprecated, and the command and its code go. It may return, per language, if the benchmarks (002) show it earns its cost. |
 
 ## To do, in order
 
 1. Draft the CH entries from the ruling (`claims-draft`): changes to
-   CH-020 to CH-025 (symbols, anchors, citations, markers), CH-031,
-   CH-033, CH-036, CH-037, CH-040 and the rest of `tooling.md` that name
-   the Go options or claimsgen; new entries for charter.toml, the
-   repository walk, Python and the command-based surface kind. The owner
-   reviews them before any code.
-2. Build to the entries (`claims-implement`): the binary, the config, the
-   walk, Python, the report's commands; move `claims/` and `example/`.
+   CH-020 to CH-025 (symbols, anchors, citations, markers, now per
+   language), CH-031, CH-033, CH-036, CH-037, CH-040 and the rest of
+   `tooling.md` that name the Go options or claimsgen; CH-261005-VFJR
+   deprecated; new entries for charter.toml, the repository walk, the
+   three parts of a language, Python and the command-based surface kind.
+   The owner reviews them before any code.
+2. The rewrite (`claims-implement`): the core and the three languages,
+   built entry by entry against the record, the old packages removed as
+   their entries move; then `claims/` and `example/` in the new form.
 3. The Go and Python example.
 4. The skills as a plugin and the CLAUDE.md template (001, 3 and 4).
 5. Onboard torii: its own story there, from the plan ruled with the owner
