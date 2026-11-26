@@ -21,6 +21,8 @@ import (
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/gate"
 	"github.com/leroux/charter/internal/lang/golang"
+	"github.com/leroux/charter/internal/lang/python"
+	"github.com/leroux/charter/internal/lang/typescript"
 	"github.com/leroux/charter/internal/record"
 	"github.com/leroux/charter/internal/surface"
 	"github.com/leroux/charter/internal/walk"
@@ -72,6 +74,26 @@ func Load(c *config.Config) (*Tree, error) {
 		}
 		t.Facts.Add(set)
 	}
+	if c.Python != nil {
+		set, err := python.Reader{
+			Root: c.Root, Dir: c.Python.Dir, EnvFile: strings.Trim(c.Python.Env, "/"),
+			ClaimsDir: config.Dir, Table: fmt.Sprintf("%s:%d", c.Rel(), c.Line("python")),
+		}.Read(t.Files[walk.Python])
+		if err != nil {
+			return nil, err
+		}
+		t.Facts.Add(set)
+	}
+	if ts := c.TypeScript; ts != nil {
+		set, err := typescript.Reader{
+			Root: c.Root, Compiler: ts.Compiler, Import: ts.Import, EnvFile: strings.Trim(ts.Env, "/"),
+			ClaimsDir: config.Dir, Table: fmt.Sprintf("%s:%d", c.Rel(), c.Line("typescript")),
+		}.Read(t.Files[walk.TypeScript])
+		if err != nil {
+			return nil, err
+		}
+		t.Facts.Add(set)
+	}
 	return t, nil
 }
 
@@ -100,6 +122,12 @@ func Generated(c *config.Config, rec *record.Record) (map[string][]byte, error) 
 		}
 		out[config.Dir+"/go.mod"] = gomod
 		out[config.Dir+"/specs.go"] = specs
+	}
+	if c.Python != nil {
+		out[config.Dir+"/"+python.ClaimsModule+".py"] = python.Generate(rec, Regen)
+	}
+	if c.TypeScript != nil {
+		out[config.Dir+"/index.ts"] = typescript.Generate(rec, Regen)
 	}
 	return out, nil
 }
@@ -177,6 +205,12 @@ func Problems(c *config.Config) ([]string, error) {
 	}
 	if c.Go != nil && c.Go.Env != "" {
 		in.EnvModules[strings.Trim(c.Go.Env, "/")] = fmt.Sprintf("%s:%d", c.Rel(), c.Line("go.env"))
+	}
+	if c.Python != nil && c.Python.Env != "" {
+		in.EnvModules[strings.Trim(c.Python.Env, "/")] = fmt.Sprintf("%s:%d", c.Rel(), c.Line("python.env"))
+	}
+	if c.TypeScript != nil && c.TypeScript.Env != "" {
+		in.EnvModules[strings.Trim(c.TypeScript.Env, "/")] = fmt.Sprintf("%s:%d", c.Rel(), c.Line("typescript.env"))
 	}
 	declared, ps := surface.Declared(c)
 	in.Declared, problems = declared, append(problems, ps...)

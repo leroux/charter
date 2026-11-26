@@ -423,3 +423,30 @@ func TestTheGatesRulesImportNoLanguage(t *testing.T) {
 		}
 	}
 }
+
+func TestTheSameRuleSaysTheSameInEveryLanguage(t *testing.T) {
+	chartertest.Verifies(t, claims.CH_261126_PQ7X, "same-rule-every-language")
+	compiler, _ := filepath.Abs("../../node_modules/typescript")
+	want := "claims/refill.md:18: rule 25: scenario burst-caps-tokens of SW-010 is verified by no test; cite it with verifies(claims.SW_010, \"burst-caps-tokens\") as a test's first statement, or waive SW-010/burst-caps-tokens in claims/waivers.txt with a reason"
+	for _, tc := range []struct {
+		lang  string
+		edits map[string]string
+	}{
+		{"go", map[string]string{"pkg/a/a_test.go": strings.Replace(fixture()["pkg/a/a_test.go"], ", \"burst-caps-tokens\")", ")", 1)}},
+		{"python", map[string]string{
+			"pkg/a/a_test.go":        strings.Replace(fixture()["pkg/a/a_test.go"], ", \"burst-caps-tokens\")", ")", 1),
+			"claims/charter.toml":    fixture()["claims/charter.toml"] + "\n[python]\ndir = \"py\"\ntest = \"python3 -m unittest\"\n",
+			"py/tests/test_burst.py": "import unittest\n\nimport claims\n\n\nclass T(unittest.TestCase):\n    def test_burst(self):\n        claims.verifies(self, claims.SW_010)\n",
+		}},
+		{"typescript", map[string]string{
+			"pkg/a/a_test.go":     strings.Replace(fixture()["pkg/a/a_test.go"], ", \"burst-caps-tokens\")", ")", 1),
+			"claims/charter.toml": fixture()["claims/charter.toml"] + "\n[typescript]\ndir = \"web\"\ntest = \"vitest run\"\ncompiler = \"" + compiler + "\"\nimport = \"@fx/claims\"\n",
+			"web/burst.test.ts":   "import { claims, verifies } from \"@fx/claims\";\n\ntest(\"burst\", () => {\n  verifies(claims.SW_010);\n});\n",
+		}},
+	} {
+		ps := problems(t, build(t, with(tc.edits)))
+		if len(ps) != 1 || ps[0] != want {
+			t.Errorf("%s: problems =\n%s\nwant exactly\n%s", tc.lang, strings.Join(ps, "\n"), want)
+		}
+	}
+}
