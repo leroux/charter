@@ -70,7 +70,11 @@ bench/harness/matrix.py --bench coreutils --conditions A,B,C --runs 3 -j 3
 
 Each run writes `bench/results/<bench>/<condition>/<run>/` with one JSON
 per task (the agent's cost, turns and time, the oracle's scores, the
-gate's result, the diff's size) and `qa.json` for the questions. The
+gate's result, the diff's size), `qa.json` for the questions, the agents'
+session transcripts (`transcript.jsonl`, `qa-transcript.jsonl`) and the
+workspace's history as `workspace.bundle`, a commit per task, which
+`git clone` restores. Results are committed: the trail is kept, smoke runs
+included. The
 workspace is `/tmp/charter-bench/<bench>-<condition>-<run>/`, outside the
 repository, so the agent cannot read the oracle by walking up.
 

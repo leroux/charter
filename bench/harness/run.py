@@ -168,6 +168,21 @@ def agent(prompt, ws: Path, session: str, first: bool, model: str, dry: bool, ma
         return {"error": "no JSON from claude", "stdout": p.stdout[-4000:], "stderr": p.stderr[-4000:]}
 
 
+def save_transcript(session: str, out: Path, name: str):
+    """Copy the session's transcript, which claude writes under
+    ~/.claude/projects, into the results, so the trail outlives the
+    container."""
+    for t in (Path.home() / ".claude" / "projects").glob(f"*/{session}.jsonl"):
+        shutil.copyfile(t, out / name)
+        return
+
+
+def save_history(ws: Path, out: Path):
+    """The workspace's git history, a commit per task, as a bundle:
+    `git clone workspace.bundle` restores every state the agent left."""
+    sh(["git", "bundle", "create", str(out / "workspace.bundle"), "--all"], ws)
+
+
 def score(bench: Path, ws: Path, n: int):
     p = sh([str(bench / "oracle" / "score"), str(ws), str(n)], bench, timeout=600)
     try:
@@ -202,7 +217,10 @@ def questions(bench: Path, ws: Path, out: Path, model: str, dry: bool):
     prompt = ("Answer each question about this codebase by reading it. Do not run, build or modify "
               "anything. Reply with JSON lines only, one per question: {\"id\": ..., \"answer\": ...}, "
               "each answer one line.\n\n" + "\n".join(json.dumps(q) for q in qs))
-    res = agent(prompt, ws, str(uuid.uuid4()), True, model, dry, 40) if not dry else {"result": "", "dry_run": True}
+    qsession = str(uuid.uuid4())
+    res = agent(prompt, ws, qsession, True, model, dry, 40) if not dry else {"result": "", "dry_run": True}
+    if not dry:
+        save_transcript(qsession, out, "qa-transcript.jsonl")
     answers = []
     for line in str(res.get("result", "")).splitlines():
         line = line.strip().strip("`")
@@ -248,6 +266,8 @@ def run(args):
                   "seconds": round(time.time() - t0, 1), "diff": diffstat(ws),
                   "checks": gate(ws, cond), "oracle": score(bench, ws, t["n"])}
         commit(ws, f"task {t['n']}: {t['slug']}")
+        if not args.dry_run:
+            save_transcript(session, out, "transcript.jsonl")
         (out / f"task-{t['n']:02d}.json").write_text(json.dumps(record, indent=2))
         summary["tasks"].append({k: record[k] for k in ("task", "kind", "oracle")} |
                                 {"cost": record["agent"].get("total_cost_usd"), "tests_pass": record["checks"]["tests_pass"]})
@@ -257,6 +277,7 @@ def run(args):
         qa = questions(bench, ws, out, args.model, args.dry_run)
         (out / "qa.json").write_text(json.dumps(qa, indent=2))
         summary["qa"] = qa["grade"]
+    save_history(ws, out)
     (out / "summary.json").write_text(json.dumps(summary, indent=2))
     return summary
 
