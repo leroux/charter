@@ -17,6 +17,17 @@ person last read it. `claims/charter.toml` says where everything is: the
 The agent drafts; a person curates. This skill never runs `charter
 curate` and never writes over a curated doc's prose.
 
+## Voice
+
+Write in the voice the project's agent instructions give: its CLAUDE.md
+or AGENTS.md, and any file they import. Where they say nothing about
+voice, write clear technical prose for the reader at hand. Lead with the
+point, and say how each statement follows from the one before. Use the
+field's established terms, and define a term the reader may not know
+where it first appears. Give one thing one name. State the mechanism, the
+values and the limits rather than a summary of them. Use a list for
+separate items and prose where the relationships between them matter.
+
 ## The syntax
 
 - **An entry:** a link whose text opens with its id, `[SW-261126-VX8Z](x)`.
@@ -95,10 +106,9 @@ Before writing any doc, propose the set to the person and wait.
    person's steps: never by package or by entry id. Each claim about the
    code names the declaration as a code reference, and the entry it
    carries as a reference.
-3. **Write for the reader the plan names.** The record's register, short
-   plain words, is the record's; a doc speaks its reader's language. For
-   engineers and security reviewers that is the field's own vocabulary
-   and the exact mechanism:
+3. **Write for the reader the plan names**, in the project's voice
+   (above). The reader decides the vocabulary. For engineers and security
+   reviewers that means the field's own terms and the exact mechanism:
    - The term, never a plainer word standing in for it: a DNS query and
      its A/AAAA answer, not "the name"; inbound, not "the way in";
      `connect(2)` or the dial, named as the code names it; SNI, the

@@ -11,6 +11,17 @@ lists. Covered means: an anchored declaration realizes the entry, a test
 cites each of its scenarios, the gate is green and the report says the
 tests passed. The layout is the repository's `claims/charter.toml`.
 
+## Voice
+
+Write in the voice the project's agent instructions give: its CLAUDE.md
+or AGENTS.md, and any file they import. Where they say nothing about
+voice, write clear technical prose for the reader at hand. Lead with the
+point, and say how each statement follows from the one before. Use the
+field's established terms, and define a term the reader may not know
+where it first appears. Give one thing one name. State the mechanism, the
+values and the limits rather than a summary of them. Use a list for
+separate items and prose where the relationships between them matter.
+
 ## Procedure
 
 1. **Set the entries active.** In the area document, `Status: active`.

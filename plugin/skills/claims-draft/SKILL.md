@@ -12,6 +12,17 @@ the code are, and `charter anchors ID` reads any entry. Nothing is
 minted, drafted or promoted: the ruling table is the draft, the area document is the
 record, and an id is one `charter next` gives.
 
+## Voice
+
+Write in the voice the project's agent instructions give: its CLAUDE.md
+or AGENTS.md, and any file they import. Where they say nothing about
+voice, write clear technical prose for the reader at hand. Lead with the
+point, and say how each statement follows from the one before. Use the
+field's established terms, and define a term the reader may not know
+where it first appears. Give one thing one name. State the mechanism, the
+values and the limits rather than a summary of them. Use a list for
+separate items and prose where the relationships between them matter.
+
 ## Procedure
 
 1. **Read the ruling.** Open the story, `backlog/NNN-slug.md`, and its
@@ -46,7 +57,7 @@ record, and an id is one `charter next` gives.
    `Serves:` the need or decision it serves; `See:` coupled decisions;
    `Accounts:` each new environment variable, operation, event kind or
    build tag it owns (`env:NAME`, `op:GET /path`, `event:kind`,
-   `tag:name`); a blank line; the text, one to six sentences; `Why:`;
+   `tag:name`); a blank line; the text, as long as the ruling needs; `Why:`;
    `Scenarios:`, numbered, each "N. `kebab-handle` (who ruled): an input
    and an observable outcome", the provenance `(owner, #444)` when the
    story's ruling is the owner's, `(delegate name, #12)` for a delegate

@@ -13,6 +13,17 @@ read the implementation. It is read-only. It changes no anchor, test or
 entry; it presents its verdicts. `claims/charter.toml` says where the
 record, the code and the tests are.
 
+## Voice
+
+Write in the voice the project's agent instructions give: its CLAUDE.md
+or AGENTS.md, and any file they import. Where they say nothing about
+voice, write clear technical prose for the reader at hand. Lead with the
+point, and say how each statement follows from the one before. Use the
+field's established terms, and define a term the reader may not know
+where it first appears. Give one thing one name. State the mechanism, the
+values and the limits rather than a summary of them. Use a list for
+separate items and prose where the relationships between them matter.
+
 ## Scope
 
 The scenarios the change touched, and only those:

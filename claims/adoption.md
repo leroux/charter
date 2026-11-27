@@ -135,11 +135,13 @@ skill names the commands of the method and finds the adopter's layout,
 the claims directory, the languages and their test commands, in
 charter.toml; it names no file of one repository's layout. Narrate drafts a doc over a
 need, an area or a flow, and on a stale doc proposes an edit of what
-changed, never writing over a curated one. It writes each doc in the
-vocabulary of the reader the plan names: for engineers, the field's own
-terms and the exact mechanism, never a plainer word standing in for one;
-a doc for another reader is another doc. Audit also reads each doc
-against the code it references. The README gives the section an adopter
+changed, never writing over a curated one; it writes each doc in the
+vocabulary of the reader the plan names. Audit also reads each doc
+against the code it references. Every skill writes in the voice the
+adopter's agent instructions (CLAUDE.md or AGENTS.md) give; where they
+give none, in a default the skills state: clear technical prose that
+leads with the point, connects each statement to the last and uses the
+field's terms. No skill imposes a sentence count or a register. The README gives the section an adopter
 puts in its CLAUDE.md as a template.
 
 Why: skills written for one product send an agent in another repository to
@@ -159,6 +161,10 @@ Scenarios:
    charter.toml.
 
 Changes:
+- 2026-11-27: the voice is the adopter's: skills follow the project's
+  agent instructions and fall back to a stated default; narrate's "short
+  plain words", draft's one-to-six sentences and audit's lint line go.
+  The owner found the plain register too simple for complex projects.
 - 2026-11-27: narrate writes in the vocabulary of the doc's reader; its
   first drafts for torii put plain stand-ins ("the name" for DNS) where an
   engineer needs the term, and the owner asked for the field's terms.

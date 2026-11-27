@@ -16,6 +16,17 @@ Probes touch real systems and may cost money. Confirm with the user which
 subjects to reach and that the credentials in the environment are the ones
 meant, before running anything.
 
+## Voice
+
+Write in the voice the project's agent instructions give: its CLAUDE.md
+or AGENTS.md, and any file they import. Where they say nothing about
+voice, write clear technical prose for the reader at hand. Lead with the
+point, and say how each statement follows from the one before. Use the
+field's established terms, and define a term the reader may not know
+where it first appears. Give one thing one name. State the mechanism, the
+values and the limits rather than a summary of them. Use a list for
+separate items and prose where the relationships between them matter.
+
 ## 1. Run
 
 A probe is a test under one of the paths `charter.toml`'s `probes` key

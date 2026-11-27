@@ -14,6 +14,17 @@ is still found. It is read-only. It writes one file, `claims/audit.md`,
 and files questions; it edits no entry, test or line of code. What it
 finds is built from a story, under `claims-implement`.
 
+## Voice
+
+Write in the voice the project's agent instructions give: its CLAUDE.md
+or AGENTS.md, and any file they import. Where they say nothing about
+voice, write clear technical prose for the reader at hand. Lead with the
+point, and say how each statement follows from the one before. Use the
+field's established terms, and define a term the reader may not know
+where it first appears. Give one thing one name. State the mechanism, the
+values and the limits rather than a summary of them. Use a list for
+separate items and prose where the relationships between them matter.
+
 ## When
 
 - Over the whole record, now and then.
@@ -56,9 +67,11 @@ open:
 4. **The clause against the record.** A clause another live entry also
    states (search `claims/DIGEST.md` for its key words) is `TWO-HOMES ID,
    ID: "the clause"`.
-5. **Style.** A Why that gives no reason though it is
-   long, a title that is a noun phrase, a text that narrates, a word the
-   glossary defines otherwise: `STYLE ID: what`. Order against the
+5. **Style**, against the project's voice (above). A Why that gives no
+   reason, a title that states no claim a reviewer could disagree with, a
+   text that recounts history instead of stating the rule, a word the
+   glossary defines otherwise, or a passage the reader cannot follow on a
+   first reading: `STYLE ID: what`. Order against the
    header: `ORDER DOC: what`.
 
 6. **Each doc against its code.** For each doc charter.toml's `docs`
@@ -82,8 +95,6 @@ ones. Its form:
     Scope: the whole record at COMMIT | the N entries changed since COMMIT.
     Readers: N, over N live entries; tests opened for N scenarios, code
     read for N entries.
-    Lint: N retired words, N titles, N texts, N scenarios, N Whys, N shared
-    tests, N open questions.
 
     Done: yes | no.
 
