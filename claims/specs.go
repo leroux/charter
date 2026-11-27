@@ -128,29 +128,29 @@ var CH_013 = &Spec{ID: "CH-013", Title: "An entry's Status MUST be planned, acti
 // CH_015 is CH-015: The gate MUST fail a Serves or See that names no existing entry, or that names the entry itself
 var CH_015 = &Spec{ID: "CH-015", Title: "The gate MUST fail a Serves or See that names no existing entry, or that names the entry itself", Status: Active}
 
-// CH_020 is CH-020: Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment
-var CH_020 = &Spec{ID: "CH-020", Title: "Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment", Status: Active}
+// CH_020 is CH-020: charter gen MUST generate a symbol per entry in each language read, named by the id with underscores for hyphens and documented by the title
+var CH_020 = &Spec{ID: "CH-020", Title: "charter gen MUST generate a symbol per entry in each language read, named by the id with underscores for hyphens and documented by the title", Status: Active}
 
-// CH_021 is CH-021: Production code anchors an entry in a Go doc comment, a TypeScript line comment, or above a Python def
-var CH_021 = &Spec{ID: "CH-021", Title: "Production code anchors an entry in a Go doc comment, a TypeScript line comment, or above a Python def", Status: Active}
+// CH_021 is CH-021: Production code MUST anchor an entry in a Go doc comment, a TypeScript line comment, or the comment lines above a Python def
+var CH_021 = &Spec{ID: "CH-021", Title: "Production code MUST anchor an entry in a Go doc comment, a TypeScript line comment, or the comment lines above a Python def", Status: Active}
 
-// CH_022 is CH-022: An anchor names an entry that exists and is not planned, and concerns never counts toward coverage
-var CH_022 = &Spec{ID: "CH-022", Title: "An anchor names an entry that exists and is not planned, and concerns never counts toward coverage", Status: Active}
+// CH_022 is CH-022: An anchor MUST name an entry that exists and is not planned, and a concerns anchor MUST NOT count toward coverage
+var CH_022 = &Spec{ID: "CH-022", Title: "An anchor MUST name an entry that exists and is not planned, and a concerns anchor MUST NOT count toward coverage", Status: Active}
 
-// CH_023 is CH-023: A test cites an entry by a Verifies statement in a test function, naming by handle the scenarios it exercises
-var CH_023 = &Spec{ID: "CH-023", Title: "A test cites an entry by a Verifies statement in a test function, naming by handle the scenarios it exercises", Status: Active}
+// CH_023 is CH-023: A test MUST cite an entry by a verifies call that opens a test function, naming by handle the scenarios it exercises
+var CH_023 = &Spec{ID: "CH-023", Title: "A test MUST cite an entry by a verifies call that opens a test function, naming by handle the scenarios it exercises", Status: Active}
 
-// CH_024 is CH-024: Each language's verifies records each citation and its test's outcome as a JSON line in the events file
-var CH_024 = &Spec{ID: "CH-024", Title: "Each language's verifies records each citation and its test's outcome as a JSON line in the events file", Status: Active}
+// CH_024 is CH-024: Each language's verifies MUST record each citation and its test's outcome as a JSON line in the events file
+var CH_024 = &Spec{ID: "CH-024", Title: "Each language's verifies MUST record each citation and its test's outcome as a JSON line in the events file", Status: Active}
 
-// CH_025 is CH-025: The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry
-var CH_025 = &Spec{ID: "CH-025", Title: "The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry", Status: Active}
+// CH_025 is CH-025: The claims directory MUST hold only the record, charter.toml and generated files, and a test MUST NOT assign to an entry
+var CH_025 = &Spec{ID: "CH-025", Title: "The claims directory MUST hold only the record, charter.toml and generated files, and a test MUST NOT assign to an entry", Status: Active}
 
 // CH_030 is CH-030: The gate MUST fail an active decision without an anchor or with an uncited scenario; a waiver MAY absorb a missing test, never a missing anchor
 var CH_030 = &Spec{ID: "CH-030", Title: "The gate MUST fail an active decision without an anchor or with an uncited scenario; a waiver MAY absorb a missing test, never a missing anchor", Status: Active, Kind: "invariant"}
 
-// CH_031 is CH-031: The gate MUST ask no anchor of a need, and MUST count a need's citation only from the stakeholder's side
-var CH_031 = &Spec{ID: "CH-031", Title: "The gate MUST ask no anchor of a need, and MUST count a need's citation only from the stakeholder's side", Status: Active}
+// CH_031 is CH-031: The gate MUST NOT ask an anchor of a need, and MUST count a need's citation only from the stakeholder's side
+var CH_031 = &Spec{ID: "CH-031", Title: "The gate MUST NOT ask an anchor of a need, and MUST count a need's citation only from the stakeholder's side", Status: Active}
 
 // CH_032 is CH-032: A probe MUST cite only observations, and a test MUST NOT cite an observation
 var CH_032 = &Spec{ID: "CH-032", Title: "A probe MUST cite only observations, and a test MUST NOT cite an observation", Status: Active}
@@ -158,8 +158,8 @@ var CH_032 = &Spec{ID: "CH-032", Title: "A probe MUST cite only observations, an
 // CH_033 is CH-033: The gate MUST enumerate every surface and require each to be accounted for by an entry or listed in a baseline of live, unaccounted surfaces
 var CH_033 = &Spec{ID: "CH-033", Title: "The gate MUST enumerate every surface and require each to be accounted for by an entry or listed in a baseline of live, unaccounted surfaces", Status: Active, Kind: "invariant"}
 
-// CH_034 is CH-034: Code MUST read an environment variable through a named constant, or under a dynamic directive, and no literal MUST name one
-var CH_034 = &Spec{ID: "CH-034", Title: "Code MUST read an environment variable through a named constant, or under a dynamic directive, and no literal MUST name one", Status: Active, Kind: "invariant"}
+// CH_034 is CH-034: Code MUST read an environment variable through a named constant, or under a dynamic directive, and a literal MUST NOT name one
+var CH_034 = &Spec{ID: "CH-034", Title: "Code MUST read an environment variable through a named constant, or under a dynamic directive, and a literal MUST NOT name one", Status: Active, Kind: "invariant"}
 
 // CH_035 is CH-035: An observation MUST carry its status's fields, and the gate MUST fail a broken observation under an active entry
 var CH_035 = &Spec{ID: "CH-035", Title: "An observation MUST carry its status's fields, and the gate MUST fail a broken observation under an active entry", Status: Active}
@@ -170,8 +170,8 @@ var CH_036 = &Spec{ID: "CH-036", Title: "The walk MUST cover every Go, Python an
 // CH_037 is CH-037: charter check MUST report every problem, sorted, with its file, line, rule and fix, and MUST pass a clean tree
 var CH_037 = &Spec{ID: "CH-037", Title: "charter check MUST report every problem, sorted, with its file, line, rule and fix, and MUST pass a clean tree", Status: Active}
 
-// CH_040 is CH-040: One charter command generates, checks, gives ids and lists anchors, and an adopter writes no main
-var CH_040 = &Spec{ID: "CH-040", Title: "One charter command generates, checks, gives ids and lists anchors, and an adopter writes no main", Status: Active}
+// CH_040 is CH-040: One charter command MUST generate, check, give ids and list anchors, so an adopter writes no main
+var CH_040 = &Spec{ID: "CH-040", Title: "One charter command MUST generate, check, give ids and list anchors, so an adopter writes no main", Status: Active}
 
 // CH_042 is CH-042: charter report MUST join each test's markers to its scenarios and say which passed, failed, were skipped or have no test
 var CH_042 = &Spec{ID: "CH-042", Title: "charter report MUST join each test's markers to its scenarios and say which passed, failed, were skipped or have no test", Status: Active}
@@ -218,23 +218,23 @@ var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "A repository's charter 
 // CH_261126_PQ7X is CH-261126-PQ7X: charter MUST support each language as a built-in reader, generator and marker, and MUST read a language only when charter.toml names it
 var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "charter MUST support each language as a built-in reader, generator and marker, and MUST read a language only when charter.toml names it", Status: Active, Kind: "structure"}
 
-// CH_261127_3NY3 is CH-261127-3NY3: A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve
-var CH_261127_3NY3 = &Spec{ID: "CH-261127-3NY3", Title: "A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve", Status: Active}
+// CH_261127_3NY3 is CH-261127-3NY3: A doc MUST be a markdown file charter.toml names, MUST declare no entry, and its references to entries MUST resolve
+var CH_261127_3NY3 = &Spec{ID: "CH-261127-3NY3", Title: "A doc MUST be a markdown file charter.toml names, MUST declare no entry, and its references to entries MUST resolve", Status: Active}
 
-// CH_261127_45KM is CH-261127-45KM: A file no language reads anchors an entry by a comment line, where charter.toml names it
-var CH_261127_45KM = &Spec{ID: "CH-261127-45KM", Title: "A file no language reads anchors an entry by a comment line, where charter.toml names it", Status: Active}
+// CH_261127_45KM is CH-261127-45KM: charter MUST read an anchor from a comment line in a file no language reads, where charter.toml names that file
+var CH_261127_45KM = &Spec{ID: "CH-261127-45KM", Title: "charter MUST read an anchor from a comment line in a file no language reads, where charter.toml names that file", Status: Active}
 
-// CH_261127_8MYR is CH-261127-8MYR: Which docs mention an entry is computed from the docs, and anchors and diff show it
-var CH_261127_8MYR = &Spec{ID: "CH-261127-8MYR", Title: "Which docs mention an entry is computed from the docs, and anchors and diff show it", Status: Active}
+// CH_261127_8MYR is CH-261127-8MYR: charter MUST compute which docs mention an entry from the docs, and charter anchors and charter diff MUST show it
+var CH_261127_8MYR = &Spec{ID: "CH-261127-8MYR", Title: "charter MUST compute which docs mention an entry from the docs, and charter anchors and charter diff MUST show it", Status: Active}
 
-// CH_261127_DW8R is CH-261127-DW8R: A doc references code by a link to the file declaring the named symbol, and one that file lacks fails
-var CH_261127_DW8R = &Spec{ID: "CH-261127-DW8R", Title: "A doc references code by a link to the file declaring the named symbol, and one that file lacks fails", Status: Active}
+// CH_261127_DW8R is CH-261127-DW8R: A doc MUST reference code by a link to the file that declares the named symbol, and the gate MUST fail one that file lacks
+var CH_261127_DW8R = &Spec{ID: "CH-261127-DW8R", Title: "A doc MUST reference code by a link to the file that declares the named symbol, and the gate MUST fail one that file lacks", Status: Active}
 
-// CH_261127_GXP7 is CH-261127-GXP7: charter curate records who curated a doc and a hash of what it references; check warns of one whose references changed
-var CH_261127_GXP7 = &Spec{ID: "CH-261127-GXP7", Title: "charter curate records who curated a doc and a hash of what it references; check warns of one whose references changed", Status: Active}
+// CH_261127_GXP7 is CH-261127-GXP7: charter curate MUST record who curated a doc and a hash of each reference, and charter check MUST warn when one changes
+var CH_261127_GXP7 = &Spec{ID: "CH-261127-GXP7", Title: "charter curate MUST record who curated a doc and a hash of each reference, and charter check MUST warn when one changes", Status: Active}
 
-// CH_261127_H4B7 is CH-261127-H4B7: charter gen keeps each doc's references and embeds current with the record and the code
-var CH_261127_H4B7 = &Spec{ID: "CH-261127-H4B7", Title: "charter gen keeps each doc's references and embeds current with the record and the code", Status: Active}
+// CH_261127_H4B7 is CH-261127-H4B7: charter gen MUST keep each doc's references and embeds current with the record and the code
+var CH_261127_H4B7 = &Spec{ID: "CH-261127-H4B7", Title: "charter gen MUST keep each doc's references and embeds current with the record and the code", Status: Active}
 
 // CH_261127_QRQS is CH-261127-QRQS: charter check MUST warn, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again
 var CH_261127_QRQS = &Spec{ID: "CH-261127-QRQS", Title: "charter check MUST warn, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again", Status: Active}

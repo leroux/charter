@@ -14,8 +14,8 @@ Kind: invariant
 Serves: CH-261126-P2SK, CH-001
 See: CH-022
 
-- An active decision with no realizes anchor MUST fail, and nothing MAY
-  waive it. That a concerns anchor does not count is CH-022's.
+- An active decision with no realizes anchor MUST fail, and a waiver
+  MUST NOT absorb it. That a concerns anchor does not count is CH-022's.
 - An active entry with scenarios MUST fail for each scenario no citation
   names, naming the document, the line and the call to write; an active
   entry without scenarios MUST fail when no citation names it at all.
@@ -61,7 +61,7 @@ Changes:
   names it (backlog 004).
 - 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
-## CH-031 The gate MUST ask no anchor of a need, and MUST count a need's citation only from the stakeholder's side
+## CH-031 The gate MUST NOT ask an anchor of a need, and MUST count a need's citation only from the stakeholder's side
 
 Status: active
 Serves: CH-261126-P2SK
@@ -232,7 +232,7 @@ Changes:
   deprecated and the need above it is served directly (backlog 004).
 - 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
-## CH-034 Code MUST read an environment variable through a named constant, or under a dynamic directive, and no literal MUST name one
+## CH-034 Code MUST read an environment variable through a named constant, or under a dynamic directive, and a literal MUST NOT name one
 
 Status: active
 Kind: invariant
