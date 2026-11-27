@@ -23,6 +23,27 @@ where it first appears. Give one thing one name. State the mechanism, the
 values and the limits rather than a summary of them. Use a list for
 separate items and prose where the relationships between them matter.
 
+## Entry form
+
+Write each entry in the form the project's agent instructions (CLAUDE.md
+or AGENTS.md) give for claims. Where they give none, use this default:
+
+- **Title:** the component that carries the obligation, with a BCP 14
+  keyword, as one claim a reviewer could disagree with: "The proxy MUST
+  check an allowlisted connection's TLS server name before relaying it".
+- **Text:** RFC 2119 bullets, one requirement per bullet. Use connected
+  prose instead when the entry is a single requirement, or when its
+  clauses only make sense together (a sequence, a cause).
+- **Key words:** MUST, MUST NOT, SHOULD, SHOULD NOT and MAY, in capitals
+  only, with their BCP 14 meanings (RFC 2119, RFC 8174). Put the
+  negation in the keyword ("MUST NOT send"), never in the subject
+  ("nothing MUST be sent"). If `needs.md` does not yet say so, add to its
+  header that the key words are interpreted as BCP 14 describes.
+- **Why:** explain the problem or threat, how the rule meets it, and what
+  the rule costs or avoids. Add no reason the ruling does not support.
+- **Scenarios:** one numbered item each, in given / when / then form, with
+  a concrete input and an observable outcome.
+
 ## Procedure
 
 1. **Read the ruling.** Open the story, `backlog/NNN-slug.md`, and its
@@ -51,38 +72,42 @@ separate items and prose where the relationships between them matter.
    (`next STK` for a need). Never write an id by hand or reuse one.
 
 5. **Write the entry** in the area document, in this order: the heading
-   `## SW-261001-K7Q2 Title`, the title a sentence a reviewer could disagree
-   with; `Status: planned` (`active` when the build lands in the same
+   `## SW-261001-K7Q2 Title`, the title as the entry form says; `Status: planned` (`active` when the build lands in the same
    change); `Kind:` only for an invariant, a bound or a structure rule;
    `Serves:` the need or decision it serves; `See:` coupled decisions;
    `Accounts:` each new environment variable, operation, event kind or
    build tag it owns (`env:NAME`, `op:GET /path`, `event:kind`,
    `tag:name`); a blank line; the text, as long as the ruling needs; `Why:`;
-   `Scenarios:`, numbered, each "N. `kebab-handle` (who ruled): an input
-   and an observable outcome", the provenance `(owner, #444)` when the
+   `Scenarios:`, numbered, each "N. `kebab-handle` (who ruled): given an
+   input, when it happens, then an observable outcome", the provenance `(owner, #444)` when the
    story's ruling is the owner's, `(delegate name, #12)` for a delegate
    `claims/policy.md` names for the area, else `(agent, provisional)` with
    a question in `claims/questions.md` (id from `charter next Q`) saying
    what was chosen and why; `Guidance:` only when the ruling said how. A need
-   has no Kind, Serves or Guidance. Abridged from `claims/form.md`:
+   has no Kind, Serves or Guidance. An entry in the default form, abridged:
 
    ```markdown
-   ## CH-012 An id is a prefix with a number or with a date and a code, declared once, and a new id is the day it was taken and a code drawn at random
+   ## CH-012 An id MUST be declared once, and a new id MUST be its prefix, the day it was taken and a random code
 
    Status: active
-   Serves: CH-003
+   Serves: CH-261126-PFG5
 
-   A new id is its prefix, the day's date and a code drawn at random,
-   drawn again when the tree already holds that id. Ids are unique across
-   the area documents; a second declaration fails naming both places.
+   - `charter next` MUST give every new id: its prefix, the day's UTC date
+     and a code drawn at random, drawn again when the tree already holds
+     that id.
+   - Ids MUST be unique across the area documents. A second declaration
+     MUST fail, naming both places.
 
-   Why: no state file and no counter to share: the tree is the state, and
-   a random code is not the same on two branches written at the same time.
+   Why: ids need no state file and no counter to share, because the tree
+   is the state. A random code is unlikely to repeat on two branches
+   written at the same time, so branches no longer collide at merge.
 
    Scenarios:
-   1. `declared-once`: an id declared in two documents fails naming both.
-   2. `next-free`: a new id is its prefix, the UTC date and a code of the
-      alphabet, and a draw the tree already holds is drawn again.
+   1. `declared-once`: given an id declared in two documents, when the
+      gate runs, then it fails naming both.
+   2. `next-free`: given a prefix, when `charter next` runs, then it gives
+      the prefix, the UTC date and a code of the alphabet, drawing again a
+      code the tree already holds.
    ```
 
 6. **Hold the altitude.** Name the boundary (a request, an event on the

@@ -67,7 +67,8 @@ open:
 4. **The clause against the record.** A clause another live entry also
    states (search `claims/DIGEST.md` for its key words) is `TWO-HOMES ID,
    ID: "the clause"`.
-5. **Style**, against the project's voice (above). A Why that gives no
+5. **Style**, against the project's voice (above) and its entry form
+   (its agent instructions, or the default in claims-draft). A Why that gives no
    reason, a title that states no claim a reviewer could disagree with, a
    text that recounts history instead of stating the rule, a word the
    glossary defines otherwise, or a passage the reader cannot follow on a

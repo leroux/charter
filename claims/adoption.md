@@ -151,6 +151,12 @@ See: CH-261126-33GK
   skills state: clear technical prose that leads with the point,
   connects each statement to the last and uses the field's terms. A
   skill MUST NOT impose a sentence count or a register.
+- Draft MUST write each entry in the form the adopter's agent
+  instructions give for claims; where they give none, in the default form
+  it states: a BCP 14 title naming the component that carries the
+  obligation, RFC 2119 bullets by default, an explanatory Why, and
+  given/when/then scenarios. Audit judges an entry's style against the
+  same form.
 - The README gives, as a template, the section an adopter puts in its
   CLAUDE.md.
 
@@ -172,6 +178,9 @@ Scenarios:
    charter command and charter.toml.
 
 Changes:
+- 2026-11-27: draft gains a default entry form, the one this repository's
+  owner chose, which an adopter's agent instructions override; audit
+  judges style against it. The owner asked for it as the default.
 - 2026-11-27: the voice is the adopter's: skills follow the project's
   agent instructions and fall back to a stated default; narrate's "short
   plain words", draft's one-to-six sentences and audit's lint line go.
