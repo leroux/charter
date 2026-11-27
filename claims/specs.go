@@ -173,23 +173,23 @@ var CH_037 = &Spec{ID: "CH-037", Title: "The gate reports every problem, sorted,
 // CH_040 is CH-040: One charter command generates, checks, gives ids and lists anchors, and an adopter writes no main
 var CH_040 = &Spec{ID: "CH-040", Title: "One charter command generates, checks, gives ids and lists anchors, and an adopter writes no main", Status: Active}
 
-// CH_042 is CH-042: A report joins each test's markers to its scenarios and says which passed, failed, were skipped or have none
-var CH_042 = &Spec{ID: "CH-042", Title: "A report joins each test's markers to its scenarios and says which passed, failed, were skipped or have none", Status: Active}
+// CH_042 is CH-042: charter report MUST join each test's markers to its scenarios and say which passed, failed, were skipped or have no test
+var CH_042 = &Spec{ID: "CH-042", Title: "charter report MUST join each test's markers to its scenarios and say which passed, failed, were skipped or have no test", Status: Active}
 
-// CH_261005_6ZBS is CH-261005-6ZBS: The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why
-var CH_261005_6ZBS = &Spec{ID: "CH-261005-6ZBS", Title: "The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why", Status: Active}
+// CH_261005_6ZBS is CH-261005-6ZBS: charter gen MUST write a digest that reads the charter in order: needs by area, an area map, then each area's decisions with their Why
+var CH_261005_6ZBS = &Spec{ID: "CH-261005-6ZBS", Title: "charter gen MUST write a digest that reads the charter in order: needs by area, an area map, then each area's decisions with their Why", Status: Active}
 
 // CH_261009_3FHW is CH-261009-3FHW: The record MUST show who ruled each scenario, and charter diff MUST name any change to an entry the record does not state
 var CH_261009_3FHW = &Spec{ID: "CH-261009-3FHW", Title: "The record MUST show who ruled each scenario, and charter diff MUST name any change to an entry the record does not state", Status: Active}
 
-// CH_261009_4B3B is CH-261009-4B3B: The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered
-var CH_261009_4B3B = &Spec{ID: "CH-261009-4B3B", Title: "The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered", Status: Active}
+// CH_261009_4B3B is CH-261009-4B3B: The question file MUST hold what nobody has ruled, each question naming its entry, who asked and the provisional answer until it is answered
+var CH_261009_4B3B = &Spec{ID: "CH-261009-4B3B", Title: "The question file MUST hold what nobody has ruled, each question naming its entry, who asked and the provisional answer until it is answered", Status: Active}
 
-// CH_261009_QQC8 is CH-261009-QQC8: charter diff names what a change did to the record that its Changes lines do not say
-var CH_261009_QQC8 = &Spec{ID: "CH-261009-QQC8", Title: "charter diff names what a change did to the record that its Changes lines do not say", Status: Active}
+// CH_261009_QQC8 is CH-261009-QQC8: charter diff MUST name every change to the record that its Changes lines do not state
+var CH_261009_QQC8 = &Spec{ID: "CH-261009-QQC8", Title: "charter diff MUST name every change to the record that its Changes lines do not state", Status: Active}
 
-// CH_261009_VY5C is CH-261009-VY5C: A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional
-var CH_261009_VY5C = &Spec{ID: "CH-261009-VY5C", Title: "A scenario says who ruled it: the owner with what it cites, a named delegate, or, unwritten, an agent, provisional", Status: Active}
+// CH_261009_VY5C is CH-261009-VY5C: The record reader MUST read who ruled a scenario: the owner with what it cites, a named delegate, or, when nothing is written, an agent, provisionally
+var CH_261009_VY5C = &Spec{ID: "CH-261009-VY5C", Title: "The record reader MUST read who ruled a scenario: the owner with what it cites, a named delegate, or, when nothing is written, an agent, provisionally", Status: Active}
 
 // CH_261126_33GK is CH-261126-33GK: charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know
 var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know", Status: Active}
