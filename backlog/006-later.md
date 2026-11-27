@@ -1,6 +1,6 @@
 # 006. Ideas held for later: extensions the foundations do not need yet
 
-Status: held · Size: — · See: 003, 004
+Status: held · Size: — · See: 007, 008
 
 Each idea came out of the design talk of 2026-11-26. None is ruled; each
 waits for an adopter, torii first, to show it is needed. Taking one up is

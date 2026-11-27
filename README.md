@@ -26,7 +26,7 @@ nested anywhere, Python and TypeScript beside them.
 | `example/` | **ratelimit**, a Go adopter kept as a real one would be |
 | `example-polyglot/` | **slugs**, a nested Go module and Python beside it, with no go.mod at its root |
 | `.claude/skills/claims-*` | The agent skills of the loop: draft, implement, review, audit, probe |
-| `backlog/` | The work toward a standalone method |
+| `backlog/` | The stories in progress or held, one a file |
 
 ## Adopting it
 

@@ -16,7 +16,7 @@ The charter tooling and method, specified by its own charter. Start with
   module and Python with no go.mod at its root. Each is a charter of its
   own that imports nothing of the tooling; `cmd/charter/adopter_test.go`
   runs their gates and holds them to that.
-- `backlog/`: the work toward a standalone method, one story a file.
+- `backlog/`: the stories in progress or held, one a file.
 
 ## The loop, here
 
