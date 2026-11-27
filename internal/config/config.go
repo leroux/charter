@@ -57,6 +57,15 @@ type Surface struct {
 	Command string `toml:"command"`
 }
 
+// Files is a [[files]] table: files no language reads, by path pattern,
+// whose comment lines may anchor an entry.
+type Files struct {
+	// Patterns are path.Match patterns, matched as Ignore's are.
+	Patterns []string `toml:"patterns"`
+	// Comment is the marker a comment line opens with, such as "#".
+	Comment string `toml:"comment"`
+}
+
 // Config is a charter's claims/charter.toml, with Root resolved.
 type Config struct {
 	// Root is the absolute directory that holds claims/.
@@ -75,11 +84,14 @@ type Config struct {
 	EnvPatterns      []string    `toml:"env-patterns"`
 	Digest           string      `toml:"digest"`
 	Surfaces         []Surface   `toml:"surface"`
+	Files            []Files     `toml:"files"`
 
 	// lines maps a table's or a key's dotted name to its line, for problems.
 	lines map[string]int
 	// surfaceLines are the lines the [[surface]] tables open on, in order.
 	surfaceLines []int
+	// filesLines are the lines the [[files]] tables open on, in order.
+	filesLines []int
 }
 
 // SurfaceLine returns the line the i-th [[surface]] table opens on, or 1.
@@ -145,8 +157,10 @@ func Load(root string) (*Config, error) {
 
 // Parse decodes a configuration's text. Its errors open with the line,
 // "12: ...", for the caller to prefix with the file.
+//
+//charter:realizes CH-261127-45KM
 func Parse(src string) (*Config, error) {
-	c := &Config{lines: keyLines(src), surfaceLines: tableLines(src, "surface")}
+	c := &Config{lines: keyLines(src), surfaceLines: tableLines(src, "surface"), filesLines: tableLines(src, "files")}
 	md, err := toml.Decode(src, c)
 	if err != nil {
 		var pe toml.ParseError
@@ -163,7 +177,7 @@ func Parse(src string) (*Config, error) {
 	var problems []string
 	for _, k := range md.Undecoded() {
 		name := k.String()
-		problems = append(problems, fmt.Sprintf("%d: unknown key %q; the keys are name, go, python, typescript, stakeholder-tests, probes, ignore, only, env-patterns, digest and surface", c.Line(name), name))
+		problems = append(problems, fmt.Sprintf("%d: unknown key %q; the keys are name, go, python, typescript, stakeholder-tests, probes, ignore, only, env-patterns, digest, surface and files", c.Line(name), name))
 	}
 	for _, l := range []struct {
 		name string
@@ -178,6 +192,18 @@ func Parse(src string) (*Config, error) {
 	}
 	if c.TypeScript != nil && c.TypeScript.Compiler == "" {
 		problems = append(problems, fmt.Sprintf("%d: [typescript] has no compiler; write compiler = \"...\", the typescript package directory", c.Line("typescript")))
+	}
+	for i, f := range c.Files {
+		line := 1
+		if i < len(c.filesLines) {
+			line = c.filesLines[i]
+		}
+		if len(f.Patterns) == 0 {
+			problems = append(problems, fmt.Sprintf("%d: [[files]] has no patterns; write patterns = [\"...\"], the paths of the files it reads", line))
+		}
+		if strings.TrimSpace(f.Comment) == "" {
+			problems = append(problems, fmt.Sprintf("%d: [[files]] has no comment marker; write comment = \"#\", what a comment line opens with", line))
+		}
 	}
 	if len(problems) > 0 {
 		return nil, errors.New(strings.Join(problems, "\n"+Dir+"/"+File+":"))

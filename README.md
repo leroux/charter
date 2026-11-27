@@ -54,7 +54,9 @@ a binary, and the files it generates are self-contained.
    # [python] and [typescript] tables take dir, test and env the same way;
    # [typescript] also compiler (the typescript package) and import.
    # [[surface]] tables declare a surface kind: a kind and a command whose
-   # output lines are its keys.
+   # output lines are its keys. [[files]] tables name files no language
+   # reads (patterns, and their comment marker) whose comment lines may
+   # anchor an entry: `# charter:realizes SW-…` in a firewall ruleset.
    ```
 
 3. Write `claims/needs.md` and an area document per area (`# Title`, a

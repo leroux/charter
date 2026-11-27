@@ -274,3 +274,6 @@ var CH_261126_PZ8Z = &Spec{ID: "CH-261126-PZ8Z", Title: "An area is contract or 
 
 // CH_261126_WTMZ is CH-261126-WTMZ: A word the record retires is named wherever a reader meets it, unless one of its phrases keeps it
 var CH_261126_WTMZ = &Spec{ID: "CH-261126-WTMZ", Title: "A word the record retires is named wherever a reader meets it, unless one of its phrases keeps it", Status: Active}
+
+// CH_261127_45KM is CH-261127-45KM: A file no language reads anchors an entry by a comment line, where charter.toml names it
+var CH_261127_45KM = &Spec{ID: "CH-261127-45KM", Title: "A file no language reads anchors an entry by a comment line, where charter.toml names it", Status: Active}

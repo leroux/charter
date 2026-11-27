@@ -26,7 +26,7 @@ type Anchor struct {
 	// Decl names the declaration the directive sits on, such as "func
 	// (*Limiter).Allow", "type Clock" or "package limiter".
 	Decl string
-	// DeclKind is func, type, var, const, class or package.
+	// DeclKind is func, type, var, const, class, package or file.
 	DeclKind string
 }
 

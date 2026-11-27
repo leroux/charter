@@ -1,6 +1,6 @@
 # From an id to its code and its tests
 
-Code: internal/lang/golang, internal/lang/python, internal/lang/typescript, internal/facts, cmd/charter
+Code: internal/lang/golang, internal/lang/python, internal/lang/typescript, internal/lang/plain, internal/facts, cmd/charter
 
 The problem this area answers: a person or an agent new to the code cannot
 find their way from what was decided to where it is done. It holds how code
@@ -128,6 +128,40 @@ Changes:
 - 2026-11-26: Python is read: a directive on the comment lines directly
   above a def or a class, or its decorators, anchors it, and one anywhere
   else is refused (backlog 003).
+
+## CH-261127-45KM A file no language reads anchors an entry by a comment line, where charter.toml names it
+
+Status: active
+Serves: CH-002
+See: CH-021
+
+A `[[files]]` table in charter.toml names path patterns, matched as the
+walk's ignore patterns are, and the comment marker of the files they
+match, such as `#` for nftables, systemd units and shell scripts. In such
+a file, a line whose text after the marker and any spaces is
+"charter:realizes ID, ..." or "charter:concerns ID, ..." is an anchor on
+the file; the anchor records the kind, the file and the line. A
+directive naming no id fails and counts for nothing. A table with no
+pattern or no marker fails naming its line, and a file no table names is
+not read for directives.
+
+Why: some decisions are carried by a file that is not code, a firewall
+ruleset or a service unit, and the pointer from the decision belongs on
+the file that decides, not on code beside it that merely loads it.
+
+Scenarios:
+1. `file-anchor-recorded` (agent, provisional): a directive line in a file
+   a table names is recorded as an anchor on that file, with its line.
+2. `unnamed-file-unread` (agent, provisional): the same line in a file no
+   table names is not an anchor.
+3. `empty-directive-refused` (agent, provisional): a directive naming no
+   id fails naming the file and the line.
+4. `files-table-checked` (agent, provisional): a `[[files]]` table with no
+   pattern, or no comment marker, fails naming its line.
+
+Guidance: name the narrowest patterns that hold the files, such as
+`packaging/*/*.nft`; a broad pattern reads every matching file for
+directives.
 
 ## CH-022 An anchor names an entry that exists and is not planned, and concerns never counts toward coverage
 

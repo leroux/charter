@@ -36,6 +36,9 @@ type Options struct {
 	// Boundary is the slash path, relative to a directory, that marks it as
 	// another charter's root, such as claims/charter.toml.
 	Boundary string
+	// Files lists, under each name, the files no language reads that match
+	// its path.Match patterns, as Ignore's are matched.
+	Files map[string][]string
 }
 
 // Tree is the files of each language, slash-relative to the root, sorted.
@@ -83,6 +86,12 @@ func Walk(o Options) (Tree, error) {
 		}
 		if l := language(rel); l != "" && want[l] {
 			tree[l] = append(tree[l], rel)
+		} else if l == "" {
+			for name, pats := range o.Files {
+				if matchesAny(pats, rel) {
+					tree[name] = append(tree[name], rel)
+				}
+			}
 		}
 		return nil
 	})

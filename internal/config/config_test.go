@@ -148,3 +148,22 @@ func TestBadKeysAreRefusedNamingTheLine(t *testing.T) {
 		})
 	}
 }
+
+func TestAFilesTableNeedsPatternsAndAMarker(t *testing.T) {
+	claims.Verifies(t, claims.CH_261127_45KM, "files-table-checked")
+	for _, tc := range []struct{ name, src, want string }{
+		{"no patterns", "name = \"x\"\n\n[[files]]\ncomment = \"#\"\n", "3: [[files]] has no patterns"},
+		{"no marker", "name = \"x\"\n\n[[files]]\npatterns = [\"*.nft\"]\n\n[[files]]\npatterns = [\"*.sh\"]\n", "6: [[files]] has no comment marker"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := Parse(tc.src)
+			if err == nil || !strings.Contains(err.Error(), tc.want) {
+				t.Errorf("Parse error = %v; want it to hold %q", err, tc.want)
+			}
+		})
+	}
+	c, err := Parse("name = \"x\"\n\n[[files]]\npatterns = [\"packaging/*/*.nft\"]\ncomment = \"#\"\n")
+	if err != nil || len(c.Files) != 1 || c.Files[0].Comment != "#" || c.Files[0].Patterns[0] != "packaging/*/*.nft" {
+		t.Errorf("Parse = %+v, %v", c, err)
+	}
+}

@@ -22,6 +22,7 @@ import (
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/gate"
 	"github.com/leroux/charter/internal/lang/golang"
+	"github.com/leroux/charter/internal/lang/plain"
 	"github.com/leroux/charter/internal/lang/python"
 	"github.com/leroux/charter/internal/lang/typescript"
 	"github.com/leroux/charter/internal/record"
@@ -61,6 +62,7 @@ func Load(c *config.Config) (*Tree, error) {
 		Ignore:    c.Ignore,
 		Only:      c.Only,
 		Boundary:  config.Dir + "/" + config.File,
+		Files:     filesKinds(c),
 	})
 	if err != nil {
 		return nil, err
@@ -95,7 +97,25 @@ func Load(c *config.Config) (*Tree, error) {
 		}
 		t.Facts.Add(set)
 	}
+	for i, f := range c.Files {
+		set, err := plain.Reader{Root: c.Root, Comment: f.Comment}.Read(t.Files[filesKind(i)])
+		if err != nil {
+			return nil, err
+		}
+		t.Facts.Add(set)
+	}
 	return t, nil
+}
+
+// filesKind names the walk's list of the i-th [[files]] table.
+func filesKind(i int) string { return fmt.Sprintf("files.%d", i) }
+
+func filesKinds(c *config.Config) map[string][]string {
+	m := map[string][]string{}
+	for i, f := range c.Files {
+		m[filesKind(i)] = f.Patterns
+	}
+	return m
 }
 
 func languages(c *config.Config) []string {

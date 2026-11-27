@@ -650,3 +650,46 @@ func TestALanguageNotNamedStartsNoParser(t *testing.T) {
 		t.Errorf("a charter naming no Python: %q", ps)
 	}
 }
+
+// guarded is the fixture with SW-010 realized by a ruleset no language
+// reads, under the [[files]] table files.
+func guarded(t *testing.T, files string) map[string]string {
+	t.Helper()
+	f := replace(t, "pkg/a/a.go", "//\n//charter:realizes SW-010\n", "")
+	f["claims/charter.toml"] += files
+	f["etc/guard.nft"] = "#!/usr/sbin/nft -f\n# The guard.\n#\n#  charter:realizes SW-010\ntable inet guard {}\n"
+	return f
+}
+
+func TestAFileNoLanguageReadsAnchorsWhereTheTableNamesIt(t *testing.T) {
+	claims.Verifies(t, claims.CH_261127_45KM, "file-anchor-recorded", "unnamed-file-unread")
+	table := "\n[[files]]\npatterns = [\"etc/*.nft\"]\ncomment = \"#\"\n"
+	c := build(t, guarded(t, table))
+	tree, err := Load(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got []string
+	for _, a := range tree.Facts.Anchors {
+		if a.DeclKind == "file" {
+			got = append(got, a.Pos()+" "+a.Kind+" "+strings.Join(a.IDs, ",")+" "+a.Decl)
+		}
+	}
+	if strings.Join(got, "|") != "etc/guard.nft:4 realizes SW-010 file etc/guard.nft" {
+		t.Errorf("file anchors = %q", got)
+	}
+	for _, p := range problems(t, c) {
+		if strings.Contains(p, "realized by no code") {
+			t.Errorf("the file's anchor did not realize SW-010: %s", p)
+		}
+	}
+	reports(t, guarded(t, ""), "active entry SW-010 is realized by no code")
+	reports(t, guarded(t, "\n[[files]]\npatterns = [\"*.service\"]\ncomment = \"#\"\n"), "active entry SW-010 is realized by no code")
+}
+
+func TestAFileDirectiveNamingNoIDIsRefused(t *testing.T) {
+	claims.Verifies(t, claims.CH_261127_45KM, "empty-directive-refused")
+	f := guarded(t, "\n[[files]]\npatterns = [\"etc/*.nft\"]\ncomment = \"#\"\n")
+	f["etc/guard.nft"] = strings.Replace(f["etc/guard.nft"], "#  charter:realizes SW-010", "# charter:realizes", 1)
+	reports(t, f, "etc/guard.nft:4: rule 24: charter:realizes names at least one spec")
+}
