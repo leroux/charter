@@ -104,11 +104,11 @@ func record(tb testing.TB, id string, handles []string) {
 	})
 }
 
-// CH_001 is CH-001: A reviewer can judge a change by its entries and their tests, not by reading the code
-var CH_001 = &Spec{ID: "CH-001", Title: "A reviewer can judge a change by its entries and their tests, not by reading the code", Status: Active}
+// CH_001 is CH-001: The charter gate MUST let a reviewer judge a change by its entries and their tests, without reading the code
+var CH_001 = &Spec{ID: "CH-001", Title: "The charter gate MUST let a reviewer judge a change by its entries and their tests, without reading the code", Status: Active}
 
-// CH_002 is CH-002: A builder reaches the code and the tests from an id, and the gate names the fix for every problem
-var CH_002 = &Spec{ID: "CH-002", Title: "A builder reaches the code and the tests from an id, and the gate names the fix for every problem", Status: Active}
+// CH_002 is CH-002: The charter command MUST lead a builder from an id to its code and tests, and every gate problem MUST name its fix
+var CH_002 = &Spec{ID: "CH-002", Title: "The charter command MUST lead a builder from an id to its code and tests, and every gate problem MUST name its fix", Status: Active}
 
 // CH_006 is CH-006: The charter specifies itself, and its own gate is green
 var CH_006 = &Spec{ID: "CH-006", Title: "The charter specifies itself, and its own gate is green", Status: Active}
@@ -179,8 +179,8 @@ var CH_042 = &Spec{ID: "CH-042", Title: "A report joins each test's markers to i
 // CH_261005_6ZBS is CH-261005-6ZBS: The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why
 var CH_261005_6ZBS = &Spec{ID: "CH-261005-6ZBS", Title: "The digest reads the charter in order: needs by area, an area map, then each area's decisions with their why", Status: Active}
 
-// CH_261009_3FHW is CH-261009-3FHW: A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named
-var CH_261009_3FHW = &Spec{ID: "CH-261009-3FHW", Title: "A reader tells what was ruled from what an agent chose, and an entry's change is recorded or named", Status: Active}
+// CH_261009_3FHW is CH-261009-3FHW: The record MUST show who ruled each scenario, and charter diff MUST name any change to an entry the record does not state
+var CH_261009_3FHW = &Spec{ID: "CH-261009-3FHW", Title: "The record MUST show who ruled each scenario, and charter diff MUST name any change to an entry the record does not state", Status: Active}
 
 // CH_261009_4B3B is CH-261009-4B3B: The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered
 var CH_261009_4B3B = &Spec{ID: "CH-261009-4B3B", Title: "The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered", Status: Active}
@@ -203,17 +203,17 @@ var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a hea
 // CH_261126_JC9B is CH-261126-JC9B: An area document's header is a title, a Code line and prose, and a fenced line is never a heading
 var CH_261126_JC9B = &Spec{ID: "CH-261126-JC9B", Title: "An area document's header is a title, a Code line and prose, and a fenced line is never a heading", Status: Active}
 
-// CH_261126_NS7T is CH-261126-NS7T: An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling
-var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter keeps a charter in any repository layout and language, and its code imports nothing of the tooling", Status: Active}
+// CH_261126_NS7T is CH-261126-NS7T: An adopter MUST be able to keep a charter in any repository layout and language, with code that imports nothing of the tooling
+var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter MUST be able to keep a charter in any repository layout and language, with code that imports nothing of the tooling", Status: Active}
 
 // CH_261126_NTRR is CH-261126-NTRR: A declared surface kind is a command run from the root whose output lines are its keys
 var CH_261126_NTRR = &Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: Active}
 
-// CH_261126_P2SK is CH-261126-P2SK: The code does what the record says, and a gap between them stops the change
-var CH_261126_P2SK = &Spec{ID: "CH-261126-P2SK", Title: "The code does what the record says, and a gap between them stops the change", Status: Active}
+// CH_261126_P2SK is CH-261126-P2SK: The charter gate MUST fail a change that leaves a gap between the record and the code
+var CH_261126_P2SK = &Spec{ID: "CH-261126-P2SK", Title: "The charter gate MUST fail a change that leaves a gap between the record and the code", Status: Active}
 
-// CH_261126_PFG5 is CH-261126-PFG5: What the software must do is written once, above the code, where people and agents both read and change it
-var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "What the software must do is written once, above the code, where people and agents both read and change it", Status: Active}
+// CH_261126_PFG5 is CH-261126-PFG5: A repository's charter MUST write what the software must do once, above the code, where people and agents both read and change it
+var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "A repository's charter MUST write what the software must do once, above the code, where people and agents both read and change it", Status: Active}
 
 // CH_261126_PQ7X is CH-261126-PQ7X: A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: Active, Kind: "structure"}
