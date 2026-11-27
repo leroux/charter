@@ -21,9 +21,9 @@ runs them, its constants module and, for Go, the generated module's path,
 and for TypeScript the typescript package it parses with and the specifier
 tests import the generated module by; the stakeholder tests, the probe
 path, the ignore and only patterns and the environment patterns; the
-digest; and the declared surface kinds. A key it does not know, a value of
-the wrong type, or a language table without its test command fails naming
-the line. Its paths are relative to the root.
+digest; the declared surface kinds; and the doc patterns. A key it does
+not know, a value of the wrong type, or a language table without its test
+command fails naming the line. Its paths are relative to the root.
 
 Why: a charter configured in Go code can be read only by a Go build, and a
 command that must be told where the charter is gets run in the wrong
@@ -51,6 +51,9 @@ Changes:
   yielded as written, where it said its paths were taken relative to the
   root, which no test showed, the root being the caller's to join (review
   of backlog 003).
+- 2026-11-27: charter.toml names the doc patterns, the markdown files read
+  as docs (CH-261127-3NY3); keys-read covers them as every key (backlog
+  007).
 
 ## CH-261126-PQ7X A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
 
@@ -124,11 +127,15 @@ Status: planned
 Serves: CH-261126-NS7T
 See: CH-261126-33GK
 
-The claims skills, draft, implement, review, audit and probe, ship as a
-Claude Code plugin of this repository, which an adopter installs. A skill
+The claims skills, draft, implement, review, audit, probe and narrate,
+ship as a Claude Code plugin of this repository, which an adopter
+installs. A skill
 names the commands of the method and finds the adopter's layout, the
 claims directory, the languages and their test commands, in charter.toml;
-it names no file of one repository's layout. The method's document gives
+it names no file of one repository's layout. Narrate drafts a doc over a
+need, an area or a flow, and on a stale doc proposes an edit of what
+changed, never writing over a curated one; audit also reads each doc
+against the code it references. The method's document gives
 the section an adopter puts in its CLAUDE.md as a template.
 
 Why: skills written for one product send an agent in another repository to
@@ -138,10 +145,15 @@ there.
 
 Scenarios:
 1. `plugin-lists-the-skills` (owner, backlog 003): the plugin's manifest
-   lists the five skills, and each skill's file is in the plugin.
+   lists the six skills, and each skill's file is in the plugin.
 2. `no-fixed-layout` (owner, backlog 003): no skill names cmd/claimsgen,
    claims/README.md or a path of one product, and each one needing the
    layout reads charter.toml.
 3. `claude-md-template` (owner, backlog 003): the method's document holds
    the CLAUDE.md section as a template naming the charter command and
    charter.toml.
+
+Changes:
+- 2026-11-27: narrate joins the skills, drafting docs and proposing edits
+  to stale ones, and audit reads docs against their code; the plugin
+  lists six skills (backlog 007).

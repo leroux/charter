@@ -65,8 +65,8 @@ one line counting the open questions of the question file, then its
 advice: a decision that serves nothing, a planned entry each of whose
 scenarios is verified, a deprecated entry still anchored or cited, an
 active decision realized only by a package clause unless its kind is
-structure, and a citation of an entry with scenarios that names none. The
-style checks, CH-261126-9K5J's and CH-261126-WTMZ's, print after the rest.
+structure, a citation of an entry with scenarios that names none, and the
+docs CH-261127-GXP7 names drafted or stale. The style checks, CH-261126-9K5J's and CH-261126-WTMZ's, print after the rest.
 
 Why: these are the gaps a reviewer would want to know about and that no
 mechanical rule should block a merge on, so lint names them and the gate
@@ -102,6 +102,8 @@ Changes:
   words CH-261126-WTMZ's, each a ruling of its own; their scenarios moved
   there, and this entry keeps the gate first, the questions' count and the
   advice (backlog 004).
+- 2026-11-27: lint's advice ends with the docs drafted or stale, whose
+  ruling and scenarios are CH-261127-GXP7's (backlog 007).
 
 ## CH-261126-9K5J Lint counts the style a reader would stumble on, against fixed bars, and -style lists each finding
 

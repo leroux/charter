@@ -54,3 +54,8 @@ Asked-by: agent
 Entry: CH-033
 Provisional: nothing is cut or changed until the owner rules; recommended: Ask whether go/charter is meant for other repositories; if not, yes; if it is, keep the baseline as the cost of adoptability. The entries it touches besides this one: CH-004.
 Answer: 2026-11-26, owner: yes, the charter is meant for other repositories and new ones; it is its own repository, github.com/leroux/charter, a project and a methodology of its own. The baseline stays as the cost of adoptability, and CH-033 and CH-004 are unchanged.
+
+## Q-261127-BVQX Should a code reference in a doc resolve a name qualified by a type, as `Engine.Accept`, to that type's method, and by a package, as `engine.Accept`, to the file's package?
+Asked-by: agent
+Entry: CH-261127-DW8R/method-by-type
+Provisional: yes; a bare name resolves to a top-level declaration, a qualifier first to the file's package and then to a type the file declares. The owner ruled the example `engine.Accept`; the type qualifier is the agent's.

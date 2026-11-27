@@ -1,12 +1,12 @@
 # From an id to its code and its tests
 
-Code: internal/lang/golang, internal/lang/python, internal/lang/typescript, internal/lang/plain, internal/facts, cmd/charter
+Code: internal/lang/golang, internal/lang/python, internal/lang/typescript, internal/lang/plain, internal/facts, internal/docs, cmd/charter
 
 The problem this area answers: a person or an agent new to the code cannot
 find their way from what was decided to where it is done. It holds how code
 and tests name the entries in each language, the generated symbols that
 make a wrong name fail, and the command that lists an entry's code and
-tests.
+tests, and the docs that tell a story over them.
 
 ## CH-020 Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment
 
@@ -344,13 +344,14 @@ See: CH-261126-33GK
 charter gen writes the generated files from the documents alone, so it
 works when one is stale or missing. check runs the gate (CH-037), lint
 prints the gate's problems and then the advice, report and diff are
-CH-042's and CH-261009-QQC8's, and export is CH-261015-9ZTY's. next prints
+CH-042's and CH-261009-QQC8's, and export is CH-261015-9ZTY's, curate CH-261127-GXP7's. next prints
 a new id for a prefix, the day's UTC date and a code drawn at random,
 drawn again when the tree already holds that id, or as many as the count
 after the prefix asks for, each different. anchors prints, per id, the
 document, the title, the status, the scenarios, the realizing and
 concerning sites with their declarations, the verifying tests with the
-handles each names, and the relations. Every verb works on the charter
+handles each names, the relations and the docs that mention it
+(CH-261127-8MYR). Every verb works on the charter
 CH-261126-33GK finds, and an adopter writes or builds nothing of its own
 to run them.
 
@@ -408,3 +409,195 @@ Changes:
   `root-from-working-directory` with them; `generate-writes-both` becomes
   `gen-from-documents-alone`, and `verbs-on-the-found-charter` is added
   (backlog 003).
+- 2026-11-27: curate is a verb, CH-261127-GXP7's, and anchors lists the
+  docs that mention an entry, CH-261127-8MYR's (backlog 007).
+
+## CH-261127-3NY3 A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve
+
+Status: planned
+Serves: CH-002
+See: CH-261126-33GK, CH-261127-DW8R, CH-261127-H4B7
+
+A doc is a markdown file that charter.toml's doc patterns match, matched
+as the ignore patterns are; no other file is read as one. A doc tells a
+story over the record and the code, and its prose is held to nothing. It
+references an entry by a markdown link whose text opens with the entry's
+id, and embeds one between a `charter:embed ID` comment and its closing
+`/charter:embed` comment. A reference or an embed naming no entry, or a
+deprecated one, fails naming the doc and the line. A heading in a doc
+that opens with an id fails naming the area documents, where entries are
+declared.
+
+Why: the record holds what binds, but a reader also needs how the system
+works, why it is shaped so, and a story joining many entries; that prose
+lives outside the gate today and points at things that are gone without
+anyone being told. A doc whose pointers are checked can still be wrong,
+but it cannot point at nothing, and an entry declared in one place alone
+stays easy to read by program.
+
+Scenarios:
+1. `doc-by-pattern` (owner, backlog 007): a markdown file the doc patterns
+   match is read as a doc, and one they do not match is not.
+2. `reference-resolves` (owner, backlog 007): a link whose text opens
+   with an active entry's id passes, and one naming no entry fails naming
+   the doc and the line.
+3. `deprecated-reference-fails` (owner, backlog 007): a reference to a
+   deprecated entry fails naming it.
+4. `embed-resolves` (owner, backlog 007): an embed naming no entry fails
+   naming the doc and the line.
+5. `doc-declares-nothing` (owner, backlog 007): a heading in a doc that
+   opens with an id fails, and no entry is read from it.
+
+## CH-261127-DW8R A doc references code by a link to the file declaring the named symbol, and one that file lacks fails
+
+Status: planned
+Serves: CH-002
+See: CH-261127-3NY3, CH-261126-PQ7X
+
+A code reference in a doc is a markdown link whose text is a name in
+backticks and whose target is a file under the root. In a file a
+language reads, the name is a declaration in that file, a function, type,
+class, method or constant, written bare or qualified by its package or its
+type, as `Accept`, `engine.Accept` or `Engine.Accept`; in any other file,
+the file's existing is enough. A target that is missing, or a file that
+declares no such name, fails naming the doc, the line and the name. A
+link whose text is not in backticks, or whose target is outside the root,
+is prose and not read.
+
+Why: how a system works lives in its code, so a walkthrough is a guide to
+declarations, and one that names a function since renamed sends the
+reader nowhere; reading the declaration from the file each language's
+reader already parses makes a rename fail the gate where the prose would
+silently go wrong.
+
+Scenarios:
+1. `go-symbol-resolves` (owner, backlog 007): a reference to a Go file
+   naming a function it declares passes, bare or qualified by its
+   package; one naming an undeclared function fails naming the doc, line
+   and name.
+2. `python-symbol-resolves` (owner, backlog 007): a reference to a Python
+   file naming a class it declares passes, and a name it lacks fails.
+3. `typescript-symbol-resolves` (owner, backlog 007): a reference to a
+   TypeScript file naming a function it exports passes, and a name it
+   lacks fails.
+4. `method-by-type` (agent, provisional): a name qualified by a type
+   resolves to that type's method, and to nothing when the type has no
+   such method.
+5. `plain-file-exists` (owner, backlog 007): a reference to a file no
+   language reads passes when the file exists, and a missing target fails.
+6. `prose-link-unread` (owner, backlog 007): a link whose text is not in
+   backticks is not read as a code reference.
+
+## CH-261127-H4B7 charter gen keeps each doc's references and embeds current with the record and the code
+
+Status: planned
+Serves: CH-002
+See: CH-261127-3NY3, CH-261127-DW8R, CH-040
+
+charter gen rewrites, in every doc, the text after the id of each entry
+reference to the entry's current title and its target to the entry's
+heading in its area document; the target of each code reference to the
+file with a line anchor at the declaration; and what lies between each
+embed's two comments to the entry's id, title and text, written from the
+area document. It changes nothing else in a doc, and a second run with
+nothing changed writes nothing.
+
+Why: a doc must read well where people read it, on a code host that
+renders markdown as written and transcludes nothing; written out by gen,
+a reference keeps its title and an embed its text without a person ever
+holding a copy to keep up to date by hand.
+
+Scenarios:
+1. `title-kept-current` (owner, backlog 007): after an entry's title
+   changes, gen rewrites each reference's text after the id to the new
+   title.
+2. `target-kept-current` (owner, backlog 007): after an entry moves to
+   another area document, gen rewrites each reference's target to its
+   heading there.
+3. `line-kept-current` (owner, backlog 007): after a declaration moves
+   down its file, gen rewrites the code reference's line anchor to the
+   declaration's new line.
+4. `embed-written` (owner, backlog 007): between an embed's comments gen
+   writes the entry's id, title and text, replacing what was there.
+5. `prose-untouched` (owner, backlog 007): gen leaves a doc's prose
+   byte for byte as it was, and a second run writes nothing.
+
+Guidance: an embed renders as a quote: the id and title in bold, then the
+text, then a link to the entry.
+
+## CH-261127-GXP7 charter curate records who curated a doc and a hash of what it references; lint names one whose references changed
+
+Status: planned
+Serves: CH-002
+See: CH-261127-3NY3, CH-261127-DW8R, CH-041
+
+charter curate FILE writes, at the end of the doc, a comment block naming
+who curated it, the date, and a hash of each entry and each code
+reference the doc holds as they are now, replacing the block that was
+there. An entry's hash is of its title, status and text, whitespace
+normalized, so a new Changes line alone leaves it unchanged; a code
+reference's hash is of its declaration's source, whitespace normalized,
+or of the whole file for a file no language reads. Curate refuses a doc
+whose references do not resolve, and changes nothing of it outside the
+block. A doc is stale when a reference's hash now differs from the one
+recorded, and drafted when it has no block; lint names each such doc,
+with each changed reference, and the gate never fails on either.
+
+Why: an agent drafts a doc and a person curates it, and what the person
+checked is what the doc rested on when they read it. A date compared with
+history needs that history whole, which a shallow clone or a squashed
+merge loses; a hash in the doc travels with it and changes only when the
+referenced text does, so lint can say which prose may no longer be true
+without claiming to know whether it is.
+
+Scenarios:
+1. `curate-records` (owner, backlog 007): curating a doc writes a block
+   with the curator, the date and a hash per reference, and curating again
+   replaces it.
+2. `stale-on-entry-change` (owner, backlog 007): after a referenced
+   entry's text changes, lint names the doc as stale with that entry.
+3. `changes-line-not-stale` (owner, backlog 007): after a referenced
+   entry gains only a Changes line, lint does not name the doc.
+4. `stale-on-go-change` (owner, backlog 007): after a referenced Go
+   function's body changes, lint names the doc with that reference, and
+   a change of whitespace alone does not.
+5. `stale-on-python-change` (owner, backlog 007): after a referenced
+   Python function's body changes, lint names the doc with that reference.
+6. `stale-on-typescript-change` (owner, backlog 007): after a referenced
+   TypeScript function's body changes, lint names the doc with that
+   reference.
+7. `drafted-named` (owner, backlog 007): a doc with no curation block is
+   named by lint as drafted.
+8. `stale-never-fails` (owner, backlog 007): a stale doc and a drafted
+   one leave charter check passing.
+9. `curate-refuses-broken` (owner, backlog 007): curating a doc with a
+   reference that does not resolve fails naming it, and writes nothing.
+10. `curate-touches-only-its-block` (owner, backlog 007): curating leaves
+    every byte of the doc before its block as it was.
+
+## CH-261127-8MYR Which docs mention an entry is computed from the docs, and anchors, export and diff show it
+
+Status: planned
+Serves: CH-002, CH-001
+See: CH-040, CH-261015-9ZTY, CH-261009-QQC8, CH-261127-GXP7
+
+Nobody writes a backlink: the docs that reference or embed an entry are
+read from the docs. charter anchors lists them for each id, with the line
+of each mention; the export carries them with each entry, and the viewer
+shows them on its page; and charter diff, given a revision, lists after
+what it names each doc holding a reference whose hash differs from the
+revision's, as docs to read again, without changing its exit status.
+
+Why: a person changing an entry needs to know which prose rests on it,
+and a reviewer of a change which docs to read again; links written by
+hand in both directions fall out of step, and the docs already say
+everything the backlinks need.
+
+Scenarios:
+1. `anchors-lists-docs` (owner, backlog 007): anchors for an id that two
+   docs mention lists both, with the line of each mention.
+2. `export-carries-docs` (owner, backlog 007): the export carries, with
+   each entry, the docs that mention it.
+3. `diff-lists-docs` (owner, backlog 007): diff against a revision lists
+   a doc whose referenced entry's text changed since, and exits as it
+   would without the doc.

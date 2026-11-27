@@ -50,6 +50,30 @@ agent proposed them, approved the same day.
 | 17 | Who checks a drafted doc against the code? | `claims-audit`, in a context that did not write it, adds: does the doc describe what the code it references does? |
 | 18 | Can a stale doc ever block? | Only where `claims/policy.md` names it, as for a walkthrough of a security-critical path. The default is a warning. |
 
+## Charter
+
+Drafted 2026-11-27 for the owner's review.
+
+New, planned, in `anchoring.md`:
+
+- CH-261127-3NY3 A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve (rulings 1, 2, 6, 7, 9, 10)
+- CH-261127-DW8R A doc references code by a link to the file declaring the named symbol, and one that file lacks fails (8, 10)
+- CH-261127-H4B7 charter gen keeps each doc's references and embeds current with the record and the code (7, 8, 9)
+- CH-261127-GXP7 charter curate records who curated a doc and a hash of what it references; lint names one whose references changed (5, 11 to 14)
+- CH-261127-8MYR Which docs mention an entry is computed from the docs, and anchors, export and diff show it (4, 15)
+
+Changed, each with a dated line: CH-261126-33GK (the doc patterns key),
+CH-261126-5JMD (narrate joins the skills; audit reads docs: 3, 16, 17),
+CH-040 (the curate verb; anchors lists docs), CH-041 (lint's advice names
+drafted and stale docs).
+
+Asked: Q-261127-BVQX, whether a name qualified by a type resolves to its
+method (CH-261127-DW8R/method-by-type), the one clause the rulings did not
+settle.
+
+Ruling 18 is no entry: a stale doc blocks only through `claims/policy.md`,
+which the review skill's judge reads and the gate does not.
+
 ## Why hashes, not dates
 
 A curation date or commit compared with git history needs that history
@@ -71,7 +95,7 @@ reformatted file or a moved declaration does not make a doc stale.
 ## To do, in order
 
 1. Done: the owner ruled 1 to 18.
-2. Draft the CH entries (claims-draft): docs in charter.toml, references
+2. Done, for review: draft the CH entries (claims-draft): docs in charter.toml, references
    and their check, embedding, curation and hashes, staleness in lint,
    backlinks in anchors, export and diff.
 3. Build them (claims-implement), with the examples: ratelimit gains a
