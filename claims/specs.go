@@ -113,20 +113,20 @@ var CH_002 = &Spec{ID: "CH-002", Title: "The charter command MUST lead a builder
 // CH_006 is CH-006: The charter specifies itself, and its own gate is green
 var CH_006 = &Spec{ID: "CH-006", Title: "The charter specifies itself, and its own gate is green", Status: Active}
 
-// CH_010 is CH-010: An entry is a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes in order
-var CH_010 = &Spec{ID: "CH-010", Title: "An entry is a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes in order", Status: Active}
+// CH_010 is CH-010: The record reader MUST read an entry as a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes, in that order
+var CH_010 = &Spec{ID: "CH-010", Title: "The record reader MUST read an entry as a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes, in that order", Status: Active}
 
-// CH_011 is CH-011: A need lives in needs.md and has no Kind, Serves or Guidance
-var CH_011 = &Spec{ID: "CH-011", Title: "A need lives in needs.md and has no Kind, Serves or Guidance", Status: Active}
+// CH_011 is CH-011: The record reader MUST treat an entry of needs.md as a need, with no Kind, Serves or Guidance
+var CH_011 = &Spec{ID: "CH-011", Title: "The record reader MUST treat an entry of needs.md as a need, with no Kind, Serves or Guidance", Status: Active}
 
-// CH_012 is CH-012: An id is declared once; a new one is its prefix, the day it was taken and a random code
-var CH_012 = &Spec{ID: "CH-012", Title: "An id is declared once; a new one is its prefix, the day it was taken and a random code", Status: Active}
+// CH_012 is CH-012: An id MUST be declared once, and a new id MUST be its prefix, the day it was taken and a random code
+var CH_012 = &Spec{ID: "CH-012", Title: "An id MUST be declared once, and a new id MUST be its prefix, the day it was taken and a random code", Status: Active}
 
-// CH_013 is CH-013: Status is planned, active or deprecated, every status generates a symbol, and coverage is asked of active entries only
-var CH_013 = &Spec{ID: "CH-013", Title: "Status is planned, active or deprecated, every status generates a symbol, and coverage is asked of active entries only", Status: Active}
+// CH_013 is CH-013: An entry's Status MUST be planned, active or deprecated; every status MUST generate a symbol, and the gate MUST ask coverage of active entries only
+var CH_013 = &Spec{ID: "CH-013", Title: "An entry's Status MUST be planned, active or deprecated; every status MUST generate a symbol, and the gate MUST ask coverage of active entries only", Status: Active}
 
-// CH_015 is CH-015: Serves and See name existing entries, a need serves nothing, and nothing names itself
-var CH_015 = &Spec{ID: "CH-015", Title: "Serves and See name existing entries, a need serves nothing, and nothing names itself", Status: Active}
+// CH_015 is CH-015: The gate MUST fail a Serves or See that names no existing entry, or that names the entry itself
+var CH_015 = &Spec{ID: "CH-015", Title: "The gate MUST fail a Serves or See that names no existing entry, or that names the entry itself", Status: Active}
 
 // CH_020 is CH-020: Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment
 var CH_020 = &Spec{ID: "CH-020", Title: "Every entry has a generated symbol per language read, its id with underscores for hyphens, its title the doc comment", Status: Active}
@@ -197,11 +197,11 @@ var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/ch
 // CH_261126_5JMD is CH-261126-5JMD: The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
 var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Active}
 
-// CH_261126_HK6S is CH-261126-HK6S: An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
-var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}
+// CH_261126_HK6S is CH-261126-HK6S: The record reader MUST read an observation as a heading in observations.md, with its subject, status, date or source and the entries it supports
+var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "The record reader MUST read an observation as a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}
 
-// CH_261126_JC9B is CH-261126-JC9B: An area document's header is a title, a Code line and prose, and a fenced line is never a heading
-var CH_261126_JC9B = &Spec{ID: "CH-261126-JC9B", Title: "An area document's header is a title, a Code line and prose, and a fenced line is never a heading", Status: Active}
+// CH_261126_JC9B is CH-261126-JC9B: The record reader MUST treat an area document's header as a title, a Code line and prose, and MUST NOT read a fenced line as a heading
+var CH_261126_JC9B = &Spec{ID: "CH-261126-JC9B", Title: "The record reader MUST treat an area document's header as a title, a Code line and prose, and MUST NOT read a fenced line as a heading", Status: Active}
 
 // CH_261126_NS7T is CH-261126-NS7T: An adopter MUST be able to keep a charter in any repository layout and language, with code that imports nothing of the tooling
 var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter MUST be able to keep a charter in any repository layout and language, with code that imports nothing of the tooling", Status: Active}
