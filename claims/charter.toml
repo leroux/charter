@@ -4,6 +4,10 @@ name = "charter"
 # The examples are charters of their own; the walk skips them by their
 # charter.toml.
 env-patterns = ["^CHARTER_[A-Z0-9_]+$"]
+# The docs: prose over the record and the code, whose references the gate
+# checks. path.Match reads one directory level, so the set is flat. The
+# patterns are their own scope: ignore and only do not narrow them.
+docs = ["docs/*.md"]
 
 [go]
 module = "github.com/leroux/charter/claims"
