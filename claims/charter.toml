@@ -10,3 +10,9 @@ module = "github.com/leroux/charter/claims"
 dir = "."
 test = "go test -count=1 ./..."
 env = "internal/env"
+
+# The skills of the loop are markdown; a comment line in each one's
+# frontmatter anchors the decision that ships them.
+[[files]]
+patterns = ["plugin/skills/*/SKILL.md"]
+comment = "#"

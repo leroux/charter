@@ -1,13 +1,15 @@
 ---
 name: claims-draft
 description: Turn a backlog story's rulings into charter entries, a decision or a Changes line in its area document or a need in claims/needs.md, at the right altitude, with a scenario per clause and a new id from charter. Use when a story's Ruling table is settled and its ids are not yet written, e.g. "draft the entries for backlog 038", "write the decisions for this ruling". Not building (claims-implement) or reviewing a change (claims-review).
+# charter:realizes CH-261126-5JMD
 ---
 
 # Draft entries from a story
 
-The form is the one every charter shares (the README, "Adopting it"); the
-best worked example is the charter's own `claims/`. Nothing is minted, drafted
-or promoted: the ruling table is the draft, the area document is the
+The form is the one every charter shares (the charter repository's
+README, "Adopting it"); `claims/charter.toml` says where the record and
+the code are, and `charter anchors ID` reads any entry. Nothing is
+minted, drafted or promoted: the ruling table is the draft, the area document is the
 record, and an id is one `charter next` gives.
 
 ## Procedure

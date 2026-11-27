@@ -1,6 +1,6 @@
 # Adopting it anywhere
 
-Code: internal/config, cmd/charter, examples
+Code: internal/config, cmd/charter, examples, plugin
 
 The problem this area answers: every project has its own languages, its
 own layout and its own people. It holds how a repository takes the charter
@@ -123,20 +123,21 @@ Changes:
 
 ## CH-261126-5JMD The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
 
-Status: planned
+Status: active
 Serves: CH-261126-NS7T
 See: CH-261126-33GK
 
 The claims skills, draft, implement, review, audit, probe and narrate,
-ship as a Claude Code plugin of this repository, which an adopter
-installs. A skill
-names the commands of the method and finds the adopter's layout, the
-claims directory, the languages and their test commands, in charter.toml;
-it names no file of one repository's layout. Narrate drafts a doc over a
+ship as a Claude Code plugin, charter, of this repository: plugin/ holds
+the plugin's manifest and the skills, and the marketplace manifest at the
+root names it, so an adopter installs it from the repository by name. A
+skill names the commands of the method and finds the adopter's layout,
+the claims directory, the languages and their test commands, in
+charter.toml; it names no file of one repository's layout. Narrate drafts a doc over a
 need, an area or a flow, and on a stale doc proposes an edit of what
 changed, never writing over a curated one; audit also reads each doc
-against the code it references. The method's document gives
-the section an adopter puts in its CLAUDE.md as a template.
+against the code it references. The README gives the section an adopter
+puts in its CLAUDE.md as a template.
 
 Why: skills written for one product send an agent in another repository to
 files that are not there; skills that read the layout from the file the
@@ -144,16 +145,20 @@ command reads go wherever the charter does, and a plugin is how they get
 there.
 
 Scenarios:
-1. `plugin-lists-the-skills` (owner, backlog 003): the plugin's manifest
-   lists the six skills, and each skill's file is in the plugin.
+1. `plugin-lists-the-skills` (owner, backlog 003): the marketplace names
+   the plugin and its directory, and the plugin holds the six skills, each
+   a SKILL.md whose name is its directory's.
 2. `no-fixed-layout` (owner, backlog 003): no skill names cmd/claimsgen,
    claims/README.md or a path of one product, and each one needing the
    layout reads charter.toml.
-3. `claude-md-template` (owner, backlog 003): the method's document holds
-   the CLAUDE.md section as a template naming the charter command and
+3. `claude-md-template` (owner, backlog 003): the README holds the
+   CLAUDE.md section as a template naming the charter command and
    charter.toml.
 
 Changes:
 - 2026-11-27: narrate joins the skills, drafting docs and proposing edits
   to stale ones, and audit reads docs against their code; the plugin
   lists six skills (backlog 007).
+- 2026-11-27: built: the plugin is plugin/, named by the marketplace at
+  the root, and the README holds the CLAUDE.md template, there being no
+  method document; the owner asked for the skills as a plugin.

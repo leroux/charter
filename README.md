@@ -25,7 +25,7 @@ nested anywhere, Python and TypeScript beside them.
 | `claims/` | The charter's own charter: the tooling specified by the method it implements |
 | `examples/ratelimit/` | **ratelimit**, a Go adopter kept as a real one would be, with a doc |
 | `examples/slugs/` | **slugs**, a nested Go module and Python beside it, with no go.mod at its root |
-| `.claude/skills/claims-*` | The agent skills of the loop: draft, implement, review, audit, probe |
+| `plugin/` | The `charter` Claude Code plugin: the skills of the loop, draft, implement, review, audit, probe and narrate |
 | `backlog/` | The stories in progress or held, one a file |
 
 ## Adopting it
@@ -87,6 +87,50 @@ a binary, and the files it generates are self-contained.
    current. An agent drafts a doc (`claims-narrate`), a person reads it
    and runs `charter curate FILE`, and check warns of it again when
    anything it references has changed since.
+
+## The skills
+
+The loop's skills ship as the `charter` plugin for Claude Code. Install it
+in the repository that keeps a charter:
+
+```
+/plugin install charter --marketplace leroux/charter
+```
+
+or, from a shell, `claude plugin marketplace add leroux/charter` and then
+`claude plugin install charter@charter --scope project`. The skills run as
+`/charter:claims-draft`, `/charter:claims-implement`,
+`/charter:claims-review`, `/charter:claims-audit`, `/charter:claims-probe`
+and `/charter:claims-narrate`, and read the layout from
+`claims/charter.toml`. The repository is private for now, so installing
+needs git credentials that can read it. A cloud session does not load
+plugins a repository's settings name; add the plugin to it at
+claude.ai/customize/plugins.
+
+Put this section in the repository's CLAUDE.md, with its prefix and paths:
+
+```markdown
+## Charter
+
+What this software must do is recorded in `claims/`, configured by
+`claims/charter.toml`: needs in `claims/needs.md`, decisions in the area
+documents, each anchored to the code that carries it and verified by the
+tests that cite it. `charter check` is the gate; run it before pushing.
+
+- A change in behaviour is a change to an entry: its text, a scenario, and
+  a dated `Changes:` line saying what changed and why. `charter diff
+  origin/main` names a change the record does not say.
+- Ids come from `charter next SW`; never write one by hand.
+- After editing an area document run `charter gen`; commit what it writes.
+- Code carries `//charter:realizes SW-…` as the last line of the doc
+  comment of the declaration that carries the decision; a test's first
+  statement is `claims.Verifies(t, claims.SW_…, "handle")`.
+- A choice no entry rules is a question in `claims/questions.md`, and the
+  scenario it produced is `(agent, provisional)` until the owner answers.
+- The `charter` plugin's skills run the loop: claims-draft,
+  claims-implement, claims-review, claims-audit, claims-probe and
+  claims-narrate for docs.
+```
 
 ## Working on the charter
 

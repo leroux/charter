@@ -1,6 +1,7 @@
 ---
 name: claims-probe
 description: Run the probes of one subject or all against their live external systems, read the result per observation, and write the Observed date or propose Broken with the entries now suspect. Use when something external broke, when a fact needs revalidating, or occasionally.
+# charter:realizes CH-261126-5JMD
 ---
 
 # Probe a subject

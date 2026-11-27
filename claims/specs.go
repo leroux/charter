@@ -195,7 +195,7 @@ var CH_261009_VY5C = &Spec{ID: "CH-261009-VY5C", Title: "A scenario says who rul
 var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know", Status: Active}
 
 // CH_261126_5JMD is CH-261126-5JMD: The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
-var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Planned}
+var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Active}
 
 // CH_261126_HK6S is CH-261126-HK6S: An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}

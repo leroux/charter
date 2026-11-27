@@ -1,6 +1,7 @@
 ---
 name: claims-audit
 description: The audit. Read the whole record, or the part of it that changed since the last audit, against its tests and its code in a context that did not write it, and report what has drifted: a scenario sentence that claims more or less than its test checks, a text that names a boundary the code lacks, a clause no scenario tests, a clause two entries state, a doc that says what its code does not, and the style the reader stumbles on. Writes claims/audit.md and files questions; changes nothing else. Runs by hand. Done when the correctness findings are none and charter check passes.
+# charter:realizes CH-261126-5JMD
 ---
 
 # The audit
@@ -20,8 +21,8 @@ finds is built from a story, under `claims-implement`.
   findings on pull requests start repeating.
 - Narrow, by hand, over the entries whose documents, anchored code or
   citing tests changed since the last audit: `git log -1 --format=%H --
-  claims/audit.md` gives the last audit's commit; `go run
-  ./charter diff THAT` names the entries whose text changed,
+  claims/audit.md` gives the last audit's commit; `charter diff THAT`
+  names the entries whose text changed,
   and `git diff --name-only THAT..HEAD` matched against `charter
   anchors` names the rest.
 
@@ -39,8 +40,8 @@ nothing, and warns of nothing, has no mechanical finding.
 
 Split the live entries among fresh readers, one or two documents each,
 as `claims/reading-order.txt` groups them; a reader reads nothing of how
-the record was written. For each live entry, with `go run
-./charter anchors ID` open:
+the record was written. For each live entry, with `charter anchors ID`
+open:
 
 1. **Each scenario against its test.** Read the sentence, then every
    citing test from its citation down. A sentence that claims more than

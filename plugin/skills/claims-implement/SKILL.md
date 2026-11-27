@@ -1,6 +1,7 @@
 ---
 name: claims-implement
 description: Take charter entries to covered. Set them active, run charter gen, build to their text and Why with the repository's implementation and testing skills, write a test per scenario and cite it, anchor the declaration that carries the decision, run the gate and the report, then run claims-review. Use when a story's entries are ready to build, e.g. "implement SW-118", "build backlog 038". Not drafting (claims-draft) or reviewing (claims-review).
+# charter:realizes CH-261126-5JMD
 ---
 
 # Implement entries
@@ -26,11 +27,9 @@ tests passed. The layout is the repository's `claims/charter.toml`.
    anchor is a claim, not a proof, and where the code has drifted the text
    is what shows it.
 
-3. **Build and test** with the repository's own skills:
-   `superpowers:test-driven-development` for the loop,
-   `superpowers:systematic-debugging` when something fails,
-   `superpowers:verification-before-completion` before presenting. Write
-   one test per scenario where the boundary allows; one test may cover
+3. **Build and test** with the repository's own implementation and
+   testing skills, if it has any: a test first, the code to pass it, and
+   the whole suite before presenting. Write one test per scenario where the boundary allows; one test may cover
    several scenarios, of one entry or several. Each test must fail if its
    scenario were violated; one that cannot is decorative, so reconsider it
    or the scenario. A need is verified from the outside only when

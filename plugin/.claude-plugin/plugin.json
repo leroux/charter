@@ -1,0 +1,8 @@
+{
+  "name": "charter",
+  "description": "The charter loop for any repository with a claims/charter.toml: draft, implement, review, audit, probe and narrate. The skills run the charter command and read the layout from charter.toml.",
+  "version": "0.1.0",
+  "author": { "name": "leroux" },
+  "repository": "https://github.com/leroux/charter",
+  "keywords": ["charter", "specification", "documentation", "review"]
+}

@@ -1,6 +1,7 @@
 ---
 name: claims-review
 description: The judge. Review a change's conformance to the charter, over a branch or a pull request, in a context that did not write it. For each scenario the change touched, answer three questions with evidence: does the citing test show what the scenario's sentence says, does the anchored code carry the decision, and does the Changes line say what changed and why. Each no is a finding; claims/policy.md says whether it blocks or warns. Runs as the last step of claims-implement, and by hand over a branch or a pull request. Read-only; it changes nothing and its verdicts are for the author and the owner.
+# charter:realizes CH-261126-5JMD
 ---
 
 # The judge
@@ -9,7 +10,8 @@ The gate proves the links exist: an anchor names the entry, a test cites
 each scenario. The judge says whether they are true. It runs in a context
 that did not write the change: a fresh agent or a person who has not
 read the implementation. It is read-only. It changes no anchor, test or
-entry; it presents its verdicts.
+entry; it presents its verdicts. `claims/charter.toml` says where the
+record, the code and the tests are.
 
 ## Scope
 

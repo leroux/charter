@@ -1,0 +1,12 @@
+{
+  "name": "charter",
+  "owner": { "name": "leroux" },
+  "description": "The charter method's skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "charter",
+      "source": "./plugin",
+      "description": "The charter loop: draft entries from a story's rulings, implement them to covered, judge a change, audit the record, probe external facts, and narrate docs over the record and the code."
+    }
+  ]
+}

@@ -41,6 +41,7 @@ The charter tooling and method, specified by its own charter. Start with
   and the examples', and the examples' reports. It needs `pnpm install`
   for the TypeScript compiler and vitest.
 
-The skills in `.claude/skills/claims-*` run the loop with the `charter`
-command and read the layout from `charter.toml`; CH-261126-5JMD (planned)
-ships them as a plugin for other repositories.
+The skills that run the loop live in `plugin/skills/claims-*`, the
+`charter` plugin other repositories install (CH-261126-5JMD);
+`.claude/skills/` links to them so this repository's sessions have them
+too. Edit them under `plugin/`.
