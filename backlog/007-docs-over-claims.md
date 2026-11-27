@@ -1,6 +1,6 @@
 # 007. Docs over claims: free prose that references and embeds claims and code, drafted by an agent, curated by a person, and warned on when what it rests on changes
 
-Status: drafted · Size: M · See: 005, 006
+Status: ruled · Size: M · See: 005, 006
 
 The record holds what binds: claims, each declared once, anchored to code
 and verified by tests. It has no place for the rest of what a reader needs
@@ -26,7 +26,8 @@ references has changed since it was curated.
 
 ## Ruling
 
-Ruled by the owner, 2026-11-27, in design talk.
+Ruled by the owner, 2026-11-27: 1 to 5 in design talk, 6 to 18 as the
+agent proposed them, approved the same day.
 
 | # | Question | Ruling |
 |---|---|---|
@@ -35,13 +36,6 @@ Ruled by the owner, 2026-11-27, in design talk.
 | 3 | Who writes docs? | An agent drafts them; a person curates them. |
 | 4 | Are backlinks written by hand? | No. Which docs mention a claim, or a code symbol, is computed from the docs. |
 | 5 | Does a stale doc fail the gate? | No, it warns. |
-
-## Proposed, for the owner
-
-Drafted by the agent, 2026-11-27. Each is the default until ruled.
-
-| # | Question | Proposal |
-|---|---|---|
 | 6 | Which files are docs? | Those charter.toml's `docs` patterns name, e.g. `docs = ["docs/**/*.md", "README.md"]`. Nothing is read as a doc unless named. |
 | 7 | How does a doc reference a claim? | A plain markdown link whose text opens with the claim's id: `[SW-261127-M36P](../claims/egress.md#sw-261127-m36p)`. `charter gen` keeps the target and the title after the id current. It renders on GitHub as written. |
 | 8 | How does a doc reference code? | A markdown link whose text is a symbol in backticks and whose target is the file declaring it: ``[`engine.Accept`](../proxy/internal/engine/engine.go)``. The gate fails if the file does not declare the symbol; gen keeps a `#L` line anchor current. |
@@ -66,8 +60,6 @@ reformatted file or a moved declaration does not make a doc stale.
 
 ## For the review
 
-- Rulings 6 to 18 are the agent's; the reference syntax (7 to 9) most of
-  all shapes how docs read and is the first to rule.
 - Ruling 13 needs each reader to return a declaration's full span. Go's
   does through go/ast; Python's and TypeScript's readers find where a
   declaration starts and may need to find where it ends.
@@ -78,7 +70,7 @@ reformatted file or a moved declaration does not make a doc stale.
 
 ## To do, in order
 
-1. The owner rules 6 to 18, the reference syntax first.
+1. Done: the owner ruled 1 to 18.
 2. Draft the CH entries (claims-draft): docs in charter.toml, references
    and their check, embedding, curation and hashes, staleness in lint,
    backlinks in anchors, export and diff.
