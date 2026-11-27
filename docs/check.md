@@ -241,6 +241,8 @@ output, so a script that reads standard output sees a clean tree.
 
 - `rule 6` is the one problem with no file or line: a surface has no
   single place. It sorts after the problems that open with a path.
+- Problems are sorted as strings, so `docs/a.md:11` prints before
+  `docs/a.md:3`. Read the list as a set, not in line order.
 - A citation the reader refused never reaches the handle check, so a
   misplaced call with a mistyped handle reports the placement alone.
 - A read of the environment is a call of the reader function. Code that
