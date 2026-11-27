@@ -110,8 +110,8 @@ var CH_001 = &Spec{ID: "CH-001", Title: "The charter gate MUST let a reviewer ju
 // CH_002 is CH-002: The charter command MUST lead a builder from an id to its code and tests, and every gate problem MUST name its fix
 var CH_002 = &Spec{ID: "CH-002", Title: "The charter command MUST lead a builder from an id to its code and tests, and every gate problem MUST name its fix", Status: Active}
 
-// CH_006 is CH-006: The charter specifies itself, and its own gate is green
-var CH_006 = &Spec{ID: "CH-006", Title: "The charter specifies itself, and its own gate is green", Status: Active}
+// CH_006 is CH-006: The charter MUST specify itself, and its own gate MUST pass
+var CH_006 = &Spec{ID: "CH-006", Title: "The charter MUST specify itself, and its own gate MUST pass", Status: Active}
 
 // CH_010 is CH-010: The record reader MUST read an entry as a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes, in that order
 var CH_010 = &Spec{ID: "CH-010", Title: "The record reader MUST read an entry as a heading with id and title, then field lines, text, Why, Scenarios, Guidance and Changes, in that order", Status: Active}
@@ -191,11 +191,11 @@ var CH_261009_QQC8 = &Spec{ID: "CH-261009-QQC8", Title: "charter diff MUST name 
 // CH_261009_VY5C is CH-261009-VY5C: The record reader MUST read who ruled a scenario: the owner with what it cites, a named delegate, or, when nothing is written, an agent, provisionally
 var CH_261009_VY5C = &Spec{ID: "CH-261009-VY5C", Title: "The record reader MUST read who ruled a scenario: the owner with what it cites, a named delegate, or, when nothing is written, an agent, provisionally", Status: Active}
 
-// CH_261126_33GK is CH-261126-33GK: charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know
-var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter finds claims/charter.toml by walking up from the working directory, and refuses a key it does not know", Status: Active}
+// CH_261126_33GK is CH-261126-33GK: charter MUST find claims/charter.toml by walking up from the working directory, and MUST refuse a key it does not know
+var CH_261126_33GK = &Spec{ID: "CH-261126-33GK", Title: "charter MUST find claims/charter.toml by walking up from the working directory, and MUST refuse a key it does not know", Status: Active}
 
-// CH_261126_5JMD is CH-261126-5JMD: The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone
-var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills ship as a plugin of this repository and read the layout from charter.toml alone", Status: Active}
+// CH_261126_5JMD is CH-261126-5JMD: The loop's skills MUST ship as a plugin of this repository and MUST read the adopter's layout from charter.toml alone
+var CH_261126_5JMD = &Spec{ID: "CH-261126-5JMD", Title: "The loop's skills MUST ship as a plugin of this repository and MUST read the adopter's layout from charter.toml alone", Status: Active}
 
 // CH_261126_HK6S is CH-261126-HK6S: The record reader MUST read an observation as a heading in observations.md, with its subject, status, date or source and the entries it supports
 var CH_261126_HK6S = &Spec{ID: "CH-261126-HK6S", Title: "The record reader MUST read an observation as a heading in observations.md, with its subject, status, date or source and the entries it supports", Status: Active}
@@ -215,8 +215,8 @@ var CH_261126_P2SK = &Spec{ID: "CH-261126-P2SK", Title: "The charter gate MUST f
 // CH_261126_PFG5 is CH-261126-PFG5: A repository's charter MUST write what the software must do once, above the code, where people and agents both read and change it
 var CH_261126_PFG5 = &Spec{ID: "CH-261126-PFG5", Title: "A repository's charter MUST write what the software must do once, above the code, where people and agents both read and change it", Status: Active}
 
-// CH_261126_PQ7X is CH-261126-PQ7X: A language is a reader, a generator and a marker, built in, and read only when charter.toml names it
-var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "A language is a reader, a generator and a marker, built in, and read only when charter.toml names it", Status: Active, Kind: "structure"}
+// CH_261126_PQ7X is CH-261126-PQ7X: charter MUST support each language as a built-in reader, generator and marker, and MUST read a language only when charter.toml names it
+var CH_261126_PQ7X = &Spec{ID: "CH-261126-PQ7X", Title: "charter MUST support each language as a built-in reader, generator and marker, and MUST read a language only when charter.toml names it", Status: Active, Kind: "structure"}
 
 // CH_261127_3NY3 is CH-261127-3NY3: A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve
 var CH_261127_3NY3 = &Spec{ID: "CH-261127-3NY3", Title: "A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve", Status: Active}
