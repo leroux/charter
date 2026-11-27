@@ -46,7 +46,7 @@ type Tree map[string][]string
 
 // Walk lists the files.
 //
-//charter:realizes CH-036, CH-006
+//charter:realizes CH-036, CH-006, CH-261127-45KM
 func Walk(o Options) (Tree, error) {
 	want := map[string]bool{}
 	for _, l := range o.Languages {
@@ -87,9 +87,11 @@ func Walk(o Options) (Tree, error) {
 		if l := language(rel); l != "" && want[l] {
 			tree[l] = append(tree[l], rel)
 		} else if l == "" {
-			for name, pats := range o.Files {
-				if matchesAny(pats, rel) {
+			// A file is read once, by the first table whose patterns match.
+			for _, name := range sortedKeys(o.Files) {
+				if matchesAny(o.Files[name], rel) {
 					tree[name] = append(tree[name], rel)
+					break
 				}
 			}
 		}
@@ -153,4 +155,13 @@ func matchesAny(patterns []string, rel string) bool {
 		}
 	}
 	return false
+}
+
+func sortedKeys(m map[string][]string) []string {
+	ks := make([]string, 0, len(m))
+	for k := range m {
+		ks = append(ks, k)
+	}
+	sort.Strings(ks)
+	return ks
 }

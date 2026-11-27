@@ -137,13 +137,14 @@ See: CH-021
 
 A `[[files]]` table in charter.toml names path patterns, matched as the
 walk's ignore patterns are, and the comment marker of the files they
-match, such as `#` for nftables, systemd units and shell scripts. In such
-a file, a line whose text after the marker and any spaces is
-"charter:realizes ID, ..." or "charter:concerns ID, ..." is an anchor on
-the file; the anchor records the kind, the file and the line. A
-directive naming no id fails and counts for nothing. A table with no
-pattern or no marker fails naming its line, and a file no table names is
-not read for directives.
+match, such as `#` for nftables, systemd units and shell scripts. A file
+the walk lists, whose extension is none of Go, Python or TypeScript, is
+read by the first table whose patterns match it. In such a file, a line
+whose text after the marker and any spaces is "charter:realizes ID, ..."
+or "charter:concerns ID, ..." is an anchor on the file; the anchor
+records the kind, the file and the line. A directive naming no id fails
+and counts for nothing. A table with no pattern or no marker fails
+naming its line, and a file no table names is not read for directives.
 
 Why: some decisions are carried by a file that is not code, a firewall
 ruleset or a service unit, and the pointer from the decision belongs on
@@ -161,7 +162,14 @@ Scenarios:
 
 Guidance: name the narrowest patterns that hold the files, such as
 `packaging/*/*.nft`; a broad pattern reads every matching file for
-directives.
+directives. The read is by line, so a directive inside a shell heredoc
+or string counts as one. The walk skips directories whose names begin
+with a dot or an underscore, so no pattern reaches them.
+
+Changes:
+- 2026-11-27: a file is read by the first matching table only, and only
+  when its extension is no language's, which is what the walk does; a
+  review found a file two tables match was read twice.
 
 ## CH-022 An anchor names an entry that exists and is not planned, and concerns never counts toward coverage
 

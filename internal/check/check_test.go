@@ -683,6 +683,21 @@ func TestAFileNoLanguageReadsAnchorsWhereTheTableNamesIt(t *testing.T) {
 			t.Errorf("the file's anchor did not realize SW-010: %s", p)
 		}
 	}
+	// Two tables matching one file read it once.
+	twice := guarded(t, table+"\n[[files]]\npatterns = [\"*.nft\"]\ncomment = \"#\"\n")
+	tree2, err := Load(build(t, twice))
+	if err != nil {
+		t.Fatal(err)
+	}
+	n := 0
+	for _, a := range tree2.Facts.Anchors {
+		if a.DeclKind == "file" {
+			n++
+		}
+	}
+	if n != 1 {
+		t.Errorf("a file two tables match gave %d anchors", n)
+	}
 	reports(t, guarded(t, ""), "active entry SW-010 is realized by no code")
 	reports(t, guarded(t, "\n[[files]]\npatterns = [\"*.service\"]\ncomment = \"#\"\n"), "active entry SW-010 is realized by no code")
 }
