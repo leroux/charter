@@ -3,6 +3,9 @@
 The charter tooling and method, specified by its own charter. Start with
 `README.md`, then the area documents in `claims/` (needs.md first).
 
+Write everything here (the record, skills, docs, commit messages and
+replies) as @WRITING.md describes.
+
 ## Layout
 
 - `cmd/charter`: the one command; `internal/`: everything it is made of,
