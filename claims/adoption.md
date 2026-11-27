@@ -135,7 +135,10 @@ skill names the commands of the method and finds the adopter's layout,
 the claims directory, the languages and their test commands, in
 charter.toml; it names no file of one repository's layout. Narrate drafts a doc over a
 need, an area or a flow, and on a stale doc proposes an edit of what
-changed, never writing over a curated one; audit also reads each doc
+changed, never writing over a curated one. It writes each doc in the
+vocabulary of the reader the plan names: for engineers, the field's own
+terms and the exact mechanism, never a plainer word standing in for one;
+a doc for another reader is another doc. Audit also reads each doc
 against the code it references. The README gives the section an adopter
 puts in its CLAUDE.md as a template.
 
@@ -156,6 +159,9 @@ Scenarios:
    charter.toml.
 
 Changes:
+- 2026-11-27: narrate writes in the vocabulary of the doc's reader; its
+  first drafts for torii put plain stand-ins ("the name" for DNS) where an
+  engineer needs the term, and the owner asked for the field's terms.
 - 2026-11-27: narrate joins the skills, drafting docs and proposing edits
   to stale ones, and audit reads docs against their code; the plugin
   lists six skills (backlog 007).

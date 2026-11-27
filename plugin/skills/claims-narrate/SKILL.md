@@ -95,17 +95,38 @@ Before writing any doc, propose the set to the person and wait.
    person's steps: never by package or by entry id. Each claim about the
    code names the declaration as a code reference, and the entry it
    carries as a reference.
-3. **Embed what binds.** Where the story rests on a rule, embed the entry
+3. **Write for the reader the plan names.** The record's register, short
+   plain words, is the record's; a doc speaks its reader's language. For
+   engineers and security reviewers that is the field's own vocabulary
+   and the exact mechanism:
+   - The term, never a plainer word standing in for it: a DNS query and
+     its A/AAAA answer, not "the name"; inbound, not "the way in";
+     `connect(2)` or the dial, named as the code names it; SNI, the
+     ClientHello, TPROXY, conntrack, a hook and a chain.
+   - The mechanism and its values: the port, the socket, the file, the
+     feature key, the timeout and the limit, the error code returned, as
+     the code has them; what happens at the boundary of each.
+   - The security vocabulary where it applies: the adversary, the trust
+     boundary and what authenticates across it, fail-closed, spoofing,
+     rebinding, exfiltration, the residual risk.
+   - The system's own coined terms only as the record defines them, each
+     defined once with a link; where the code names a thing otherwise,
+     give both once.
+   - Headings that say what the section is about ("DNS resolution",
+     "Inbound"), and no sentence that only announces the next one.
+   A doc for another reader (an operator new to the field, a manager) is
+   another doc, planned as such.
+4. **Embed what binds.** Where the story rests on a rule, embed the entry
    rather than paraphrase it. Paraphrase only what no entry states.
-4. **Name the traps.** What a newcomer would get wrong, and why the code
+5. **Name the traps.** What a newcomer would get wrong, and why the code
    is shaped against it: a lock held for a whole request, a clock read in
    one place, an observation of an outside system the code rests on.
-5. **Check.** Run `charter gen` (targets, line anchors, embeds), then
+6. **Check.** Run `charter gen` (targets, line anchors, embeds), then
    `charter check`: every reference resolves. Read each sentence against
    the declaration it names; one you cannot point at a line for, cut. A
    sentence that contradicts an entry is a question for the person, not a
    quiet fix in either place.
-6. **Hand it over.** Present the doc, say it is drafted, and list what to
+7. **Hand it over.** Present the doc, say it is drafted, and list what to
    read it against. `charter check` warns of it until a person reads it
    and runs `charter curate -by NAME FILE`.
 
