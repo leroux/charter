@@ -1,15 +1,15 @@
 ---
 name: claims-review
-description: The judge. Review a change's conformance to the charter, over a branch or a pull request, in a context that did not write it. For each scenario the change touched, answer three questions with evidence: does the citing test show what the scenario's sentence says, does the anchored code carry the decision, and does the Changes line say what changed and why. Each no is a finding; claims/policy.md says whether it blocks or warns. Runs as the last step of claims-implement, by hand over a branch, and in CI on every pull request. Read-only; it changes nothing and its verdicts are for the author and the owner.
+description: The judge. Review a change's conformance to the charter, over a branch or a pull request, in a context that did not write it. For each scenario the change touched, answer three questions with evidence: does the citing test show what the scenario's sentence says, does the anchored code carry the decision, and does the Changes line say what changed and why. Each no is a finding; claims/policy.md says whether it blocks or warns. Runs as the last step of claims-implement, and by hand over a branch or a pull request. Read-only; it changes nothing and its verdicts are for the author and the owner.
 ---
 
 # The judge
 
 The gate proves the links exist: an anchor names the entry, a test cites
 each scenario. The judge says whether they are true. It runs in a context
-that did not write the change: in CI, its own job; by hand, a fresh
-agent or a person who has not read the implementation. It is read-only.
-It changes no anchor, test or entry; it posts its verdicts.
+that did not write the change: a fresh agent or a person who has not
+read the implementation. It is read-only. It changes no anchor, test or
+entry; it presents its verdicts.
 
 ## Scope
 
@@ -69,14 +69,6 @@ whether a no blocks or warns. Write one line per finding:
 then a summary: how many scenarios were read, how many findings, how many
 block. A finding you cannot point at is a guess: trace it or drop it.
 
-## In CI
-
-Write the verdicts and the summary to `charter-review.md` in the working
-directory, then post the same text as one comment on the pull request
-with `gh pr comment`. The job fails when any line opens with
-`Verdict: block`; the author fixes, or the owner overrules on the thread
-and the finding's class is read again on the next push.
-
 ## Not a finding
 
 - Code left unanchored because its entry lands in a later change.
@@ -88,6 +80,5 @@ and the finding's class is read again on the next push.
 ## Done when
 
 Every scenario in scope had its three questions answered with evidence;
-every finding has its verdict and its class; the result is presented, or
-written to `charter-review.md` and posted. Nothing re-anchored, nothing
-changed, nothing merged.
+every finding has its verdict and its class; the result is presented.
+Nothing re-anchored, nothing changed, nothing merged.

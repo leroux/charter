@@ -14,5 +14,5 @@ Why: a slug is a link; two that differ for one title are a broken link the
 writer never sees until a reader follows it.
 
 Scenarios:
-1. `same-slug-both-ways` (owner, backlog 003): a title with capitals,
+1. `same-slug-both-ways` (owner, 2026-11-26): a title with capitals,
    spaces and punctuation gives one slug from the service and the tool.

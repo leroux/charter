@@ -1,4 +1,4 @@
-# The charter's build. `make check` is everything CI runs.
+# The charter's build. `make check` before pushing runs all of it.
 .PHONY: check check-go claims examples FORCE
 
 NODE_MODULES := node_modules/.modules.yaml
@@ -25,10 +25,8 @@ check-go: $(NODE_MODULES) $(CHARTER)
 # document, and each example's. Commit what it writes.
 claims: $(CHARTER)
 	$(CHARTER) gen
-	cd example && ../$(CHARTER) gen
-	cd example-polyglot && ../$(CHARTER) gen
+	for d in examples/*/; do (cd $$d && ../../$(CHARTER) gen) || exit 1; done
 
 # The examples, charters of their own: each one's gate and report.
 examples: $(CHARTER)
-	cd example && ../$(CHARTER) check && ../$(CHARTER) report -md >/dev/null
-	cd example-polyglot && ../$(CHARTER) check && ../$(CHARTER) report -md >/dev/null
+	for d in examples/*/; do (cd $$d && ../../$(CHARTER) check && ../../$(CHARTER) report -md >/dev/null) || exit 1; done

@@ -12,7 +12,7 @@ The charter tooling and method, specified by its own charter. Start with
   markers.
 - `claims/`: the charter's own charter, the `CH` entries, with
   `charter.toml` and the generated claims module (`go.mod`, `specs.go`).
-- `example/`: ratelimit, Go alone; `example-polyglot/`: slugs, a nested Go
+- `examples/`: `ratelimit`, Go alone, with a doc; `slugs`, a nested Go
   module and Python with no go.mod at its root. Each is a charter of its
   own that imports nothing of the tooling; `cmd/charter/adopter_test.go`
   runs their gates and holds them to that.

@@ -15,7 +15,7 @@ import (
 
 // The examples are charters of their own beside the tooling: ratelimit, Go
 // alone, and slugs, a nested Go module and Python with no go.mod at its root.
-var examples = []string{"../../example", "../../example-polyglot"}
+var examples = []string{"../../examples/ratelimit", "../../examples/slugs"}
 
 func charter(t *testing.T, dir string, args ...string) (string, int) {
 	t.Helper()
@@ -59,9 +59,9 @@ func copyExample(t *testing.T, dir, file, old, new string) string {
 func TestACopyMissingACitationFailsNamingTheScenario(t *testing.T) {
 	claims.Verifies(t, claims.CH_261126_NS7T, "example-untested-scenario-named", "polyglot-untested-scenario-named")
 	for _, tc := range []struct{ dir, file, old, new, want string }{
-		{"../../example", "limiter/limiter_test.go", `claims.Verifies(t, claims.SW_261126_2XG8, "time-from-clock")`, `_ = claims.SW_261126_2XG8`,
+		{"../../examples/ratelimit", "limiter/limiter_test.go", `claims.Verifies(t, claims.SW_261126_2XG8, "time-from-clock")`, `_ = claims.SW_261126_2XG8`,
 			"scenario time-from-clock of SW-261126-2XG8 is verified by no test"},
-		{"../../example-polyglot", "tool/tests/test_slug.py", `claims.verifies(self, claims.SW_261126_X6HB, "separator-from-env")`, `claims.verifies(self, claims.SW_261126_X6HB)`,
+		{"../../examples/slugs", "tool/tests/test_slug.py", `claims.verifies(self, claims.SW_261126_X6HB, "separator-from-env")`, `claims.verifies(self, claims.SW_261126_X6HB)`,
 			"scenario separator-from-env of SW-261126-X6HB is verified by no test"},
 	} {
 		out, code := charter(t, copyExample(t, tc.dir, tc.file, tc.old, tc.new), "check")
@@ -111,10 +111,8 @@ func TestTheChartersOwnGateIsGreenOverTheToolingAlone(t *testing.T) {
 	}
 	for _, files := range tree.Files {
 		for _, f := range files {
-			for _, other := range []string{"example/", "example-polyglot/"} {
-				if strings.HasPrefix(f, other) {
-					t.Errorf("the charter's own walk read %s, another charter's or no tooling's", f)
-				}
+			if strings.HasPrefix(f, "examples/") {
+				t.Errorf("the charter's own walk read %s, another charter's", f)
 			}
 		}
 	}

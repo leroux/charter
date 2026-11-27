@@ -23,14 +23,14 @@ nested anywhere, Python and TypeScript beside them.
 | `cmd/charter` | The one command: `check`, `gen`, `next`, `anchors`, `questions`, `report`, `diff`, `curate` |
 | `internal/` | What it is made of: a core that names no language, and `lang/{golang,python,typescript}` |
 | `claims/` | The charter's own charter: the tooling specified by the method it implements |
-| `example/` | **ratelimit**, a Go adopter kept as a real one would be |
-| `example-polyglot/` | **slugs**, a nested Go module and Python beside it, with no go.mod at its root |
+| `examples/ratelimit/` | **ratelimit**, a Go adopter kept as a real one would be, with a doc |
+| `examples/slugs/` | **slugs**, a nested Go module and Python beside it, with no go.mod at its root |
 | `.claude/skills/claims-*` | The agent skills of the loop: draft, implement, review, audit, probe |
 | `backlog/` | The stories in progress or held, one a file |
 
 ## Adopting it
 
-`example/` and `example-polyglot/` are the worked examples; every piece
+`examples/ratelimit` and `examples/slugs` are the worked examples; every piece
 below is a file there. Nothing of the tooling is imported: the command is
 a binary, and the files it generates are self-contained.
 
@@ -79,7 +79,7 @@ a binary, and the files it generates are self-contained.
    rest of the loop; `report` runs each language's test command and reads
    each citation's outcome from the events file.
 7. Docs tell the story the record does not: a walkthrough, a design, a
-   guide (`example/docs/walkthrough.md`). A link whose text opens with an
+   guide (`examples/ratelimit/docs/walkthrough.md`). A link whose text opens with an
    id references an entry, ``[`Limiter.Allow`](../limiter/limiter.go)``
    references a declaration, and `<!-- charter:embed SW-… -->` with its
    closing comment embeds an entry; the gate fails one that does not

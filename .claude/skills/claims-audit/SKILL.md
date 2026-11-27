@@ -1,6 +1,6 @@
 ---
 name: claims-audit
-description: The audit. Read the whole record, or the part of it that changed since the last audit, against its tests and its code in a context that did not write it, and report what has drifted: a scenario sentence that claims more or less than its test checks, a text that names a boundary the code lacks, a clause no scenario tests, a clause two entries state, a doc that says what its code does not, and the style the reader stumbles on. Writes claims/audit.md and files questions; changes nothing else. Runs by hand, and monthly in CI. Done when the correctness findings are none and charter check passes.
+description: The audit. Read the whole record, or the part of it that changed since the last audit, against its tests and its code in a context that did not write it, and report what has drifted: a scenario sentence that claims more or less than its test checks, a text that names a boundary the code lacks, a clause no scenario tests, a clause two entries state, a doc that says what its code does not, and the style the reader stumbles on. Writes claims/audit.md and files questions; changes nothing else. Runs by hand. Done when the correctness findings are none and charter check passes.
 ---
 
 # The audit
@@ -15,9 +15,8 @@ finds is built from a story, under `claims-implement`.
 
 ## When
 
-- Monthly, in CI (`.github/workflows/charter.yml`, the audit job), over
-  the whole record, its report opened as an issue.
-- By hand, after a pass that rewrote many entries, or when the judge's
+- Over the whole record, now and then.
+- After a pass that rewrote many entries, or when the judge's
   findings on pull requests start repeating.
 - Narrow, by hand, over the entries whose documents, anchored code or
   citing tests changed since the last audit: `git log -1 --format=%H --
@@ -99,11 +98,10 @@ ones. Its form:
     The counts by kind, then the warnings check printed and the readers'.
 
     ## Questions filed
-    Q-IDs with their entries, or, in CI, the questions as text.
+    Q-IDs with their entries.
 
 `Done: yes` when the Correctness section is empty and charter check
-passes. Style and untested
-clauses do not keep an audit from being done; they are counted, and the
+passes. Style and untested clauses do not keep an audit from being done; they are counted, and the
 owner sets a bar in `claims/policy.md` when the counts should fail.
 
 ## Step 4: questions, never changes
@@ -111,8 +109,7 @@ owner sets a bar in `claims/policy.md` when the counts should fail.
 A finding that needs a ruling (which of two homes, whether a clause is
 tested or dropped, what the code should do) is a question in
 `claims/questions.md` with the provisional answer "as it stands", filed
-by hand with `charter next Q`; in CI it is listed in the issue for a
-person to file. Nothing else changes: the audit does not reword, move or
+with `charter next Q`. Nothing else changes: the audit does not reword, move or
 fix. The fixes are a story, built under `claims-implement`, and the next
 audit says whether they held.
 

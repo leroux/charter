@@ -1,6 +1,6 @@
 # Adopting it anywhere
 
-Code: internal/config, cmd/charter, example, example-polyglot
+Code: internal/config, cmd/charter, examples
 
 The problem this area answers: every project has its own languages, its
 own layout and its own people. It holds how a repository takes the charter
