@@ -66,6 +66,13 @@ the record was written. For each live entry, with `go run
    glossary defines otherwise: `STYLE ID: what`. Order against the
    header: `ORDER DOC: what`.
 
+6. **Each doc against its code.** For each doc charter.toml's `docs`
+   names, read it with every declaration it references open. A sentence
+   that says the code does what it does not is `DOC-OVER-CODE doc:line:
+   what`; an embed or a reference whose sentence around it contradicts
+   the entry is `DOC-OVER-RECORD doc:line ID`. A doc lint names drafted
+   or stale is read first.
+
 A finding a reader cannot point at a file and line is a guess: trace it
 or drop it. Readers report in these forms, most severe first, and the
 auditor merges them.

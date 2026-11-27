@@ -86,6 +86,21 @@ type Refused struct {
 	Message string
 }
 
+// Decl is a declaration of production code that a doc may reference by
+// name: a function, a type, a class, a method or a constant, from its first
+// line to its last.
+type Decl struct {
+	At
+	// End is the declaration's last line.
+	End int
+	// Name is the declaration's name; a method's is its type's and its own,
+	// "Engine.Accept", and a nested Python def's the dotted path to it.
+	Name string
+	// Package is the name a reference may qualify the declaration by: a Go
+	// file's package, or another language's file name without extension.
+	Package string
+}
+
 // Set is every fact of one tree.
 type Set struct {
 	Anchors    []Anchor
@@ -95,6 +110,7 @@ type Set struct {
 	EnvReads   []EnvRead
 	Literals   []Literal
 	Refused    []Refused
+	Decls      []Decl
 	// TestFiles are the test files read, slash-relative to the root.
 	TestFiles []string
 }
@@ -108,5 +124,6 @@ func (s *Set) Add(o *Set) {
 	s.EnvReads = append(s.EnvReads, o.EnvReads...)
 	s.Literals = append(s.Literals, o.Literals...)
 	s.Refused = append(s.Refused, o.Refused...)
+	s.Decls = append(s.Decls, o.Decls...)
 	s.TestFiles = append(s.TestFiles, o.TestFiles...)
 }

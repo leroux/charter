@@ -132,6 +132,18 @@ export function EntryCard({ e, showArea = true, open: initiallyOpen = true }: Pr
               )}
             </section>
           )}
+          {e.docs.length > 0 && (
+            <section>
+              <h4>Mentioned in</h4>
+              <ul className="sites">
+                {e.docs.map((d) => (
+                  <li key={`${d.file}:${d.line}`}>
+                    <FileLink file={d.file} line={d.line} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
           {(servedBy.length > 0 || seenBy.length > 0 || supportedBy.length > 0) && (
             <section className="backlinks">
               {servedBy.length > 0 && <Back label="Served by" entries={servedBy} />}

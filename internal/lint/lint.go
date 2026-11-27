@@ -14,6 +14,7 @@ import (
 
 	"github.com/leroux/charter/internal/check"
 	"github.com/leroux/charter/internal/config"
+	"github.com/leroux/charter/internal/docs"
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/record"
 )
@@ -40,6 +41,10 @@ func Lint(c *config.Config, listStyle bool) ([]string, error) {
 	}
 	out = append(out, advise(t)...)
 	sort.Strings(out)
+	// The advice ends with the docs drafted or stale.
+	for _, d := range t.Docs {
+		out = append(out, docs.Stale(d, docs.Hashes(d, t.Record, t.Code))...)
+	}
 	if !listStyle {
 		out = append(out, style.counts()...)
 	}

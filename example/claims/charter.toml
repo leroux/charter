@@ -8,6 +8,9 @@ stakeholder-tests = ["cmd/ratelimit/*_test.go"]
 # variable nobody accounted for.
 env-patterns = ["^RATELIMIT_[A-Z0-9_]+$"]
 digest = "DIGEST.md"
+# The docs: prose over the record and the code, whose references the gate
+# checks.
+docs = ["docs/*.md"]
 
 [go]
 module = "example.com/ratelimit/claims"

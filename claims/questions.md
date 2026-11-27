@@ -58,4 +58,9 @@ Answer: 2026-11-26, owner: yes, the charter is meant for other repositories and 
 ## Q-261127-BVQX Should a code reference in a doc resolve a name qualified by a type, as `Engine.Accept`, to that type's method, and by a package, as `engine.Accept`, to the file's package?
 Asked-by: agent
 Entry: CH-261127-DW8R/method-by-type
-Provisional: yes; a bare name resolves to a top-level declaration, a qualifier first to the file's package and then to a type the file declares. The owner ruled the example `engine.Accept`; the type qualifier is the agent's.
+Provisional: yes; a bare name resolves to a top-level declaration, a qualifier first to the file's package and then to a type the file declares. The owner ruled the example `engine.Accept`; the type qualifier is the agent's. In Python and TypeScript, which have no package clause, the file's name without its extension is the package: `run.Meter`, `main.spend`. A bare name never reaches a method.
+
+## Q-261127-TW9H Should a doc's reference whose link text is the id alone stay bare when charter gen rewrites it, rather than gaining the entry's title?
+Asked-by: agent
+Entry: CH-261127-H4B7/bare-id-stays
+Provisional: yes; a bare id is a link in running prose, "as [SW-118](...) rules", where a title would break the sentence; a reference written with any text after the id gets the current title.

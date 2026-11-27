@@ -50,7 +50,7 @@ var ErrNoInterpreter = errors.New("python3 is not on PATH")
 // are decided; this charter reads no Python of its own, so they are anchored
 // on the call that runs it.
 //
-//charter:realizes CH-261126-PQ7X, CH-021, CH-023, CH-034
+//charter:realizes CH-261126-PQ7X, CH-021, CH-023, CH-034, CH-261127-DW8R
 func (r Reader) Read(files []string) (*facts.Set, error) {
 	var keep []string
 	for _, f := range files {

@@ -276,19 +276,19 @@ var CH_261126_PZ8Z = &Spec{ID: "CH-261126-PZ8Z", Title: "An area is contract or 
 var CH_261126_WTMZ = &Spec{ID: "CH-261126-WTMZ", Title: "A word the record retires is named wherever a reader meets it, unless one of its phrases keeps it", Status: Active}
 
 // CH_261127_3NY3 is CH-261127-3NY3: A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve
-var CH_261127_3NY3 = &Spec{ID: "CH-261127-3NY3", Title: "A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve", Status: Planned}
+var CH_261127_3NY3 = &Spec{ID: "CH-261127-3NY3", Title: "A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve", Status: Active}
 
 // CH_261127_45KM is CH-261127-45KM: A file no language reads anchors an entry by a comment line, where charter.toml names it
 var CH_261127_45KM = &Spec{ID: "CH-261127-45KM", Title: "A file no language reads anchors an entry by a comment line, where charter.toml names it", Status: Active}
 
 // CH_261127_8MYR is CH-261127-8MYR: Which docs mention an entry is computed from the docs, and anchors, export and diff show it
-var CH_261127_8MYR = &Spec{ID: "CH-261127-8MYR", Title: "Which docs mention an entry is computed from the docs, and anchors, export and diff show it", Status: Planned}
+var CH_261127_8MYR = &Spec{ID: "CH-261127-8MYR", Title: "Which docs mention an entry is computed from the docs, and anchors, export and diff show it", Status: Active}
 
 // CH_261127_DW8R is CH-261127-DW8R: A doc references code by a link to the file declaring the named symbol, and one that file lacks fails
-var CH_261127_DW8R = &Spec{ID: "CH-261127-DW8R", Title: "A doc references code by a link to the file declaring the named symbol, and one that file lacks fails", Status: Planned}
+var CH_261127_DW8R = &Spec{ID: "CH-261127-DW8R", Title: "A doc references code by a link to the file declaring the named symbol, and one that file lacks fails", Status: Active}
 
 // CH_261127_GXP7 is CH-261127-GXP7: charter curate records who curated a doc and a hash of what it references; lint names one whose references changed
-var CH_261127_GXP7 = &Spec{ID: "CH-261127-GXP7", Title: "charter curate records who curated a doc and a hash of what it references; lint names one whose references changed", Status: Planned}
+var CH_261127_GXP7 = &Spec{ID: "CH-261127-GXP7", Title: "charter curate records who curated a doc and a hash of what it references; lint names one whose references changed", Status: Active}
 
 // CH_261127_H4B7 is CH-261127-H4B7: charter gen keeps each doc's references and embeds current with the record and the code
-var CH_261127_H4B7 = &Spec{ID: "CH-261127-H4B7", Title: "charter gen keeps each doc's references and embeds current with the record and the code", Status: Planned}
+var CH_261127_H4B7 = &Spec{ID: "CH-261127-H4B7", Title: "charter gen keeps each doc's references and embeds current with the record and the code", Status: Active}

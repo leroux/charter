@@ -75,6 +75,13 @@ type jsonEntry struct {
 	Scenarios    []jsonScenario `json:"scenarios"`
 	Changes      []jsonChange   `json:"changes"`
 	Anchors      []jsonAnchor   `json:"anchors"`
+	// Docs are the docs that reference or embed the entry.
+	Docs []jsonDoc `json:"docs"`
+}
+
+type jsonDoc struct {
+	File string `json:"file"`
+	Line int    `json:"line"`
 }
 
 type jsonScenario struct {
@@ -104,9 +111,19 @@ type jsonRef struct {
 	Handles []string `json:"handles"`
 }
 
+func nonNilDocs(d []jsonDoc) []jsonDoc {
+	if d == nil {
+		return []jsonDoc{}
+	}
+	return d
+}
+
 // Write writes the charter as the viewer reads it to w: every area in the
 // reading order, every entry with its anchors and citations, the waivers,
-// the observations and the gate's problems.
+// the observations and the gate's problems, and with each entry the docs
+// that mention it.
+//
+//charter:realizes CH-261127-8MYR
 func Write(w io.Writer, t *check.Tree, problems []string, source, root string) error {
 	rec := t.Record
 	out := jsonRegistry{
@@ -142,6 +159,15 @@ func Write(w io.Writer, t *check.Tree, problems []string, source, root string) e
 			anchors[id] = append(anchors[id], jsonAnchor{Kind: a.Kind, File: a.File, Line: a.Line, Decl: a.Decl})
 		}
 	}
+	mentions := map[string][]jsonDoc{}
+	for _, d := range t.Docs {
+		for _, r := range d.EntryRefs {
+			mentions[r.ID] = append(mentions[r.ID], jsonDoc{File: d.File, Line: r.Line})
+		}
+		for _, em := range d.Embeds {
+			mentions[em.ID] = append(mentions[em.ID], jsonDoc{File: d.File, Line: em.Line})
+		}
+	}
 	for _, e := range rec.Entries {
 		scenarios := []jsonScenario{}
 		for _, s := range e.Scenarios {
@@ -158,6 +184,7 @@ func Write(w io.Writer, t *check.Tree, problems []string, source, root string) e
 			Serves: nonNil(e.Serves), See: nonNil(e.See), Realizes: []string{}, Concerns: []string{}, Related: []string{},
 			Description: e.Text, Rationale: e.Why, Guidance: e.Guidance,
 			Scenarios: scenarios, Changes: changes, Anchors: nonNilAnchors(anchors[e.ID]),
+			Docs: nonNilDocs(mentions[e.ID]),
 		})
 	}
 	for _, o := range rec.Observations {
@@ -166,7 +193,7 @@ func Write(w io.Writer, t *check.Tree, problems []string, source, root string) e
 			File: o.File, Pos: o.Pos(), Supports: nonNil(o.Supports), Accounts: []string{},
 			Refs: nonNilRefs(refs[o.Name]), Subject: o.Subject, Source: o.Source, Observed: o.Observed,
 			Serves: []string{}, See: []string{}, Realizes: []string{}, Concerns: []string{}, Related: []string{},
-			Scenarios: []jsonScenario{}, Changes: []jsonChange{}, Anchors: []jsonAnchor{},
+			Scenarios: []jsonScenario{}, Changes: []jsonChange{}, Anchors: []jsonAnchor{}, Docs: []jsonDoc{},
 		})
 	}
 	enc := json.NewEncoder(w)

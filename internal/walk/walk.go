@@ -103,7 +103,9 @@ func Walk(o Options) (Tree, error) {
 	return tree, err
 }
 
-// language is the language a file is written in, or "".
+// Language is the language a file is written in, or "".
+func Language(rel string) string { return language(rel) }
+
 func language(rel string) string {
 	switch {
 	case strings.HasSuffix(rel, ".go"):

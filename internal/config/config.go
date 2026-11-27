@@ -85,6 +85,9 @@ type Config struct {
 	Digest           string      `toml:"digest"`
 	Surfaces         []Surface   `toml:"surface"`
 	Files            []Files     `toml:"files"`
+	// Docs are path.Match patterns, matched as Ignore's are, naming the
+	// markdown files read as docs.
+	Docs []string `toml:"docs"`
 
 	// lines maps a table's or a key's dotted name to its line, for problems.
 	lines map[string]int
@@ -177,7 +180,7 @@ func Parse(src string) (*Config, error) {
 	var problems []string
 	for _, k := range md.Undecoded() {
 		name := k.String()
-		problems = append(problems, fmt.Sprintf("%d: unknown key %q; the keys are name, go, python, typescript, stakeholder-tests, probes, ignore, only, env-patterns, digest, surface and files", c.Line(name), name))
+		problems = append(problems, fmt.Sprintf("%d: unknown key %q; the keys are name, go, python, typescript, stakeholder-tests, probes, ignore, only, env-patterns, digest, surface, files and docs", c.Line(name), name))
 	}
 	for _, l := range []struct {
 		name string

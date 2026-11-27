@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -94,6 +95,11 @@ type record_ struct {
 		Line  int    `json:"line"`
 		Value string `json:"value"`
 	} `json:"literals"`
+	Decls []struct {
+		Name string `json:"name"`
+		Line int    `json:"line"`
+		End  int    `json:"end"`
+	} `json:"decls"`
 }
 
 var directive = regexp.MustCompile(`^\s*//\s*charter:(realizes|concerns)\b(.*)$`)
@@ -102,7 +108,7 @@ var directive = regexp.MustCompile(`^\s*//\s*charter:(realizes|concerns)\b(.*)$`
 // citations count and which are refused, and which environment reads go
 // through a constant.
 //
-//charter:realizes CH-261126-PQ7X, CH-023, CH-034
+//charter:realizes CH-261126-PQ7X, CH-023, CH-034, CH-261127-DW8R
 func (r Reader) Read(files []string) (*facts.Set, error) {
 	var keep []string
 	for _, f := range files {
@@ -148,6 +154,10 @@ func (r Reader) Read(files []string) (*facts.Set, error) {
 			}
 			for _, l := range f.Literals {
 				set.Literals = append(set.Literals, facts.Literal{At: at(l.Line), Value: l.Value})
+			}
+			pkg := strings.TrimSuffix(path.Base(f.File), path.Ext(f.File))
+			for _, d := range f.Decls {
+				set.Decls = append(set.Decls, facts.Decl{At: at(d.Line), End: d.End, Name: d.Name, Package: pkg})
 			}
 			continue
 		}

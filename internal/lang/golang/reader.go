@@ -80,6 +80,7 @@ func (r Reader) Read(files []string) (*facts.Set, error) {
 			continue
 		}
 		fr.anchors()
+		fr.decls()
 		if r.EnvDir != "" && path.Dir(rel) == r.EnvDir {
 			fr.envConsts()
 			continue
@@ -145,6 +146,45 @@ func (fr *fileReader) anchors() {
 				continue
 			}
 			fr.set.Anchors = append(fr.set.Anchors, facts.Anchor{At: fr.at(c.Pos()), Kind: kind, IDs: ids, Decl: owner.name, DeclKind: owner.kind})
+		}
+	}
+}
+
+// decls records each top-level declaration with its first and last line:
+// a function, a method as its receiver's type and its name, and each name
+// a type, var or const spec declares.
+//
+//charter:realizes CH-261127-DW8R
+func (fr *fileReader) decls() {
+	add := func(name string, from, to token.Pos) {
+		if name == "" || name == "_" {
+			return
+		}
+		fr.set.Decls = append(fr.set.Decls, facts.Decl{At: fr.at(from), End: fr.fset.Position(to).Line, Name: name, Package: fr.f.Name.Name})
+	}
+	for _, d := range fr.f.Decls {
+		switch d := d.(type) {
+		case *ast.FuncDecl:
+			name := d.Name.Name
+			if d.Recv != nil && len(d.Recv.List) == 1 {
+				name = recvName(d.Recv.List[0].Type) + "." + name
+			}
+			add(name, d.Pos(), d.End())
+		case *ast.GenDecl:
+			for _, s := range d.Specs {
+				from := s.Pos()
+				if len(d.Specs) == 1 {
+					from = d.Pos()
+				}
+				switch s := s.(type) {
+				case *ast.TypeSpec:
+					add(s.Name.Name, from, s.End())
+				case *ast.ValueSpec:
+					for _, n := range s.Names {
+						add(n.Name, from, s.End())
+					}
+				}
+			}
 		}
 	}
 }

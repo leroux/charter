@@ -14,6 +14,7 @@ import (
 	"math/rand/v2"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -21,6 +22,7 @@ import (
 	"github.com/leroux/charter/internal/check"
 	"github.com/leroux/charter/internal/config"
 	"github.com/leroux/charter/internal/diff"
+	"github.com/leroux/charter/internal/docs"
 	"github.com/leroux/charter/internal/export"
 	"github.com/leroux/charter/internal/lint"
 	"github.com/leroux/charter/internal/record"
@@ -38,6 +40,8 @@ const usage = `usage: charter <verb> [arguments]
   report [-md]        run every language's tests and say which scenarios passed
   diff REV            name what the record changed since REV with no Changes line
   export [-o FILE]    the charter as one JSON file for the viewer
+  curate [-by NAME] FILE...
+                      record that a person read each doc, with a hash of what it references
 `
 
 func main() {
@@ -150,7 +154,19 @@ func run(args []string, dir string, stdout, stderr io.Writer) int {
 		if err != nil {
 			return fail(err)
 		}
-		return lines(findings, true)
+		status := lines(findings, true)
+		if len(c.Docs) > 0 {
+			// The docs to read again are a list, never a finding: when they
+			// cannot be listed, diff says so and its status stands.
+			again, err := docsToReadAgain(c, rest[0])
+			if err != nil {
+				fmt.Fprintf(stderr, "charter diff: the docs to read again are not listed: %v\n", err)
+			}
+			lines(again, false)
+		}
+		return status
+	case "curate":
+		return curate(c, rest, stdout, stderr)
 	case "export":
 		fs := flag.NewFlagSet("export", flag.ContinueOnError)
 		fs.SetOutput(stderr)
@@ -245,6 +261,7 @@ func anchors(c *config.Config, ids []string, stdout, stderr io.Writer) int {
 		Verifies  []site            `json:"verifies"`
 		Serves    []string          `json:"serves"`
 		See       []string          `json:"see"`
+		Docs      []docSite         `json:"docs"`
 	}
 	out := map[string]*result{}
 	for _, id := range ids {
@@ -254,7 +271,7 @@ func anchors(c *config.Config, ids []string, stdout, stderr io.Writer) int {
 			return 2
 		}
 		r := &result{File: e.File, Title: e.Title, Status: e.Status, Kind: e.Kind, Scenarios: e.Scenarios,
-			Realizes: []site{}, Concerns: []site{}, Verifies: []site{}, Serves: e.Serves, See: e.See}
+			Realizes: []site{}, Concerns: []site{}, Verifies: []site{}, Serves: e.Serves, See: e.See, Docs: docMentions(t, id)}
 		for _, a := range t.Facts.Anchors {
 			for _, aid := range a.IDs {
 				if aid != id {
@@ -282,6 +299,112 @@ func anchors(c *config.Config, ids []string, stdout, stderr io.Writer) int {
 		return 2
 	}
 	return 0
+}
+
+// docsToReadAgain is diff's list of the docs whose references changed
+// since the revision.
+//
+//charter:realizes CH-261127-8MYR
+func docsToReadAgain(c *config.Config, rev string) ([]string, error) {
+	t, err := check.Load(c)
+	if err != nil {
+		return nil, err
+	}
+	return diff.Docs(c, rev, t)
+}
+
+// docSite is a doc's mention of an entry.
+type docSite struct {
+	File string `json:"file"`
+	Line int    `json:"line"`
+}
+
+// docMentions are the docs that reference or embed the entry, at the line
+// of each mention.
+//
+//charter:realizes CH-261127-8MYR
+func docMentions(t *check.Tree, id string) []docSite {
+	out := []docSite{}
+	for _, d := range t.Docs {
+		for _, r := range d.EntryRefs {
+			if r.ID == id {
+				out = append(out, docSite{File: d.File, Line: r.Line})
+			}
+		}
+		for _, e := range d.Embeds {
+			if e.ID == id {
+				out = append(out, docSite{File: d.File, Line: e.Line})
+			}
+		}
+	}
+	return out
+}
+
+// curate records, at the end of each doc named, who curated it, the date
+// and the hash of everything it references. A doc whose references do not
+// resolve, or that charter.toml does not name, is refused and not written.
+//
+//charter:realizes CH-261127-GXP7
+func curate(c *config.Config, args []string, stdout, stderr io.Writer) int {
+	fs := flag.NewFlagSet("curate", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	by := fs.String("by", "owner", "who read the doc against the record and the code")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if fs.NArg() == 0 {
+		fmt.Fprintln(stderr, "charter curate: name the docs to curate")
+		return 2
+	}
+	t, err := check.Load(c)
+	if err != nil {
+		fmt.Fprintf(stderr, "charter curate: %v\n", err)
+		return 2
+	}
+	byFile := map[string]*docs.Doc{}
+	for _, d := range t.Docs {
+		byFile[d.File] = d
+	}
+	date := time.Now().UTC().Format("2006-01-02")
+	status := 0
+	for _, arg := range fs.Args() {
+		rel, err := docPath(c.Root, arg)
+		d := byFile[rel]
+		if err != nil || d == nil {
+			fmt.Fprintf(stderr, "charter curate: %s is not a doc charter.toml names\n", arg)
+			status = 1
+			continue
+		}
+		if ps := docs.Problems([]*docs.Doc{d}, t.Record, t.Code); len(ps) > 0 {
+			for _, p := range ps {
+				fmt.Fprintln(stderr, p)
+			}
+			fmt.Fprintf(stderr, "charter curate: %s has references that do not resolve; nothing written\n", rel)
+			status = 1
+			continue
+		}
+		out := docs.Curate(d, *by, date, docs.Hashes(d, t.Record, t.Code))
+		if err := os.WriteFile(filepath.Join(c.Root, filepath.FromSlash(rel)), []byte(out), 0o644); err != nil {
+			fmt.Fprintf(stderr, "charter curate: %v\n", err)
+			return 2
+		}
+		fmt.Fprintf(stdout, "%s curated by %s on %s\n", rel, *by, date)
+	}
+	return status
+}
+
+// docPath is a path given on the command line, relative to the working
+// directory, as a slash path relative to the root.
+func docPath(root, arg string) (string, error) {
+	abs, err := filepath.Abs(arg)
+	if err != nil {
+		return "", err
+	}
+	rel, err := filepath.Rel(root, abs)
+	if err != nil {
+		return "", err
+	}
+	return filepath.ToSlash(rel), nil
 }
 
 // writeQuestions prints a block per open question, or with all per

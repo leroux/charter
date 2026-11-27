@@ -77,6 +77,7 @@ ignore = ["build"]
 only = ["proxy", "dom0"]
 env-patterns = ["^ACME_[A-Z0-9_]+$"]
 digest = "DIGEST.md"
+docs = ["docs/*.md", "README.md"]
 
 [go]
 module = "github.com/leroux/acme-svc/claims"
@@ -122,6 +123,7 @@ func TestEveryKeyIsRead(t *testing.T) {
 		Python:           &Language{Dir: "dom0", Test: "python3 -m unittest tests.test_acme", Env: "dom0/acme/env.py"},
 		TypeScript:       &TypeScript{Language: Language{Dir: "web", Test: "pnpm test", Env: "web/src/env.ts"}, Compiler: "node_modules/typescript", Import: "@acme/claims"},
 		Surfaces:         []Surface{{Kind: "key", Command: "python3 -m acme keys"}},
+		Docs:             []string{"docs/*.md", "README.md"},
 	}
 	c.lines, c.surfaceLines = nil, nil
 	if !reflect.DeepEqual(c, want) {

@@ -414,7 +414,7 @@ Changes:
 
 ## CH-261127-3NY3 A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve
 
-Status: planned
+Status: active
 Serves: CH-002
 See: CH-261126-33GK, CH-261127-DW8R, CH-261127-H4B7
 
@@ -448,9 +448,20 @@ Scenarios:
 5. `doc-declares-nothing` (owner, backlog 007): a heading in a doc that
    opens with an id fails, and no entry is read from it.
 
+Guidance: the doc patterns are their own scope: charter.toml's only and
+ignore patterns do not narrow them, and a matched file that is not
+markdown is not a doc. As in every walk, a directory whose name begins
+with a dot or an underscore is skipped, so no doc lives there.
+
+Changes:
+- 2026-11-27: the guidance says the doc patterns are not narrowed by only
+  or ignore, and read markdown alone; the build read docs through the
+  walk's only patterns, which hid a doc the patterns named (review of
+  backlog 007).
+
 ## CH-261127-DW8R A doc references code by a link to the file declaring the named symbol, and one that file lacks fails
 
-Status: planned
+Status: active
 Serves: CH-002
 See: CH-261127-3NY3, CH-261126-PQ7X
 
@@ -490,16 +501,16 @@ Scenarios:
 
 ## CH-261127-H4B7 charter gen keeps each doc's references and embeds current with the record and the code
 
-Status: planned
+Status: active
 Serves: CH-002
 See: CH-261127-3NY3, CH-261127-DW8R, CH-040
 
 charter gen rewrites, in every doc, the text after the id of each entry
-reference to the entry's current title and its target to the entry's
-heading in its area document; the target of each code reference to the
-file with a line anchor at the declaration; and what lies between each
-embed's two comments to the entry's id, title and text, written from the
-area document. It changes nothing else in a doc, and a second run with
+reference to the entry's current title, leaving a bare id bare, and its
+target to the entry's heading in its area document; the target of each
+code reference to the file with a line anchor at the declaration; and
+what lies between each embed's two comments to the entry's id, title and
+text, written from the area document. It changes nothing else in a doc, and a second run with
 nothing changed writes nothing.
 
 Why: a doc must read well where people read it, on a code host that
@@ -521,13 +532,23 @@ Scenarios:
    writes the entry's id, title and text, replacing what was there.
 5. `prose-untouched` (owner, backlog 007): gen leaves a doc's prose
    byte for byte as it was, and a second run writes nothing.
+6. `bare-id-stays` (agent, provisional): a reference whose text is the id
+   alone keeps it alone, its target made current.
 
-Guidance: an embed renders as a quote: the id and title in bold, then the
-text, then a link to the entry.
+Guidance: an embed renders as a quote: the id, linked to the entry, and
+the title in bold, then the text.
+
+Changes:
+- 2026-11-27: a reference whose text is the id alone stays so, a link in
+  running prose; the guidance says the embed's link is on its id, where it
+  said after the text (build of backlog 007).
+- 2026-11-27: the bare id is the agent's choice, not a ruling, so its
+  clause has a scenario of its own, provisional, and Q-261127-TW9H asks
+  the owner (review of backlog 007).
 
 ## CH-261127-GXP7 charter curate records who curated a doc and a hash of what it references; lint names one whose references changed
 
-Status: planned
+Status: active
 Serves: CH-002
 See: CH-261127-3NY3, CH-261127-DW8R, CH-041
 
@@ -577,7 +598,7 @@ Scenarios:
 
 ## CH-261127-8MYR Which docs mention an entry is computed from the docs, and anchors, export and diff show it
 
-Status: planned
+Status: active
 Serves: CH-002, CH-001
 See: CH-040, CH-261015-9ZTY, CH-261009-QQC8, CH-261127-GXP7
 

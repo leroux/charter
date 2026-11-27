@@ -18,6 +18,7 @@ import (
 
 	"github.com/leroux/charter/internal/config"
 	"github.com/leroux/charter/internal/digest"
+	"github.com/leroux/charter/internal/docs"
 	"github.com/leroux/charter/internal/env"
 	"github.com/leroux/charter/internal/facts"
 	"github.com/leroux/charter/internal/gate"
@@ -40,9 +41,16 @@ type Tree struct {
 	Facts  *facts.Set
 	// Files are the walked files by language.
 	Files walk.Tree
+	// Docs are the docs charter.toml names, and Code what their code
+	// references resolve against.
+	Docs []*docs.Doc
+	Code docs.Code
 	// Problems found while reading, before the rules run.
 	Problems []string
 }
+
+// DocsKind names the walk's list of the docs.
+const DocsKind = "docs"
 
 // Load reads the charter's record and its tree's facts.
 func Load(c *config.Config) (*Tree, error) {
@@ -104,7 +112,78 @@ func Load(c *config.Config) (*Tree, error) {
 		}
 		t.Facts.Add(set)
 	}
+	var langFiles []string
+	for _, l := range languages(c) {
+		langFiles = append(langFiles, t.Files[l]...)
+	}
+	t.Code = docs.NewCode(c.Root, langFiles, t.Facts.Decls)
+	files, err := DocFiles(c)
+	if err != nil {
+		return nil, err
+	}
+	if t.Docs, err = docs.Read(c.Root, files); err != nil {
+		return nil, err
+	}
 	return t, nil
+}
+
+// DocFiles lists the docs: every markdown file under the root that
+// charter.toml's doc patterns match. The patterns are their own scope:
+// the walk's only and ignore patterns do not narrow them.
+//
+//charter:realizes CH-261127-3NY3
+func DocFiles(c *config.Config) ([]string, error) {
+	if len(c.Docs) == 0 {
+		return nil, nil
+	}
+	tree, err := walk.Walk(walk.Options{Root: c.Root, Boundary: config.Dir + "/" + config.File, Files: map[string][]string{DocsKind: c.Docs}})
+	if err != nil {
+		return nil, err
+	}
+	var out []string
+	for _, f := range tree[DocsKind] {
+		if strings.HasSuffix(f, ".md") {
+			out = append(out, f)
+		}
+	}
+	return out, nil
+}
+
+// ReadDecls runs each configured language's reader over the files, found
+// under root, which may be another directory than the charter's, as a
+// revision's files written out, and returns their declarations.
+func ReadDecls(c *config.Config, root string, files []string) ([]facts.Decl, error) {
+	by := map[string][]string{}
+	for _, f := range files {
+		by[walk.Language(f)] = append(by[walk.Language(f)], f)
+	}
+	set := &facts.Set{}
+	if c.Go != nil && len(by[walk.Go]) > 0 {
+		s, err := golang.Reader{Root: root, Claims: c.Go.Module, ClaimsDir: config.Dir}.Read(by[walk.Go])
+		if err != nil {
+			return nil, err
+		}
+		set.Add(s)
+	}
+	if c.Python != nil && len(by[walk.Python]) > 0 {
+		s, err := python.Reader{Root: root, Dir: c.Python.Dir, ClaimsDir: config.Dir, Table: fmt.Sprintf("%s:%d", c.Rel(), c.Line("python"))}.Read(by[walk.Python])
+		if err != nil {
+			return nil, err
+		}
+		set.Add(s)
+	}
+	if ts := c.TypeScript; ts != nil && len(by[walk.TypeScript]) > 0 {
+		compiler := ts.Compiler
+		if !filepath.IsAbs(compiler) {
+			compiler = filepath.Join(c.Root, compiler)
+		}
+		s, err := typescript.Reader{Root: root, Compiler: compiler, Import: ts.Import, ClaimsDir: config.Dir, Table: fmt.Sprintf("%s:%d", c.Rel(), c.Line("typescript"))}.Read(by[walk.TypeScript])
+		if err != nil {
+			return nil, err
+		}
+		set.Add(s)
+	}
+	return set.Decls, nil
 }
 
 // filesKind names the walk's list of the i-th [[files]] table.
@@ -156,9 +235,11 @@ func Generated(c *config.Config, rec *record.Record) (map[string][]byte, error) 
 	return out, nil
 }
 
-// Write writes every generated file.
+// Write writes every generated file, then rewrites each doc's references
+// and embeds. A tree whose code cannot be read still has its docs' entry
+// references and embeds made current.
 //
-//charter:realizes CH-020
+//charter:realizes CH-020, CH-261127-H4B7
 func Write(c *config.Config) error {
 	rec, err := record.Read(c.Root, config.Dir, path.Base(c.Digest))
 	if err != nil {
@@ -170,6 +251,32 @@ func Write(c *config.Config) error {
 	}
 	for rel, data := range files {
 		if err := os.WriteFile(filepath.Join(c.Root, filepath.FromSlash(rel)), data, 0o644); err != nil {
+			return err
+		}
+	}
+	if len(c.Docs) == 0 {
+		return nil
+	}
+	t, err := Load(c)
+	if err != nil {
+		// The code cannot be read: the docs are still read, and their
+		// references to entries and their embeds made current.
+		files, werr := DocFiles(c)
+		if werr != nil {
+			return werr
+		}
+		ds, derr := docs.Read(c.Root, files)
+		if derr != nil {
+			return derr
+		}
+		t = &Tree{Docs: ds, Code: docs.NewCode(c.Root, nil, nil)}
+	}
+	for _, d := range t.Docs {
+		out := docs.Rewrite(d, rec, t.Code)
+		if out == strings.Join(d.Lines, "\n") {
+			continue
+		}
+		if err := os.WriteFile(filepath.Join(c.Root, filepath.FromSlash(d.File)), []byte(out), 0o644); err != nil {
 			return err
 		}
 	}
@@ -262,6 +369,7 @@ func Run(c *config.Config) (*Tree, []string, error) {
 	in.Baseline, problems = lines, append(problems, ps...)
 
 	problems = append(problems, gate.Check(in)...)
+	problems = append(problems, docs.Problems(t.Docs, t.Record, t.Code)...)
 	sort.Strings(problems)
 	return t, problems, nil
 }

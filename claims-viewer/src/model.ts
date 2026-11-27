@@ -29,6 +29,12 @@ export interface Change {
   line: number;
 }
 
+// A doc's mention of an entry: a reference or an embed.
+export interface DocMention {
+  file: string;
+  line: number;
+}
+
 export interface Anchor {
   kind: "realizes" | "concerns";
   file: string;
@@ -91,6 +97,8 @@ export interface Entry {
   changes: Change[];
   anchors: Anchor[];
   refs: Ref[];
+  // The docs that reference or embed the entry; absent in an older export.
+  docs: DocMention[];
   // Observations only.
   subject: string;
   source: string;
@@ -225,6 +233,7 @@ export function parseRegistry(raw: unknown): Registry {
       scenarios: records(e.scenarios, `${id}.scenarios`).map((s) => ({ handle: str(s.handle), text: str(s.text), line: num(s.line) })),
       changes: records(e.changes, `${id}.changes`).map((c) => ({ date: str(c.date), text: str(c.text), line: num(c.line) })),
       anchors,
+      docs: (e.docs === undefined ? [] : records(e.docs, `${id}.docs`)).map((d) => ({ file: str(d.file), line: num(d.line) })),
       refs: records(e.refs, `${id}.refs`).map((r) => ({ file: str(r.file), func: str(r.func), line: num(r.line), handles: strs(r.handles, `${id}.refs.handles`) })),
       subject: str(e.subject),
       source: str(e.source),

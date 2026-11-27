@@ -72,6 +72,23 @@ class File:
             else:
                 yield from self.declarations(child, prefix)
 
+    def decls(self, node=None, prefix=""):
+        """Each def and class, nested ones by their dotted path, from its
+        first decorator to its last line, and each top-level assignment."""
+        package = os.path.splitext(os.path.basename(self.rel))[0]
+        node = node or self.tree
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                start = min([d.lineno for d in child.decorator_list] + [child.lineno])
+                name = prefix + child.name
+                self.facts["Decls"].append(dict(self.at(start), End=child.end_lineno, Name=name, Package=package))
+                self.decls(child, name + ".")
+            elif node is self.tree and isinstance(child, (ast.Assign, ast.AnnAssign)):
+                targets = child.targets if isinstance(child, ast.Assign) else [child.target]
+                for t in targets:
+                    if isinstance(t, ast.Name):
+                        self.facts["Decls"].append(dict(self.at(child.lineno), End=child.end_lineno, Name=t.id, Package=package))
+
     def anchors(self):
         starts = {start: (kind, name) for start, kind, name in self.declarations()}
         for line, text in sorted(self.comments.items()):
@@ -290,7 +307,7 @@ class File:
 
 def main():
     req = json.load(sys.stdin)
-    facts = {k: [] for k in ("Anchors", "Citations", "References", "EnvConsts", "EnvReads", "Literals", "Refused", "TestFiles")}
+    facts = {k: [] for k in ("Anchors", "Citations", "References", "EnvConsts", "EnvReads", "Literals", "Refused", "Decls", "TestFiles")}
     req["facts"] = facts
     env_file = req.get("env_file", "")
     for rel in req["files"]:
@@ -304,6 +321,7 @@ def main():
             f.citations()
             continue
         f.anchors()
+        f.decls()
         if rel == env_file:
             f.env_consts()
             continue

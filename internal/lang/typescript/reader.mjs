@@ -154,7 +154,24 @@ function extract(root, files) {
       ts.forEachChild(node, visit);
     };
     visit(sf);
-    out.push({ file, diagnostics, imports, refs, consts, envReads, literals });
+    // Declarations a doc may reference: top-level functions, classes and
+    // their methods, interfaces, type aliases, enums and variables, each
+    // with its first and last line.
+    const decls = [];
+    const span = (n) => ({ line: lineOf(n.getStart(sf)), end: lineOf(n.getEnd()) });
+    for (const st of sf.statements) {
+      if ((ts.isFunctionDeclaration(st) || ts.isInterfaceDeclaration(st) || ts.isTypeAliasDeclaration(st) || ts.isEnumDeclaration(st)) && st.name) {
+        decls.push({ name: st.name.text, ...span(st) });
+      } else if (ts.isClassDeclaration(st) && st.name) {
+        decls.push({ name: st.name.text, ...span(st) });
+        for (const m of st.members) {
+          if (m.name && (ts.isIdentifier(m.name) || ts.isPrivateIdentifier(m.name))) decls.push({ name: st.name.text + "." + m.name.text, ...span(m) });
+        }
+      } else if (ts.isVariableStatement(st)) {
+        for (const d of st.declarationList.declarations) if (ts.isIdentifier(d.name)) decls.push({ name: d.name.text, line: lineOf(st.getStart(sf)), end: lineOf(st.getEnd()) });
+      }
+    }
+    out.push({ file, diagnostics, imports, refs, consts, envReads, literals, decls });
   }
   return out;
 }

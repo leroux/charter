@@ -335,15 +335,16 @@ func TestEveryRuleHasAMutationThatTripsIt(t *testing.T) {
 	tripped := map[string]bool{}
 	for _, f := range []map[string]string{
 		with(map[string]string{"claims/facts.go": "package claims\n"}),
-		with(map[string]string{"pkg/a/dot_test.go": "package a\n\nimport . \"example.com/fx/claims\"\n\nvar _ = SW_010\n"}),    // rule 10                                                         // rule 1
-		replace(t, "pkg/a/a.go", "os.Getenv(env.Rate)", "os.Getenv(\"FX_RATE\")"),                                              // rule 8
-		replace(t, "claims/charter.toml", "command = \"echo refill\"", "command = \"exit 1\""),                                 // rule 9
-		replace(t, "probes/clock_test.go", "claims.Observes(t, claims.ClockIsMonotonic)", "claims.Verifies(t, claims.SW_010)"), // rule 11, 12
-		replace(t, "claims/observations.md", "Status: observed\n", "Status: broken\n"),                                         // rule 13
-		replace(t, "claims/refill.md", "Serves: STK-001\nAccounts", "Serves: SW-999\nAccounts"),                                // rule 23
-		replace(t, "pkg/a/a_test.go", "\"burst-caps-tokens\")", "\"no-such\")"),                                                // rule 24, 25
-		replace(t, "claims/refill.md", "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE"),                            // rule 6
-		replace(t, "claims/refill.md", "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE, op:refill, op:x"),           // rule 7
+		with(map[string]string{"pkg/a/dot_test.go": "package a\n\nimport . \"example.com/fx/claims\"\n\nvar _ = SW_010\n"}),                         // rule 10                                                         // rule 1
+		replace(t, "pkg/a/a.go", "os.Getenv(env.Rate)", "os.Getenv(\"FX_RATE\")"),                                                                   // rule 8
+		replace(t, "claims/charter.toml", "command = \"echo refill\"", "command = \"exit 1\""),                                                      // rule 9
+		replace(t, "probes/clock_test.go", "claims.Observes(t, claims.ClockIsMonotonic)", "claims.Verifies(t, claims.SW_010)"),                      // rule 11, 12
+		replace(t, "claims/observations.md", "Status: observed\n", "Status: broken\n"),                                                              // rule 13
+		replace(t, "claims/refill.md", "Serves: STK-001\nAccounts", "Serves: SW-999\nAccounts"),                                                     // rule 23
+		replace(t, "pkg/a/a_test.go", "\"burst-caps-tokens\")", "\"no-such\")"),                                                                     // rule 24, 25
+		replace(t, "claims/refill.md", "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE"),                                                 // rule 6
+		replace(t, "claims/refill.md", "Accounts: env:FX_RATE, op:refill", "Accounts: env:FX_RATE, op:refill, op:x"),                                // rule 7
+		with(map[string]string{"claims/charter.toml": "docs = [\"docs/*.md\"]\n" + fixture()["claims/charter.toml"], "docs/a.md": "[SW-999](x)\n"}), // rule 26
 	} {
 		for _, p := range problems(t, build(t, f)) {
 			if i := strings.Index(p, "rule "); i >= 0 {
@@ -372,7 +373,7 @@ func TestEveryRuleHasAMutationThatTripsIt(t *testing.T) {
 func gateRules(t *testing.T) []string {
 	t.Helper()
 	rules := map[string]bool{}
-	for _, dir := range []string{"../gate", ".", "../surface", "../lang/golang"} {
+	for _, dir := range []string{"../gate", ".", "../surface", "../lang/golang", "../docs"} {
 		pkgs, err := parser.ParseDir(token.NewFileSet(), dir, func(fi os.FileInfo) bool { return !strings.HasSuffix(fi.Name(), "_test.go") }, 0)
 		if err != nil {
 			t.Fatal(err)

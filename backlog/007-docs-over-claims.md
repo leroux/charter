@@ -1,6 +1,6 @@
 # 007. Docs over claims: free prose that references and embeds claims and code, drafted by an agent, curated by a person, and warned on when what it rests on changes
 
-Status: ruled · Size: M · See: 005, 006
+Status: in progress · Size: M · See: 005, 006
 
 The record holds what binds: claims, each declared once, anchored to code
 and verified by tests. It has no place for the rest of what a reader needs
@@ -73,6 +73,31 @@ settle.
 
 Ruling 18 is no entry: a stale doc blocks only through `claims/policy.md`,
 which the review skill's judge reads and the gate does not.
+
+## Built
+
+Built 2026-11-27: the five entries active, every scenario passing in
+`charter report`; the docs package (`internal/docs`), declarations from
+each language's reader, the `curate` verb, backlinks in anchors, export,
+diff and the viewer, the `claims-narrate` skill, docs in `claims-audit`,
+and `example/docs/walkthrough.md`, curated by the agent until the owner
+reads it.
+
+The judge's review, and what became of each finding:
+
+- Curate dropped prose written after an old block: fixed, and tested.
+- Diff failed when the code could not be read, though the docs it lists
+  are never a finding: fixed; it says the docs are not listed and keeps
+  its status, tested.
+- The walk's only patterns narrowed the docs, a non-markdown match was
+  read, and the code deciding which files are docs was unanchored: fixed,
+  with a Changes line and guidance on CH-261127-3NY3, tested.
+- A bare id staying bare was written as the owner's: it is now
+  `bare-id-stays`, provisional, asked as Q-261127-TW9H.
+- References in an indented code block, a `~~~` fence or a double-backtick
+  span were read; lint's stale-doc lines were sorted in with the advice
+  rather than ending it: both fixed. Q-261127-BVQX now says Python and
+  TypeScript qualify a name by the file's name.
 
 ## Why hashes, not dates
 
