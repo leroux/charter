@@ -42,9 +42,6 @@ Scenarios:
    a dated line, when the record is read, then the entry keeps its id and
    shows the change and when it was made.
 
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
-
 ## CH-261126-P2SK The charter gate MUST fail a change that leaves a gap between the record and the code
 
 Status: active
@@ -67,9 +64,6 @@ Scenarios:
 2. `unowned-surface-stops-the-change` (agent, provisional): given a new
    environment variable no entry owns, when the check runs, then it fails
    naming it.
-
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-001 The charter gate MUST let a reviewer judge a change by its entries and their tests, without reading the code
 
@@ -98,9 +92,6 @@ Scenarios:
 3. `every-rule-has-a-mutation`: given the clean fixture, when each rule
    of the gate is considered, then a mutation of the fixture named after
    the rule trips it.
-
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261009-3FHW The record MUST show who ruled each scenario, and charter diff MUST name any change to an entry the record does not state
 
@@ -131,9 +122,6 @@ Scenarios:
 3. `unrecorded-change-named` (owner): given an entry's text changed with
    no dated Changes line, when diff runs against the earlier revision,
    then it names the entry; given the line, then it does not.
-
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-002 The charter command MUST lead a builder from an id to its code and tests, and every gate problem MUST name its fix
 
@@ -166,7 +154,6 @@ Changes:
   Go, Python and TypeScript, so a citation of an entry that does not exist
   fails to compile or to import, where it named Go's compiler alone
   (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261126-NS7T An adopter MUST be able to keep a charter in any repository layout and language, with code that imports nothing of the tooling
 
@@ -212,6 +199,5 @@ Changes:
   languages are kept, a second example of Go and Python proving it;
   `polyglot-example-passes`, `polyglot-untested-scenario-named` and
   `nothing-of-the-tooling-imported` are added (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 - 2026-11-27: `example-gate-passes` no longer names charter lint, which
   backlog 008 deleted; the example's gate passing is what its test shows.

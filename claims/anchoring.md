@@ -86,7 +86,6 @@ Changes:
 - 2026-11-26: serves CH-002, CH-261126-PFG5, where it served CH-002,
   CH-003: CH-003 is deprecated and the need above it is served directly
   (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-021 Production code MUST anchor an entry in a Go doc comment, a TypeScript line comment, or the comment lines above a Python def
 
@@ -138,7 +137,6 @@ Changes:
 - 2026-11-26: Python is read: a directive on the comment lines directly
   above a def or a class, or its decorators, anchors it, and one anywhere
   else is refused (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261127-45KM charter MUST read an anchor from a comment line in a file no language reads, where charter.toml names that file
 
@@ -185,7 +183,6 @@ Changes:
 - 2026-11-27: a file is read by the first matching table only, and only
   when its extension is no language's, which is what the walk does; a
   review found a file two tables match was read twice.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-022 An anchor MUST name an entry that exists and is not planned, and a concerns anchor MUST NOT count toward coverage
 
@@ -218,7 +215,6 @@ Changes:
   not-realized was tested with a decision anchored by concerns alone, as
   concerns-is-not-realized is, and is now tested with one anchored by
   nothing, CH-030 pointing here.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-023 A test MUST cite an entry by a verifies call that opens a test function, naming by handle the scenarios it exercises
 
@@ -299,7 +295,6 @@ Changes:
 - 2026-11-26: Python is read: a verifies opening a unittest test_ method
   or a pytest test_ function is a citation, held to the same refusals as
   Go's and TypeScript's (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-024 Each language's verifies MUST record each citation and its test's outcome as a JSON line in the events file
 
@@ -346,7 +341,6 @@ Changes:
   JSON stream; `attr-per-citation` is dropped for `event-per-citation`,
   and `outcome-recorded`, `unset-records-nothing` and
   `concurrent-lines-whole` are added (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-025 The claims directory MUST hold only the record, charter.toml and generated files, and a test MUST NOT assign to an entry
 
@@ -383,7 +377,6 @@ Changes:
   (backlog 003).
 - 2026-11-26: serves CH-261126-PFG5, where it served CH-003: CH-003 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-040 One charter command MUST generate, check, give ids and list anchors, so an adopter writes no main
 
@@ -459,7 +452,6 @@ Changes:
   export and lint's baggage deleted; check prints the warnings lint kept.
   `registry-lists-everything` goes with export, which was its one reader,
   and anchors gives an entry's Changes, which export alone gave.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261127-3NY3 A doc MUST be a markdown file charter.toml names, MUST declare no entry, and its references to entries MUST resolve
 
@@ -514,7 +506,6 @@ Changes:
   or ignore, and read markdown alone; the build read docs through the
   walk's only patterns, which hid a doc the patterns named (review of
   backlog 007).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261127-DW8R A doc MUST reference code by a link to the file that declares the named symbol, and the gate MUST fail one that file lacks
 
@@ -564,7 +555,6 @@ Changes:
 - 2026-11-27: `method-by-type` is the owner's, answering Q-261127-BVQX
   yes: a type qualifies its method, and in Python and TypeScript the
   file's name stands for the package.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261127-H4B7 charter gen MUST keep each doc's references and embeds current with the record and the code
 
@@ -618,7 +608,6 @@ Changes:
   the owner (review of backlog 007).
 - 2026-11-27: `bare-id-stays` is the owner's, answering Q-261127-TW9H
   yes.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261127-GXP7 charter curate MUST record who curated a doc and a hash of each reference, and charter check MUST warn when one changes
 
@@ -680,7 +669,6 @@ Changes:
 - 2026-11-27: check warns of a drafted or stale doc, where lint named
   it: the owner ruled lint deleted and its three useful checks kept as
   check's warnings (CH-261127-QRQS).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261127-8MYR charter MUST compute which docs mention an entry from the docs, and charter anchors and charter diff MUST show it
 
@@ -712,4 +700,3 @@ Scenarios:
 Changes:
 - 2026-11-27: the export and the viewer are deleted, by the owner's
   ruling, so neither shows the docs; `export-carries-docs` goes with them.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.

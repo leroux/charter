@@ -61,7 +61,6 @@ Changes:
   are joined too: `go-results-joined` and `typescript-joined` are dropped
   for `results-joined`, `command-failure-named` is added, and the Guidance
   on the stream goes (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261005-6ZBS charter gen MUST write a digest that reads the charter in order: needs by area, an area map, then each area's decisions with their Why
 
@@ -117,4 +116,3 @@ Scenarios:
 Changes:
 - 2026-11-26: charter gen is the one writer of the digest, so
   CHARTER_UPDATE_DIGEST and its Accounts are gone (Q-261015-Y682).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.

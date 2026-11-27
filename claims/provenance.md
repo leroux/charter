@@ -40,9 +40,6 @@ Scenarios:
    agent with a reference, when it is read, then it is a form problem
    naming the forms to write.
 
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
-
 ## CH-261009-4B3B The question file MUST hold what nobody has ruled, each question naming its entry, who asked and the provisional answer until it is answered
 
 Status: active
@@ -93,7 +90,6 @@ Changes:
 - 2026-11-27: an answered question is deleted once its answer is written
   into the record (Q-261015-YSKC, answered yes by the owner), and lint,
   which counted the open ones, is gone; `open-listed` goes with it.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261009-QQC8 charter diff MUST name every change to the record that its Changes lines do not state
 
@@ -144,4 +140,3 @@ Changes:
   owner ruled that retiring is deprecating an entry and stripping its
   code and tests, then deleting it in a later change, git keeping the
   text; until now an entry was never deleted.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.

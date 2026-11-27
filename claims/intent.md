@@ -86,7 +86,6 @@ Changes:
   its own; readme-is-not-a-document, header-is-prose and
   heading-in-fence-is-text and the Guidance moved there with it (backlog
   004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261126-JC9B The record reader MUST treat an area document's header as a title, a Code line and prose, and MUST NOT read a fenced line as a heading
 
@@ -124,9 +123,6 @@ Guidance: the header carries no rulings, and a hand-written index of the
 entries is not part of it, since the headings are the index; neither is
 something the parser can tell, so review holds the header to them.
 
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
-
 ## CH-011 The record reader MUST treat an entry of needs.md as a need, with no Kind, Serves or Guidance
 
 Status: active
@@ -151,7 +147,6 @@ Changes:
 - 2026-11-26: serves CH-261126-PFG5, where it served CH-001: the needs are
   re-cut one a problem, and this decision answers the one that names it
   (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-012 An id MUST be declared once, and a new id MUST be its prefix, the day it was taken and a random code
 
@@ -219,7 +214,6 @@ Changes:
   (backlog 003).
 - 2026-11-26: serves CH-261126-PFG5, where it served CH-003: CH-003 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-013 An entry's Status MUST be planned, active or deprecated; every status MUST generate a symbol, and the gate MUST ask coverage of active entries only
 
@@ -260,7 +254,6 @@ Changes:
 - 2026-11-26: serves CH-002, CH-261126-PFG5, where it served CH-002,
   CH-003: CH-003 is deprecated and the need above it is served directly
   (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-015 The gate MUST fail a Serves or See that names no existing entry, or that names the entry itself
 
@@ -286,7 +279,6 @@ Changes:
 - 2026-11-26: the earlier form's relations are no longer read
   (Q-261015-N4HJ): `stakeholder-realizes-nothing` is dropped with them,
   and `unknown-target` names Serves and See alone.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261126-HK6S The record reader MUST read an observation as a heading in observations.md, with its subject, status, date or source and the entries it supports
 
@@ -325,4 +317,3 @@ Scenarios:
 Changes:
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.

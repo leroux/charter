@@ -57,7 +57,6 @@ Changes:
 - 2026-11-27: charter.toml names the doc patterns, the markdown files read
   as docs (CH-261127-3NY3); keys-read covers them as every key (backlog
   007).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261126-PQ7X charter MUST support each language as a built-in reader, generator and marker, and MUST read a language only when charter.toml names it
 
@@ -99,9 +98,6 @@ Scenarios:
    the gate's rules, when its imports are read, then it imports no
    language's reader, parser or generator.
 
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
-
 ## CH-006 The charter MUST specify itself, and its own gate MUST pass
 
 Status: active
@@ -131,7 +127,6 @@ Changes:
   its own, the needs being re-cut one a problem: the charter using its own
   method is how an adopter knows the method carries a real tool, a
   property of the project and not a promise to one person (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261126-5JMD The loop's skills MUST ship as a plugin of this repository and MUST read the adopter's layout from charter.toml alone
 
@@ -190,4 +185,3 @@ Changes:
 - 2026-11-27: built: the plugin is plugin/, named by the marketplace at
   the root, and the README holds the CLAUDE.md template, there being no
   method document; the owner asked for the skills as a plugin.
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.

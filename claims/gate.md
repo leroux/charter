@@ -59,7 +59,6 @@ Changes:
 - 2026-11-26: serves CH-261126-P2SK, CH-001, where it served CH-001: the
   needs are re-cut one a problem, and this decision answers the one that
   names it (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-031 The gate MUST NOT ask an anchor of a need, and MUST count a need's citation only from the stakeholder's side
 
@@ -91,7 +90,6 @@ Changes:
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-001: the needs are
   re-cut one a problem, and this decision answers the one that names it
   (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-032 A probe MUST cite only observations, and a test MUST NOT cite an observation
 
@@ -131,7 +129,6 @@ Changes:
   `probe-by-path` and `probe-path-required` (backlog 003).
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-033 The gate MUST enumerate every surface and require each to be accounted for by an entry or listed in a baseline of live, unaccounted surfaces
 
@@ -188,7 +185,6 @@ Changes:
   kinds (backlog 003).
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-004: CH-004 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261126-NTRR charter check MUST read a declared surface kind's keys as the output lines of a command run from the root
 
@@ -230,7 +226,6 @@ Scenarios:
 Changes:
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-004: CH-004 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-034 Code MUST read an environment variable through a named constant, or under a dynamic directive, and a literal MUST NOT name one
 
@@ -278,7 +273,6 @@ Changes:
   003).
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-004: CH-004 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-035 An observation MUST carry its status's fields, and the gate MUST fail a broken observation under an active entry
 
@@ -312,7 +306,6 @@ Scenarios:
 Changes:
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
   deprecated and the need above it is served directly (backlog 004).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-036 The walk MUST cover every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores
 
@@ -360,7 +353,6 @@ Changes:
   `hidden-and-nested-skipped` is dropped for `hidden-skipped`,
   `nested-module-walked` and `other-charter-skipped`, and `python-listed`
   is added (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-037 charter check MUST report every problem, sorted, with its file, line, rule and fix, and MUST pass a clean tree
 
@@ -390,7 +382,6 @@ Changes:
   configuration checked moved to CH-261126-33GK, `root-resolved` and
   `typescript-options-validated` with them, and `exit-status` is added
   (backlog 003).
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
 
 ## CH-261127-QRQS charter check MUST warn, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again
 
@@ -421,6 +412,3 @@ Scenarios:
 3. `warnings-never-fail` (owner, backlog 008): given a tree whose only
    findings are warnings, when check runs, then it passes and writes
    nothing to standard output.
-
-Changes:
-- 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
