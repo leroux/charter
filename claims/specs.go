@@ -146,29 +146,29 @@ var CH_024 = &Spec{ID: "CH-024", Title: "Each language's verifies records each c
 // CH_025 is CH-025: The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry
 var CH_025 = &Spec{ID: "CH-025", Title: "The claims directory holds the record, charter.toml and generated files, and no test assigns to an entry", Status: Active}
 
-// CH_030 is CH-030: An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor
-var CH_030 = &Spec{ID: "CH-030", Title: "An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor", Status: Active, Kind: "invariant"}
+// CH_030 is CH-030: The gate MUST fail an active decision without an anchor or with an uncited scenario; a waiver MAY absorb a missing test, never a missing anchor
+var CH_030 = &Spec{ID: "CH-030", Title: "The gate MUST fail an active decision without an anchor or with an uncited scenario; a waiver MAY absorb a missing test, never a missing anchor", Status: Active, Kind: "invariant"}
 
-// CH_031 is CH-031: A need needs no anchor and is verified only from the stakeholder's side
-var CH_031 = &Spec{ID: "CH-031", Title: "A need needs no anchor and is verified only from the stakeholder's side", Status: Active}
+// CH_031 is CH-031: The gate MUST ask no anchor of a need, and MUST count a need's citation only from the stakeholder's side
+var CH_031 = &Spec{ID: "CH-031", Title: "The gate MUST ask no anchor of a need, and MUST count a need's citation only from the stakeholder's side", Status: Active}
 
-// CH_032 is CH-032: A probe cites observations only, and a test never cites an observation
-var CH_032 = &Spec{ID: "CH-032", Title: "A probe cites observations only, and a test never cites an observation", Status: Active}
+// CH_032 is CH-032: A probe MUST cite only observations, and a test MUST NOT cite an observation
+var CH_032 = &Spec{ID: "CH-032", Title: "A probe MUST cite only observations, and a test MUST NOT cite an observation", Status: Active}
 
-// CH_033 is CH-033: Every surface is enumerated, and accounted for by an entry or listed in a baseline of only live, unaccounted surfaces
-var CH_033 = &Spec{ID: "CH-033", Title: "Every surface is enumerated, and accounted for by an entry or listed in a baseline of only live, unaccounted surfaces", Status: Active, Kind: "invariant"}
+// CH_033 is CH-033: The gate MUST enumerate every surface and require each to be accounted for by an entry or listed in a baseline of live, unaccounted surfaces
+var CH_033 = &Spec{ID: "CH-033", Title: "The gate MUST enumerate every surface and require each to be accounted for by an entry or listed in a baseline of live, unaccounted surfaces", Status: Active, Kind: "invariant"}
 
-// CH_034 is CH-034: An environment variable is read through a named constant, or under a dynamic directive, and no literal names one
-var CH_034 = &Spec{ID: "CH-034", Title: "An environment variable is read through a named constant, or under a dynamic directive, and no literal names one", Status: Active, Kind: "invariant"}
+// CH_034 is CH-034: Code MUST read an environment variable through a named constant, or under a dynamic directive, and no literal MUST name one
+var CH_034 = &Spec{ID: "CH-034", Title: "Code MUST read an environment variable through a named constant, or under a dynamic directive, and no literal MUST name one", Status: Active, Kind: "invariant"}
 
-// CH_035 is CH-035: Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails
-var CH_035 = &Spec{ID: "CH-035", Title: "Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails", Status: Active}
+// CH_035 is CH-035: An observation MUST carry its status's fields, and the gate MUST fail a broken observation under an active entry
+var CH_035 = &Spec{ID: "CH-035", Title: "An observation MUST carry its status's fields, and the gate MUST fail a broken observation under an active entry", Status: Active}
 
-// CH_036 is CH-036: The walk covers every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores
-var CH_036 = &Spec{ID: "CH-036", Title: "The walk covers every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores", Status: Active}
+// CH_036 is CH-036: The walk MUST cover every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores
+var CH_036 = &Spec{ID: "CH-036", Title: "The walk MUST cover every Go, Python and TypeScript file under the root, skipping another charter's tree and what charter.toml ignores", Status: Active}
 
-// CH_037 is CH-037: The gate reports every problem, sorted, with its file, line, rule and fix, and passes on a clean tree
-var CH_037 = &Spec{ID: "CH-037", Title: "The gate reports every problem, sorted, with its file, line, rule and fix, and passes on a clean tree", Status: Active}
+// CH_037 is CH-037: charter check MUST report every problem, sorted, with its file, line, rule and fix, and MUST pass a clean tree
+var CH_037 = &Spec{ID: "CH-037", Title: "charter check MUST report every problem, sorted, with its file, line, rule and fix, and MUST pass a clean tree", Status: Active}
 
 // CH_040 is CH-040: One charter command generates, checks, gives ids and lists anchors, and an adopter writes no main
 var CH_040 = &Spec{ID: "CH-040", Title: "One charter command generates, checks, gives ids and lists anchors, and an adopter writes no main", Status: Active}
@@ -206,8 +206,8 @@ var CH_261126_JC9B = &Spec{ID: "CH-261126-JC9B", Title: "The record reader MUST 
 // CH_261126_NS7T is CH-261126-NS7T: An adopter MUST be able to keep a charter in any repository layout and language, with code that imports nothing of the tooling
 var CH_261126_NS7T = &Spec{ID: "CH-261126-NS7T", Title: "An adopter MUST be able to keep a charter in any repository layout and language, with code that imports nothing of the tooling", Status: Active}
 
-// CH_261126_NTRR is CH-261126-NTRR: A declared surface kind is a command run from the root whose output lines are its keys
-var CH_261126_NTRR = &Spec{ID: "CH-261126-NTRR", Title: "A declared surface kind is a command run from the root whose output lines are its keys", Status: Active}
+// CH_261126_NTRR is CH-261126-NTRR: charter check MUST read a declared surface kind's keys as the output lines of a command run from the root
+var CH_261126_NTRR = &Spec{ID: "CH-261126-NTRR", Title: "charter check MUST read a declared surface kind's keys as the output lines of a command run from the root", Status: Active}
 
 // CH_261126_P2SK is CH-261126-P2SK: The charter gate MUST fail a change that leaves a gap between the record and the code
 var CH_261126_P2SK = &Spec{ID: "CH-261126-P2SK", Title: "The charter gate MUST fail a change that leaves a gap between the record and the code", Status: Active}
@@ -236,5 +236,5 @@ var CH_261127_GXP7 = &Spec{ID: "CH-261127-GXP7", Title: "charter curate records 
 // CH_261127_H4B7 is CH-261127-H4B7: charter gen keeps each doc's references and embeds current with the record and the code
 var CH_261127_H4B7 = &Spec{ID: "CH-261127-H4B7", Title: "charter gen keeps each doc's references and embeds current with the record and the code", Status: Active}
 
-// CH_261127_QRQS is CH-261127-QRQS: charter check warns, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again
-var CH_261127_QRQS = &Spec{ID: "CH-261127-QRQS", Title: "charter check warns, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again", Status: Active}
+// CH_261127_QRQS is CH-261127-QRQS: charter check MUST warn, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again
+var CH_261127_QRQS = &Spec{ID: "CH-261127-QRQS", Title: "charter check MUST warn, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again", Status: Active}
