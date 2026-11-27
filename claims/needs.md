@@ -189,8 +189,8 @@ they find out.
 
 Scenarios:
 1. `example-gate-passes` (owner, backlog 003): given the ratelimit
-   example, when charter check runs over its own charter, then it passes,
-   and charter lint finds nothing it fails on.
+   example, when charter check runs over its own charter, then it
+   passes.
 2. `example-untested-scenario-named` (agent, provisional): given a copy of
    the example whose test of one scenario no longer cites it, when its
    gate runs, then it fails naming that scenario.
@@ -213,3 +213,5 @@ Changes:
   `polyglot-example-passes`, `polyglot-untested-scenario-named` and
   `nothing-of-the-tooling-imported` are added (backlog 003).
 - 2026-11-27: reworded in the owner's claim form; the ruling is unchanged.
+- 2026-11-27: `example-gate-passes` no longer names charter lint, which
+  backlog 008 deleted; the example's gate passing is what its test shows.
