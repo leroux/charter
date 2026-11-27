@@ -1,8 +1,8 @@
 # The charter's own charter: the tooling, specified by the method it
-# implements. The examples and the benchmarks' seeds are charters of their
-# own; the viewer is checked by its own tests.
+# implements. The examples are charters of their own.
 name = "charter"
-ignore = ["bench", "claims-viewer"]
+# The examples are charters of their own; the walk skips them by their
+# charter.toml.
 env-patterns = ["^CHARTER_[A-Z0-9_]+$"]
 
 [go]

@@ -88,9 +88,9 @@ record, and an id is one `charter next` gives.
    Each answer is a clause with a scenario, or an exclusion stated in the
    text.
 
-8. **Check.** `charter gen`, then `charter lint`; both
-   clean but for lint's line counting the open questions. Lint names a
-   decision that serves nothing.
+8. **Check.** `charter gen`, then `charter check`. A planned entry's
+   untested scenarios are not problems; a broken relation, form or id is.
+   Every decision names what it serves.
 
 9. **Record and stop.** List the ids in the story's `## Charter` section,
    one line each with its title. Present the area document diff and stop
@@ -100,7 +100,6 @@ record, and an id is one `charter next` gives.
 
 - Every ruling is a new entry or a dated Changes line, in its area
   document, at the altitude above, with a scenario per clause.
-- The ids came from `charter next`; `charter gen` and `charter lint`
-  are clean but for the open-questions line; the story's `## Charter`
-  lists the ids.
+- The ids came from `charter next`; `charter gen` and `charter check`
+  are clean; the story's `## Charter` lists the ids.
 - The owner has the diff; nothing is built or committed.

@@ -202,7 +202,7 @@ func TestTheGeneratedModuleEqualsTheFixture(t *testing.T) {
 
 func TestATypeScriptTestRecordsItsOutcomeInTheEventsFile(t *testing.T) {
 	claims.Verifies(t, claims.CH_024, "event-per-citation", "outcome-recorded", "unset-records-nothing")
-	vitest := filepath.Join(repo, "claims-viewer", "node_modules", ".bin", "vitest")
+	vitest := filepath.Join(repo, "node_modules", ".bin", "vitest")
 	if _, err := os.Stat(vitest); err != nil {
 		t.Fatalf("vitest is not installed at %s; run pnpm install", vitest)
 	}

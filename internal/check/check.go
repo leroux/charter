@@ -381,3 +381,52 @@ func allFiles(t walk.Tree) []string {
 	}
 	return out
 }
+
+// Warnings are what check writes after its problems and never fails on: a
+// planned entry each of whose scenarios a test cites, a deprecated entry
+// still anchored or cited, and each doc drafted or stale.
+//
+//charter:realizes CH-261127-QRQS
+func Warnings(t *Tree) []string {
+	var out []string
+	cited := map[string]map[string]bool{} // id -> handles cited
+	for _, ct := range t.Facts.Citations {
+		e, _ := t.Record.BySymbol(ct.Symbol)
+		if ct.Observes || e == nil {
+			continue
+		}
+		if cited[e.ID] == nil {
+			cited[e.ID] = map[string]bool{}
+		}
+		for _, h := range ct.Handles {
+			cited[e.ID][h] = true
+		}
+		if e.Status == "deprecated" {
+			out = append(out, fmt.Sprintf("%s: warning: %s is deprecated and still verified here; strip it before the entry is deleted", ct.Pos(), e.ID))
+		}
+	}
+	for _, a := range t.Facts.Anchors {
+		for _, id := range a.IDs {
+			if e := t.Record.Entry(id); e != nil && e.Status == "deprecated" {
+				out = append(out, fmt.Sprintf("%s: warning: %s is deprecated and still anchored here; strip it before the entry is deleted", a.Pos(), id))
+			}
+		}
+	}
+	for _, e := range t.Record.Entries {
+		if e.Status != "planned" || len(e.Scenarios) == 0 {
+			continue
+		}
+		all := true
+		for _, sc := range e.Scenarios {
+			all = all && cited[e.ID][sc.Handle]
+		}
+		if all {
+			out = append(out, fmt.Sprintf("%s: warning: %s is planned and each of its scenarios is verified; set it active", e.Pos(), e.ID))
+		}
+	}
+	sort.Strings(out)
+	for _, d := range t.Docs {
+		out = append(out, docs.Stale(d, docs.Hashes(d, t.Record, t.Code))...)
+	}
+	return out
+}

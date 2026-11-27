@@ -50,7 +50,7 @@ func TestEveryVerbWorksOnTheCharterFoundAbove(t *testing.T) {
 		t.Fatal(err)
 	}
 	var out, errOut bytes.Buffer
-	for _, args := range [][]string{{"gen"}, {"check"}, {"lint"}, {"next", "SW"}, {"anchors", "SW-010"}, {"questions"}, {"export"}} {
+	for _, args := range [][]string{{"gen"}, {"check"}, {"next", "SW"}, {"anchors", "SW-010"}, {"questions"}} {
 		out.Reset()
 		if code := run(args, deep, &out, &errOut); code != 0 {
 			t.Errorf("charter %v from %s: exit %d, %s%s", args, deep, code, out.String(), errOut.String())
@@ -154,44 +154,6 @@ func TestAnchorsListsTheCodeAndTheTestsOfAnEntry(t *testing.T) {
 	}
 }
 
-func TestExportGivesEveryPartOfTheRecord(t *testing.T) {
-	claims.Verifies(t, claims.CH_040, "registry-lists-everything")
-	root := goCharter(t)
-	var out, errOut bytes.Buffer
-	run([]string{"gen"}, root, &out, &errOut)
-	out.Reset()
-	run([]string{"export"}, root, &out, &errOut)
-	var got struct {
-		Areas []struct {
-			File, Title, Summary string
-			Code                 []string
-		}
-		Waivers []struct{ Pattern, Reason string }
-		Entries []struct {
-			ID        string
-			Scenarios []struct{ Handle, Provenance string }
-			Anchors   []struct{ File string }
-			Refs      []struct {
-				Func    string
-				Handles []string
-			}
-		}
-	}
-	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
-		t.Fatalf("%v\n%s", err, out.String())
-	}
-	if len(got.Areas) != 1 || got.Areas[0].Title != "Refill" || got.Areas[0].Code[0] != "pkg/a" || got.Areas[0].Summary != "How the bucket refills." {
-		t.Errorf("areas = %+v", got.Areas)
-	}
-	if len(got.Waivers) != 1 || got.Waivers[0].Reason != "idle on purpose" {
-		t.Errorf("waivers = %+v", got.Waivers)
-	}
-	e := got.Entries[0]
-	if e.ID != "SW-010" || e.Scenarios[0].Handle != "refills" || e.Scenarios[0].Provenance != "owner, #1" || len(e.Anchors) != 1 || len(e.Refs) != 1 || e.Refs[0].Func != "TestRefill" || e.Refs[0].Handles[0] != "refills" {
-		t.Errorf("entry = %+v", e)
-	}
-}
-
 // writeTree writes files under a fresh root.
 func writeTree(t *testing.T, files map[string]string) string {
 	t.Helper()
@@ -212,40 +174,18 @@ const sharedArea = "# Refill\n\nHow the bucket refills.\n\n## SW-010 The bucket 
 
 const sharedNeeds = "# Needs\n\n## SW-001 A caller that waits is let through\nStatus: planned\n\nIt is let through.\n\nWhy: waiting should not be punished.\n"
 
-// exportedAll is every entry export gives, without where it was read.
-func exportedAll(t *testing.T, root string) []map[string]any {
+// anchored is what charter anchors gives for the ids.
+func anchored(t *testing.T, root string, ids ...string) map[string]map[string]any {
 	t.Helper()
 	var out, errOut bytes.Buffer
-	if code := run([]string{"export"}, root, &out, &errOut); code != 0 {
-		t.Fatalf("export in %s: exit %d %s", root, code, errOut.String())
+	if code := run(append([]string{"anchors"}, ids...), root, &out, &errOut); code != 0 {
+		t.Fatalf("anchors in %s: exit %d %s", root, code, errOut.String())
 	}
-	var got struct{ Entries []map[string]any }
+	var got map[string]map[string]any
 	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	for _, e := range got.Entries {
-		for _, k := range []string{"refs", "anchors", "pos", "file"} {
-			delete(e, k)
-		}
-	}
-	return got.Entries
-}
-
-func exported(t *testing.T, root string) map[string]any {
-	t.Helper()
-	var out, errOut bytes.Buffer
-	if code := run([]string{"export"}, root, &out, &errOut); code != 0 {
-		t.Fatalf("export in %s: exit %d %s", root, code, errOut.String())
-	}
-	var got struct{ Entries []map[string]any }
-	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
-		t.Fatal(err)
-	}
-	e := got.Entries[0]
-	for _, k := range []string{"refs", "anchors", "pos", "file"} {
-		delete(e, k)
-	}
-	return e
+	return got
 }
 
 func TestOneRecordReadsAlikeInAnyLayout(t *testing.T) {
@@ -262,9 +202,9 @@ func TestOneRecordReadsAlikeInAnyLayout(t *testing.T) {
 		"claims/needs.md":     sharedNeeds,
 		"tool/slug.py":        "x = 1\n",
 	})
-	a, b := exportedAll(t, goRoot), exportedAll(t, pyRoot)
-	if len(a) != 2 {
-		t.Fatalf("want a need and a decision, got %d entries", len(a))
+	a, b := anchored(t, goRoot, "SW-001", "SW-010"), anchored(t, pyRoot, "SW-001", "SW-010")
+	if len(a) != 2 || a["SW-010"]["title"] != "The bucket refills" {
+		t.Fatalf("want a need and a decision, got %v", a)
 	}
 	ja, _ := json.Marshal(a)
 	jb, _ := json.Marshal(b)
@@ -291,9 +231,9 @@ func TestAChangedEntryKeepsItsIdAndItsHistory(t *testing.T) {
 	if code := run([]string{"diff", "HEAD"}, root, &out, &errOut); code != 0 {
 		t.Errorf("a recorded change: diff exit %d\n%s%s", code, out.String(), errOut.String())
 	}
-	e := exported(t, root)
+	e := anchored(t, root, "SW-010")["SW-010"]
 	changes, _ := e["changes"].([]any)
-	if e["id"] != "SW-010" || len(changes) != 1 || changes[0].(map[string]any)["date"] != "2026-11-26" {
+	if len(changes) != 1 || changes[0].(map[string]any)["Date"] != "2026-11-26" {
 		t.Errorf("after the change: %v", e)
 	}
 }
@@ -369,5 +309,35 @@ func TestReportFailsOnAScenarioThatDidNotPass(t *testing.T) {
 	out.Reset()
 	if code := run([]string{"report", "-md"}, root, &out, &errOut); code != 1 || !strings.Contains(out.String(), "SW-010/refills") {
 		t.Errorf("a skipped scenario: exit %d\n%s%s", code, out.String(), errOut.String())
+	}
+}
+
+func TestCheckWarnsWithoutFailing(t *testing.T) {
+	claims.Verifies(t, claims.CH_261127_QRQS, "planned-fully-tested", "deprecated-still-in-code", "warnings-never-fail")
+	root := writeTree(t, map[string]string{
+		"go.mod":              "module example.com/fx\n\ngo 1.21\n\nrequire example.com/fx/claims v0.0.0\n\nreplace example.com/fx/claims => ./claims\n",
+		"claims/charter.toml": "name = \"fx\"\n\n[go]\nmodule = \"example.com/fx/claims\"\ndir = \".\"\ntest = \"go test ./...\"\n",
+		"claims/refill.md": "# Refill\nCode: pkg/a\n\nHow the bucket refills.\n\n" +
+			"## SW-011 A planned rule\nStatus: planned\n\nLater.\n\nWhy: someone needs it.\n\nScenarios:\n1. `later`: later.\n\n" +
+			"## SW-012 A retired rule\nStatus: deprecated\n\nGone.\n\nWhy: it was.\n\nChanges:\n- 2026-11-01: retired.\n",
+		"pkg/a/a.go":      "package a\n\n// Old is retired.\n//\n//charter:realizes SW-012\nfunc Old() {}\n",
+		"pkg/a/a_test.go": "package a\n\nimport (\n\t\"testing\"\n\n\t\"example.com/fx/claims\"\n)\n\nfunc TestLater(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_011, \"later\")\n}\n\nfunc TestOld(t *testing.T) {\n\tclaims.Verifies(t, claims.SW_012)\n}\n",
+	})
+	var out, errOut bytes.Buffer
+	if code := run([]string{"gen"}, root, &out, &errOut); code != 0 {
+		t.Fatalf("gen: %s", errOut.String())
+	}
+	code := run([]string{"check"}, root, &out, &errOut)
+	if code != 0 || out.Len() != 0 {
+		t.Errorf("warnings alone: exit %d, standard output %q", code, out.String())
+	}
+	for _, want := range []string{
+		"claims/refill.md:6: warning: SW-011 is planned and each of its scenarios is verified; set it active",
+		"pkg/a/a.go:5: warning: SW-012 is deprecated and still anchored here",
+		"pkg/a/a_test.go:14: warning: SW-012 is deprecated and still verified here",
+	} {
+		if !strings.Contains(errOut.String(), want) {
+			t.Errorf("want %s in\n%s", want, errOut.String())
+		}
 	}
 }

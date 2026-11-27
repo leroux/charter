@@ -20,12 +20,11 @@ nested anywhere, Python and TypeScript beside them.
 
 | Path | What it is |
 |---|---|
-| `cmd/charter` | The one command: `check`, `gen`, `lint`, `next`, `anchors`, `questions`, `report`, `diff`, `export`, `curate` |
+| `cmd/charter` | The one command: `check`, `gen`, `next`, `anchors`, `questions`, `report`, `diff`, `curate` |
 | `internal/` | What it is made of: a core that names no language, and `lang/{golang,python,typescript}` |
 | `claims/` | The charter's own charter: the tooling specified by the method it implements |
 | `example/` | **ratelimit**, a Go adopter kept as a real one would be |
 | `example-polyglot/` | **slugs**, a nested Go module and Python beside it, with no go.mod at its root |
-| `claims-viewer/` | A web viewer of an exported charter |
 | `.claude/skills/claims-*` | The agent skills of the loop: draft, implement, review, audit, probe |
 | `backlog/` | The work toward a standalone method |
 
@@ -74,9 +73,11 @@ a binary, and the files it generates are self-contained.
    "handle")`, `claims.verifies(self, claims.SW_…, "handle")` in unittest
    or `verifies(None, …)` in pytest, `verifies(claims.SW_…, "handle")` in
    vitest.
-6. `charter check` is the gate. `charter lint`, `report -md` and `diff
-   origin/main` do the rest of the loop; `report` runs each language's test
-   command and reads each citation's outcome from the events file.
+6. `charter check` is the gate; it also warns, without failing, of a
+   planned entry already fully tested, a deprecated one still in the code,
+   and a doc to read again. `report -md` and `diff origin/main` do the
+   rest of the loop; `report` runs each language's test command and reads
+   each citation's outcome from the events file.
 7. Docs tell the story the record does not: a walkthrough, a design, a
    guide (`example/docs/walkthrough.md`). A link whose text opens with an
    id references an entry, ``[`Limiter.Allow`](../limiter/limiter.go)``
@@ -84,15 +85,14 @@ a binary, and the files it generates are self-contained.
    closing comment embeds an entry; the gate fails one that does not
    resolve, and `charter gen` keeps titles, line anchors and embeds
    current. An agent drafts a doc (`claims-narrate`), a person reads it
-   and runs `charter curate FILE`, and lint names it again when anything
-   it references has changed since.
+   and runs `charter curate FILE`, and check warns of it again when
+   anything it references has changed since.
 
 ## Working on the charter
 
 ```sh
 pnpm install          # the TypeScript compiler and vitest the tests use
-make check            # the Go tests and the charter's own gate, the examples, the viewer
-go run ./cmd/charter lint
+make check            # the Go tests, the charter's own gate and the examples'
 go run ./cmd/charter report -md
 ```
 

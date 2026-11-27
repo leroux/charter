@@ -1,6 +1,0 @@
-{
-  "name": "coreutils",
-  "description": "A greenfield Go clone of GNU cut, sort, uniq and wc, grown flag by flag; scored by differential testing against GNU coreutils 9.4 with LC_ALL=C.",
-  "language": "go",
-  "conditions": ["A", "B", "C", "D", "E"]
-}

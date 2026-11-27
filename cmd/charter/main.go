@@ -6,7 +6,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -23,23 +22,19 @@ import (
 	"github.com/leroux/charter/internal/config"
 	"github.com/leroux/charter/internal/diff"
 	"github.com/leroux/charter/internal/docs"
-	"github.com/leroux/charter/internal/export"
-	"github.com/leroux/charter/internal/lint"
 	"github.com/leroux/charter/internal/record"
 	"github.com/leroux/charter/internal/report"
 )
 
 const usage = `usage: charter <verb> [arguments]
 
-  check               run the gate; print every problem and exit 1 on any
+  check               run the gate; print every problem and exit 1 on any, warnings on stderr
   gen                 write the generated files and the digest from the record
-  lint [-style]       the gate's problems, then advice; -style lists the style findings
   next PREFIX [N]     print N new ids with the prefix
   anchors ID...       an entry's code, tests and relations, as JSON
   questions [-all]    the open questions; -all the answered ones too
   report [-md]        run every language's tests and say which scenarios passed
   diff REV            name what the record changed since REV with no Changes line
-  export [-o FILE]    the charter as one JSON file for the viewer
   curate [-by NAME] FILE...
                       record that a person read each doc, with a hash of what it references
 `
@@ -81,18 +76,6 @@ func run(args []string, dir string, stdout, stderr io.Writer) int {
 			return fail(err)
 		}
 		return 0
-	case "lint":
-		fs := flag.NewFlagSet("lint", flag.ContinueOnError)
-		fs.SetOutput(stderr)
-		style := fs.Bool("style", false, "list every style finding at its line")
-		if err := fs.Parse(rest); err != nil {
-			return 2
-		}
-		out, err := lint.Lint(c, *style)
-		if err != nil {
-			return fail(err)
-		}
-		return lines(out, true)
 	case "next":
 		prefix, count, err := nextArgs(rest)
 		if err != nil {
@@ -167,50 +150,27 @@ func run(args []string, dir string, stdout, stderr io.Writer) int {
 		return status
 	case "curate":
 		return curate(c, rest, stdout, stderr)
-	case "export":
-		fs := flag.NewFlagSet("export", flag.ContinueOnError)
-		fs.SetOutput(stderr)
-		out := fs.String("o", "-", "the file to write, or - for standard output")
-		if err := fs.Parse(rest); err != nil {
-			return 2
-		}
-		t, problems, err := check.Run(c)
-		if err != nil {
-			return fail(err)
-		}
-		for _, p := range problems {
-			fmt.Fprintf(stderr, "charter export: warning: %s\n", p)
-		}
-		var buf bytes.Buffer
-		if err := export.Write(&buf, t, problems, source(c.Root), c.Root); err != nil {
-			return fail(err)
-		}
-		if *out == "-" {
-			_, err = stdout.Write(buf.Bytes())
-		} else {
-			err = os.WriteFile(*out, buf.Bytes(), 0o644)
-		}
-		if err != nil {
-			return fail(err)
-		}
-		return 0
 	}
 	fmt.Fprintf(stderr, "charter: unknown verb %q\n%s", verb, usage)
 	return 2
 }
 
 // runCheck prints each problem on a line of its own, sorted, and exits 1
-// when it prints any; on a clean tree it prints nothing.
+// when it prints any; on a clean tree it prints nothing. Its warnings go
+// to standard error and never change its exit.
 //
-//charter:realizes CH-037
+//charter:realizes CH-037, CH-261127-QRQS
 func runCheck(c *config.Config, stdout, stderr io.Writer) int {
-	problems, err := check.Problems(c)
+	t, problems, err := check.Run(c)
 	if err != nil {
 		fmt.Fprintf(stderr, "charter check: %v\n", err)
 		return 2
 	}
 	for _, p := range problems {
 		fmt.Fprintln(stdout, p)
+	}
+	for _, w := range check.Warnings(t) {
+		fmt.Fprintln(stderr, w)
 	}
 	if len(problems) > 0 {
 		return 1
@@ -234,7 +194,8 @@ func nextArgs(args []string) (prefix string, count int, err error) {
 
 // anchors prints, per id, the entry's document, title, status, kind and
 // scenarios, the code that realizes or concerns it with the declarations,
-// the tests that verify it with the handles each names, and its relations.
+// the tests that verify it with the handles each names, its relations, the
+// docs that mention it and its changes.
 //
 //charter:realizes CH-040
 func anchors(c *config.Config, ids []string, stdout, stderr io.Writer) int {
@@ -262,6 +223,7 @@ func anchors(c *config.Config, ids []string, stdout, stderr io.Writer) int {
 		Serves    []string          `json:"serves"`
 		See       []string          `json:"see"`
 		Docs      []docSite         `json:"docs"`
+		Changes   []record.Change   `json:"changes"`
 	}
 	out := map[string]*result{}
 	for _, id := range ids {
@@ -271,7 +233,7 @@ func anchors(c *config.Config, ids []string, stdout, stderr io.Writer) int {
 			return 2
 		}
 		r := &result{File: e.File, Title: e.Title, Status: e.Status, Kind: e.Kind, Scenarios: e.Scenarios,
-			Realizes: []site{}, Concerns: []site{}, Verifies: []site{}, Serves: e.Serves, See: e.See, Docs: docMentions(t, id)}
+			Realizes: []site{}, Concerns: []site{}, Verifies: []site{}, Serves: e.Serves, See: e.See, Docs: docMentions(t, id), Changes: e.Changes}
 		for _, a := range t.Facts.Anchors {
 			for _, aid := range a.IDs {
 				if aid != id {

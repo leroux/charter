@@ -170,7 +170,11 @@ func compare(prev, cur map[string]*record.Entry, order []string, rev string) []s
 		p := prev[id]
 		c := cur[id]
 		if c == nil {
-			note(p, "%s, in %s at %s, is gone; an entry is deprecated, never deleted", p.ID, p.File, rev)
+			// An entry is deprecated first, its code and tests stripped,
+			// and deleted in a later change.
+			if p.Status != "deprecated" {
+				note(p, "%s, in %s at %s, is gone; an entry is deprecated first and deleted in a later change", p.ID, p.File, rev)
+			}
 			continue
 		}
 		recorded := hasNewChange(p, c)

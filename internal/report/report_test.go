@@ -22,7 +22,7 @@ const area = "# Refill\n\n" +
 func build(t *testing.T, extra map[string]string) *config.Config {
 	t.Helper()
 	root := t.TempDir()
-	vitest := filepath.Join(repo, "claims-viewer", "node_modules", ".bin", "vitest")
+	vitest := filepath.Join(repo, "node_modules", ".bin", "vitest")
 	files := map[string]string{
 		"go.mod": "module example.com/fx\n\ngo 1.21\n\nrequire example.com/fx/claims v0.0.0\n\nreplace example.com/fx/claims => ./claims\n",
 		"claims/charter.toml": "name = \"fx\"\n\n[go]\nmodule = \"example.com/fx/claims\"\ndir = \".\"\ntest = \"GOFLAGS=-mod=mod GOWORK=off go test -count=1 ./...\"\n\n" +

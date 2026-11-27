@@ -7,43 +7,6 @@ what the gate fails a tree on once the record, the anchors and the
 citations are read: coverage, the surfaces, the environment, the facts the
 entries rest on, the walk and the gate's own report.
 
-## CH-004 No surface exists that an entry does not own, and the baseline only shrinks
-
-Status: deprecated
-Serves: CH-261126-P2SK
-
-Every environment variable the tree reads, and every surface of a kind
-the charter declares, is named by an entry's Accounts, or listed with a reason
-in a baseline that predates the charter. The gate fails a surface neither
-names, a baseline line whose surface is gone or now accounted for, and a
-read of an environment variable that goes through anything but a named
-constant.
-
-Why: the surfaces are the operator's contract with the system. A variable
-nobody claims is a promise nobody keeps.
-
-Scenarios:
-1. `unaccounted-surface-fails` (owner, backlog 003): a key of a declared
-   kind that no entry accounts for and the baseline does not list fails
-   naming it.
-2. `baseline-holds-only-live-gaps`: a baseline line for a surface that is
-   gone, or that an entry now accounts for, fails naming the entry.
-3. `env-read-through-a-constant` (owner, backlog 003): an environment read
-   in Go, Python or TypeScript whose argument is a string literal, or a
-   variable, fails naming the constant to use.
-
-Changes:
-- 2026-11-26: environment variables are the one built-in kind, read in Go,
-  Python and TypeScript; build tags, contract operations and event kinds
-  become kinds a charter declares, like any other (backlog 003).
-- 2026-11-26: a decision serving CH-261126-P2SK, where it was a need of
-  its own, the needs being re-cut one a problem: every surface owned by an
-  entry is part of holding the code to the record, a rule of the gate and
-  not a promise to one person (backlog 004).
-- 2026-11-26: deprecated: each of its scenarios restated one that CH-033
-  and CH-034 rule, and the promise above them is CH-261126-P2SK's; its
-  children serve CH-261126-P2SK in its place (backlog 004).
-
 ## CH-030 An active decision is anchored and each scenario cited; a waiver absorbs a missing test, never a missing anchor
 
 Status: active
@@ -82,8 +45,6 @@ Scenarios:
 Changes:
 - 2026-10-09: a glob waiver, which absorbed every scenario of an entry at
   once, is refused.
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-10-09: that a concerns anchor realizes nothing moved to CH-022,
   the concerns directive being its subject: not-realized was tested with
   a decision anchored by concerns alone, as CH-022's
@@ -197,8 +158,6 @@ Scenarios:
 
 Changes:
 - 2026-10-09: a deprecated entry's Accounts counted; they own nothing now.
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-11-26: environment variables are the one built-in kind, in every
   language; build tags, OpenAPI operations and event kinds are kinds an
   adopter declares (CH-261126-NTRR), and the scenarios name the declared
@@ -280,41 +239,6 @@ Changes:
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-004: CH-004 is
   deprecated and the need above it is served directly (backlog 004).
 
-## CH-005 An external system's fact is recorded with its source and date, and no active entry rests on one found false
-
-Status: deprecated
-Serves: CH-261126-P2SK
-
-An observation records a fact about a system the code does not own, with
-its subject, where it was read or when a probe last saw it true, and the
-entries that rest on it. Probes check observations and nothing else; tests
-cite entries and never observations. A broken observation under an active
-entry fails the gate.
-
-Why: a decision that rests on a vendor's behaviour is only as good as the
-fact; recording the fact apart from the decision says what to re-check
-when the vendor changes.
-
-Scenarios:
-1. `observed-fact-has-a-date-and-a-probe`: an observed observation without
-   a calendar date, or cited by no probe, fails.
-2. `broken-fact-under-active-fails`: a broken observation supporting an
-   active entry fails, and one supporting a planned or deprecated entry
-   does not.
-3. `probes-and-tests-stay-apart`: a test file referencing an observation,
-   and a probe referencing an entry, each fail.
-
-Changes:
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
-- 2026-11-26: a decision serving CH-261126-P2SK, where it was a need of
-  its own, the needs being re-cut one a problem: a fact an entry rests on,
-  checked by a probe, is part of holding the code to the record, a rule of
-  the gate and not a promise to one person (backlog 004).
-- 2026-11-26: deprecated: each of its scenarios restated one that CH-032
-  and CH-035 rule, and the promise above them is CH-261126-P2SK's; its
-  children serve CH-261126-P2SK in its place (backlog 004).
-
 ## CH-035 Observations carry their status's fields, observed ones a date and a probe; one broken under an active entry fails
 
 Status: active
@@ -339,8 +263,6 @@ Scenarios:
    fails, and under a planned or deprecated one does not.
 
 Changes:
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
   deprecated and the need above it is served directly (backlog 004).
 
@@ -404,47 +326,33 @@ Scenarios:
    tree with a problem, and zero with no output on the clean fixture.
 
 Changes:
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-11-26: charter check prints the problems and sets its exit status,
   where Check reported them as test errors; how the root is found and the
   configuration checked moved to CH-261126-33GK, `root-resolved` and
   `typescript-options-validated` with them, and `exit-status` is added
   (backlog 003).
 
-## CH-261126-GFR7 A contract scenario is verified by a portable fixture, run against whichever implementation charter.toml names
+## CH-261127-QRQS charter check warns, without failing, of a planned entry fully tested, a deprecated one still in the code, and a doc to read again
 
-Status: deprecated
-Serves: CH-261126-P2SK
-See: CH-261126-PZ8Z, CH-042
+Status: active
+Serves: CH-001
+See: CH-037, CH-261127-GXP7
 
-A fixture is a txtar file under claims/fixtures, opening with the
-scenarios it verifies, "verifies: CH-030/scenario-unverified", then the
-files of the tree to run in, a "-- cmd --" section holding one command
-line, and the expected "-- stdout --", "-- stderr --" and "-- exit --".
-charter conform builds each fixture's tree in an empty directory, runs its
-command against the implementation the [contract] table's run key names,
-and compares what came back, byte for byte after the tree's path is
-replaced by a placeholder. The gate counts a fixture as a citation of each
-scenario it names, and the report joins its outcome as it joins a test's.
-A fixture's file names no language and no implementation.
+After its problems, charter check writes a warning a line to standard
+error, each with its file and line: a planned entry each of whose
+scenarios a test cites, to set active; a deprecated entry still anchored
+or cited, with each site, to strip before it is deleted; and each doc
+CH-261127-GXP7 names drafted or stale. Warnings never change its exit
+status, and with none it writes nothing there.
 
-Why: a test written in the implementation's language cannot be run against
-a rewrite in another, so a contract checked only by such tests binds
-nothing but the code it was written for; a fixture is input and output at
-the edge, and runs against any implementation that keeps the contract.
+Why: each is a step the loop has not taken yet, worth seeing on every run
+and wrong to block a merge on; kept apart from the problems on standard
+error, they leave the gate's own output and exit as they were.
 
 Scenarios:
-1. `fixture-read` (agent, provisional): a fixture yields the scenarios it
-   verifies, its tree, its command and its expected output and exit.
-2. `fixture-cites` (agent, provisional): a scenario a fixture names is
-   cited, and a fixture naming a handle its entry lacks fails naming both.
-3. `conform-runs-any-implementation` (agent, provisional): charter conform
-   runs every fixture against the binary the run key names and says per
-   scenario passed or failed, with the difference.
-4. `path-placeholder` (agent, provisional): output holding the temporary
-   tree's path matches a fixture that writes the placeholder in its place.
-
-Changes:
-- 2026-11-26: deprecated before it was built: held as an idea for later in
-  backlog 006, the foundations coming first (owner, backlog 006).
+1. `planned-fully-tested` (owner, backlog 008): a planned entry with
+   every scenario cited is warned of, to set active.
+2. `deprecated-still-in-code` (owner, backlog 008): a deprecated entry
+   with an anchor and a citation is warned of at each.
+3. `warnings-never-fail` (owner, backlog 008): a tree whose only findings
+   are warnings passes, writing nothing to standard output.

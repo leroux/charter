@@ -7,7 +7,7 @@ The charter tooling and method, specified by its own charter. Start with
 
 - `cmd/charter`: the one command; `internal/`: everything it is made of,
   importable by nothing outside. The core (`record`, `facts`, `gate`,
-  `check`, `report`, `digest`, `lint`, `diff`, `export`) names no language;
+  `check`, `report`, `digest`, `diff`, `docs`) names no language;
   `internal/lang/{golang,python,typescript}` are the readers, generators and
   markers.
 - `claims/`: the charter's own charter, the `CH` entries, with
@@ -21,7 +21,9 @@ The charter tooling and method, specified by its own charter. Start with
 ## The loop, here
 
 - A change to the tooling is a change to an entry in `claims/`: its text,
-  a scenario, and a dated, append-only `Changes:` line. `go run
+  a scenario, and a dated `Changes:` line saying what changed in the
+  ruling and why, in about three lines; how a review found it belongs in
+  the pull request. `go run
   ./cmd/charter diff origin/main` names a change the record does not say.
 - Ids come from `go run ./cmd/charter next CH` (in an example, the built
   `build/charter next SW` from its directory). Never write one by hand,
@@ -36,8 +38,8 @@ The charter tooling and method, specified by its own charter. Start with
   `charter next Q`), and the scenario it produced is `(agent,
   provisional)` until the owner answers.
 - `make check` before pushing: the Go tests with the charter's own gate
-  and the examples', the examples' lint and report, the viewer. It needs
-  `pnpm install` for the TypeScript compiler and vitest.
+  and the examples', and the examples' reports. It needs `pnpm install`
+  for the TypeScript compiler and vitest.
 
 The skills in `.claude/skills/claims-*` run the loop with the `charter`
 command and read the layout from `charter.toml`; CH-261126-5JMD (planned)

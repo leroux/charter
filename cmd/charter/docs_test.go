@@ -61,13 +61,14 @@ func checked(t *testing.T, root string) (string, int) {
 	return out.String(), code
 }
 
-func linted(t *testing.T, root string) string {
+// warned is what charter check writes to standard error: its warnings.
+func warned(t *testing.T, root string) string {
 	t.Helper()
 	var out, errOut bytes.Buffer
-	if code := run([]string{"lint"}, root, &out, &errOut); code == 2 {
-		t.Fatalf("lint: %s", errOut.String())
+	if code := run([]string{"check"}, root, &out, &errOut); code == 2 {
+		t.Fatalf("check: %s", errOut.String())
 	}
-	return out.String()
+	return errOut.String()
 }
 
 func readFile(t *testing.T, root, rel string) string {
@@ -307,7 +308,7 @@ func TestCurateRefusesADocWithABrokenReference(t *testing.T) {
 func TestLintNamesADocWhoseReferencesChanged(t *testing.T) {
 	claims.Verifies(t, claims.CH_261127_GXP7, "stale-on-entry-change", "changes-line-not-stale", "stale-on-go-change", "stale-on-python-change", "stale-on-typescript-change", "drafted-named", "stale-never-fails")
 	root := docsCharter(t, tour)
-	if out := linted(t, root); !strings.Contains(out, "docs/tour.md:1: lint: the doc is drafted") {
+	if out := warned(t, root); !strings.Contains(out, "docs/tour.md:1: warning: the doc is drafted") {
 		t.Errorf("an uncurated doc is not named drafted:\n%s", out)
 	}
 	if out, code := checked(t, root); code != 0 {
@@ -316,25 +317,25 @@ func TestLintNamesADocWhoseReferencesChanged(t *testing.T) {
 	if out, code := curated(t, root); code != 0 {
 		t.Fatalf("curate: %s", out)
 	}
-	if out := linted(t, root); strings.Contains(out, "docs/tour.md") {
+	if out := warned(t, root); strings.Contains(out, "docs/tour.md") {
 		t.Errorf("a doc curated a moment ago is named:\n%s", out)
 	}
 	// A Changes line alone, and whitespace, change nothing a doc rests on.
 	edit(t, root, "claims/refill.md", "1. `refills`: it refills.\n", "1. `refills`: it refills.\n\nChanges:\n- 2026-11-27: noted.\n")
 	edit(t, root, "pkg/a/a.go", "func Refill() {}", "func Refill()   {}")
-	if out := linted(t, root); strings.Contains(out, "docs/tour.md") {
+	if out := warned(t, root); strings.Contains(out, "docs/tour.md") {
 		t.Errorf("a Changes line or whitespace made the doc stale:\n%s", out)
 	}
 	edit(t, root, "claims/refill.md", "It refills at the rate.", "It refills at twice the rate.")
 	edit(t, root, "pkg/a/a.go", "func Refill()   {}", "func Refill() { println() }")
 	edit(t, root, "py/acme/run.py", "return 1", "return 2")
 	edit(t, root, "web/main.ts", "return n - 1;", "return n - 2;")
-	out := linted(t, root)
+	out := warned(t, root)
 	for _, want := range []string{
-		"docs/tour.md:3: lint: the doc is stale: SW-010 changed since it was curated",
-		"docs/tour.md:3: lint: the doc is stale: pkg/a/a.go#Refill changed since it was curated",
-		"docs/tour.md:4: lint: the doc is stale: py/acme/run.py#Meter.tick changed since it was curated",
-		"docs/tour.md:4: lint: the doc is stale: web/main.ts#spend changed since it was curated",
+		"docs/tour.md:3: warning: the doc is stale: SW-010 changed since it was curated",
+		"docs/tour.md:3: warning: the doc is stale: pkg/a/a.go#Refill changed since it was curated",
+		"docs/tour.md:4: warning: the doc is stale: py/acme/run.py#Meter.tick changed since it was curated",
+		"docs/tour.md:4: warning: the doc is stale: web/main.ts#spend changed since it was curated",
 	} {
 		if !strings.Contains(out, want) {
 			t.Errorf("want\n  %s\ngot\n%s", want, out)
@@ -346,7 +347,7 @@ func TestLintNamesADocWhoseReferencesChanged(t *testing.T) {
 }
 
 func TestBacklinksAreReadFromTheDocs(t *testing.T) {
-	claims.Verifies(t, claims.CH_261127_8MYR, "anchors-lists-docs", "export-carries-docs")
+	claims.Verifies(t, claims.CH_261127_8MYR, "anchors-lists-docs")
 	root := docsCharter(t, "# Tour\n\nOne\n[SW-010](x).\n")
 	writeFile(t, root, "docs/more.md", "# More\n\n<!-- charter:embed SW-010 -->\n<!-- /charter:embed -->\n")
 	var out, errOut bytes.Buffer
@@ -365,30 +366,6 @@ func TestBacklinksAreReadFromTheDocs(t *testing.T) {
 	ds := got["SW-010"].Docs
 	if len(ds) != 2 || ds[0].File != "docs/more.md" || ds[0].Line != 3 || ds[1].File != "docs/tour.md" || ds[1].Line != 4 {
 		t.Errorf("anchors gives the docs %+v", ds)
-	}
-	out.Reset()
-	if code := run([]string{"export"}, root, &out, &errOut); code != 0 {
-		t.Fatalf("export: %s", errOut.String())
-	}
-	var ex struct {
-		Entries []struct {
-			ID   string
-			Docs []struct {
-				File string
-				Line int
-			}
-		}
-	}
-	if err := json.Unmarshal(out.Bytes(), &ex); err != nil {
-		t.Fatal(err)
-	}
-	for _, e := range ex.Entries {
-		if e.ID == "SW-010" && len(e.Docs) != 2 {
-			t.Errorf("export carries %+v for SW-010", e.Docs)
-		}
-		if e.ID == "SW-011" && len(e.Docs) != 0 {
-			t.Errorf("export carries %+v for SW-011, which no doc mentions", e.Docs)
-		}
 	}
 }
 

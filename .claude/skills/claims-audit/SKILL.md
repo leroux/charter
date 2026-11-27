@@ -1,6 +1,6 @@
 ---
 name: claims-audit
-description: The audit. Read the whole record, or the part of it that changed since the last audit, against its tests and its code in a context that did not write it, and report what has drifted: a scenario sentence that claims more or less than its test checks, a text that names a boundary the code lacks, a clause no scenario tests, a clause two entries state, and the style the reader stumbles on. Writes claims/audit.md and files questions; changes nothing else. Runs by hand, and monthly in CI. Done when the correctness findings are none and lint prints only the line counting the open questions.
+description: The audit. Read the whole record, or the part of it that changed since the last audit, against its tests and its code in a context that did not write it, and report what has drifted: a scenario sentence that claims more or less than its test checks, a text that names a boundary the code lacks, a clause no scenario tests, a clause two entries state, a doc that says what its code does not, and the style the reader stumbles on. Writes claims/audit.md and files questions; changes nothing else. Runs by hand, and monthly in CI. Done when the correctness findings are none and charter check passes.
 ---
 
 # The audit
@@ -28,18 +28,13 @@ finds is built from a story, under `claims-implement`.
 
 ## Step 1: the mechanical checks
 
-Run the gate and lint first; their lines are the audit's first findings
-and cost no reader:
+Run the gate first; its problems and its warnings are the audit's first
+findings and cost no reader:
 
     charter check
-    charter lint
 
-Lint names the retired words (`claims/retired.txt`), the titles over
-twenty words, the texts over six sentences, the scenario sentences over
-thirty words, the Whys that only point at a ruling, the tests two
-decisions share, and counts the open questions. Copy its lines into the
-report by kind. A record whose lint prints nothing but the questions
-count has no mechanical finding.
+Copy its lines into the report by kind. A record whose check prints
+nothing, and warns of nothing, has no mechanical finding.
 
 ## Step 2: the readers
 
@@ -61,7 +56,7 @@ the record was written. For each live entry, with `go run
 4. **The clause against the record.** A clause another live entry also
    states (search `claims/DIGEST.md` for its key words) is `TWO-HOMES ID,
    ID: "the clause"`.
-5. **Style lint cannot see.** A Why that gives no reason though it is
+5. **Style.** A Why that gives no reason though it is
    long, a title that is a noun phrase, a text that narrates, a word the
    glossary defines otherwise: `STYLE ID: what`. Order against the
    header: `ORDER DOC: what`.
@@ -70,8 +65,8 @@ the record was written. For each live entry, with `go run
    names, read it with every declaration it references open. A sentence
    that says the code does what it does not is `DOC-OVER-CODE doc:line:
    what`; an embed or a reference whose sentence around it contradicts
-   the entry is `DOC-OVER-RECORD doc:line ID`. A doc lint names drafted
-   or stale is read first.
+   the entry is `DOC-OVER-RECORD doc:line ID`. A doc check warns of as
+   drafted or stale is read first.
 
 A finding a reader cannot point at a file and line is a guess: trace it
 or drop it. Readers report in these forms, most severe first, and the
@@ -101,13 +96,13 @@ ones. Its form:
     ...
 
     ## Style and order
-    The counts by kind, then the lines lint printed and the readers'.
+    The counts by kind, then the warnings check printed and the readers'.
 
     ## Questions filed
     Q-IDs with their entries, or, in CI, the questions as text.
 
-`Done: yes` when the Correctness section is empty and lint printed
-nothing but the line counting the open questions. Style and untested
+`Done: yes` when the Correctness section is empty and charter check
+passes. Style and untested
 clauses do not keep an audit from being done; they are counted, and the
 owner sets a bar in `claims/policy.md` when the counts should fail.
 

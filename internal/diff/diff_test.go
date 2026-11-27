@@ -76,7 +76,7 @@ func TestHistoryNamesWhatTheChangesLinesDoNotSay(t *testing.T) {
 	prev := mapOf(t, base)
 	order := []string{"SW-010"}
 	for _, tc := range []struct{ name, old, repl, want string }{
-		{"removed", base[len("# Refill\nCode: pkg/a\n\n"):], "", "claims/refill.md:4: history: SW-010, in claims/refill.md at base, is gone; an entry is deprecated, never deleted"},
+		{"removed", base[len("# Refill\nCode: pkg/a\n\n"):], "", "claims/refill.md:4: history: SW-010, in claims/refill.md at base, is gone; an entry is deprecated first and deleted in a later change"},
 		{"unbuilt", "Status: active", "Status: planned", "history: SW-010 went from active to planned; a built decision is deprecated with a Changes line, not unbuilt"},
 		{"deprecated without a line", "Status: active", "Status: deprecated", "history: SW-010 was deprecated with no Changes line saying what replaces it"},
 		{"text changed", "At each request", "At every request", "history: SW-010 changed since base (text) with no Changes line saying what and why"},
@@ -106,6 +106,10 @@ func TestHistoryNamesWhatTheChangesLinesDoNotSay(t *testing.T) {
 	}
 	if got := compare(prev, prev, order, "base"); len(got) != 0 {
 		t.Errorf("an unchanged record was named: %q", got)
+	}
+	retired := mapOf(t, strings.Replace(base, "Status: active", "Status: deprecated", 1))
+	if got := compare(retired, map[string]*record.Entry{}, order, "base"); len(got) != 0 {
+		t.Errorf("deleting an entry deprecated at the revision was named: %q", got)
 	}
 
 	// Against a git revision.

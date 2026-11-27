@@ -1,6 +1,6 @@
 ---
 name: claims-narrate
-description: Draft a doc that tells a story over the record and the code, a walkthrough of a flow, an area or a need, with checked references to entries and declarations and embeds of the entries it rests on; or, on a doc lint names stale, propose an edit of what changed. Never writes over a curated doc's prose and never curates: a person reads the draft and runs charter curate. Use when asked to "write a walkthrough of X", "explain how Y works for a newcomer", or "lint says docs/Z.md is stale".
+description: Draft a doc that tells a story over the record and the code, a walkthrough of a flow, an area or a need, with checked references to entries and declarations and embeds of the entries it rests on; or, on a doc charter check warns is stale, propose an edit of what changed. Never writes over a curated doc's prose and never curates: a person reads the draft and runs charter curate. Use when asked to "write a walkthrough of X", "explain how Y works for a newcomer", or "check says docs/Z.md is stale".
 ---
 
 # Narrate
@@ -10,7 +10,7 @@ works, where in the code, and which decisions each step carries. The
 record holds what binds; a doc tells the story that joins it, and its
 prose is free. What the gate checks is its references: a link whose text
 opens with an entry's id, a link whose text is a backticked name and
-whose target is the file declaring it, and an embed. What lint checks is
+whose target is the file declaring it, and an embed. What check warns of is
 whether anything a doc references has changed since a person last read
 it.
 
@@ -43,12 +43,12 @@ curate` and never writes over a curated doc's prose.
    check`: every reference resolves. Read each sentence against the
    declaration it names; one you cannot point at a line for, cut.
 6. **Hand it over.** Present the doc and say it is drafted: `charter
-   lint` names it until a person reads it and runs `charter curate
+   check` warns of it until a person reads it and runs `charter curate
    FILE -by NAME`.
 
 ## Refresh a stale doc
 
-1. `charter lint` names the doc and each reference that changed since it
+1. `charter check` warns of the doc and each reference that changed since it
    was curated; `charter diff REV` names the docs a change touched.
 2. For each changed reference, read what changed (the entry's text and
    its Changes lines; the declaration's diff) and the doc's sentences

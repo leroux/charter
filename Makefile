@@ -1,17 +1,17 @@
-# The charter's build. `make check` is everything CI runs on Go and the viewer.
-.PHONY: check check-go claims examples viewer viewer-dev FORCE
+# The charter's build. `make check` is everything CI runs.
+.PHONY: check check-go claims examples FORCE
 
 NODE_MODULES := node_modules/.modules.yaml
 CHARTER := build/charter
 
-$(NODE_MODULES): pnpm-lock.yaml package.json claims-viewer/package.json
+$(NODE_MODULES): pnpm-lock.yaml package.json
 	pnpm install --frozen-lockfile
 	touch $@
 
 $(CHARTER): FORCE
 	go build -o $@ ./cmd/charter
 
-check: check-go examples viewer
+check: check-go examples
 
 # The tooling's tests, the charter's own gate among them (cmd/charter's
 # adopter tests run the examples' gates too), then the gate as an adopter
@@ -28,18 +28,7 @@ claims: $(CHARTER)
 	cd example && ../$(CHARTER) gen
 	cd example-polyglot && ../$(CHARTER) gen
 
-# The examples, charters of their own: each one's gate, lint and report.
+# The examples, charters of their own: each one's gate and report.
 examples: $(CHARTER)
-	cd example && ../$(CHARTER) check && ../$(CHARTER) lint && ../$(CHARTER) report -md >/dev/null
-	cd example-polyglot && ../$(CHARTER) check && ../$(CHARTER) lint && ../$(CHARTER) report -md >/dev/null
-
-claims-viewer/public/charter.json: $(CHARTER) FORCE
-	mkdir -p claims-viewer/public
-	$(CHARTER) export -o $@
-	printf '%s\n' '[{"data": "charter.json", "label": "charter"}]' > claims-viewer/public/charters.json
-
-viewer: claims-viewer/public/charter.json $(NODE_MODULES)
-	cd claims-viewer && pnpm run typecheck && pnpm test && pnpm run build
-
-viewer-dev: claims-viewer/public/charter.json $(NODE_MODULES)
-	cd claims-viewer && pnpm run dev
+	cd example && ../$(CHARTER) check && ../$(CHARTER) report -md >/dev/null
+	cd example-polyglot && ../$(CHARTER) check && ../$(CHARTER) report -md >/dev/null

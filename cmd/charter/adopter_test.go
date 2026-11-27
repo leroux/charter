@@ -27,11 +27,9 @@ func charter(t *testing.T, dir string, args ...string) (string, int) {
 func TestTheExamplesPassTheirOwnGate(t *testing.T) {
 	claims.Verifies(t, claims.CH_261126_NS7T, "example-gate-passes", "polyglot-example-passes")
 	for _, dir := range examples {
-		if out, code := charter(t, dir, "check"); code != 0 {
+		// Clean: no problem, and no warning either.
+		if out, code := charter(t, dir, "check"); code != 0 || out != "" {
 			t.Errorf("charter check in %s: exit %d\n%s", dir, code, out)
-		}
-		if out, code := charter(t, dir, "lint"); code != 0 {
-			t.Errorf("charter lint in %s: exit %d\n%s", dir, code, out)
 		}
 	}
 }
@@ -113,7 +111,7 @@ func TestTheChartersOwnGateIsGreenOverTheToolingAlone(t *testing.T) {
 	}
 	for _, files := range tree.Files {
 		for _, f := range files {
-			for _, other := range []string{"example/", "example-polyglot/", "bench/", "claims-viewer/"} {
+			for _, other := range []string{"example/", "example-polyglot/"} {
 				if strings.HasPrefix(f, other) {
 					t.Errorf("the charter's own walk read %s, another charter's or no tooling's", f)
 				}

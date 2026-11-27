@@ -60,8 +60,6 @@ Changes:
 - 2026-10-01: a dated id holds two hyphens, each an underscore in its
   symbol, and the generated files follow the order of the ids, numbered
   then dated, where they followed the number (CH-012).
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-10-09: the order the generated files declare the entries in moved
   to CH-012, whose ordered-by-date states it, the order ids sort in being
   its subject: bare-symbol-declared no longer names it and keeps that
@@ -123,8 +121,6 @@ Scenarios:
 Changes:
 - 2026-10-09: a directive outside a declaration's doc comment was read as
   an anchor on nothing; it is refused.
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-11-26: Python is read: a directive on the comment lines directly
   above a def or a class, or its decorators, anchors it, and one anywhere
   else is refused (backlog 003).
@@ -258,8 +254,6 @@ Changes:
 - 2026-10-09: a citation counted wherever it sat in a test, after a skip,
   under a false branch, in a function go test never runs, in a skipped
   TypeScript test or through a verifies the test declared; each is refused.
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-11-26: Python is read: a verifies opening a unittest test_ method
   or a pytest test_ function is a citation, held to the same refusals as
   Go's and TypeScript's (backlog 003).
@@ -335,23 +329,23 @@ Changes:
 - 2026-11-26: serves CH-261126-PFG5, where it served CH-003: CH-003 is
   deprecated and the need above it is served directly (backlog 004).
 
-## CH-040 One charter command generates, checks, lints, gives ids and lists anchors, and an adopter writes no main
+## CH-040 One charter command generates, checks, gives ids and lists anchors, and an adopter writes no main
 
 Status: active
 Serves: CH-002
 See: CH-261126-33GK
 
 charter gen writes the generated files from the documents alone, so it
-works when one is stale or missing. check runs the gate (CH-037), lint
-prints the gate's problems and then the advice, report and diff are
-CH-042's and CH-261009-QQC8's, and export is CH-261015-9ZTY's, curate CH-261127-GXP7's. next prints
-a new id for a prefix, the day's UTC date and a code drawn at random,
+works when one is stale or missing. check runs the gate (CH-037) and
+prints its warnings (CH-261127-QRQS); report and diff are CH-042's and
+CH-261009-QQC8's, and curate is CH-261127-GXP7's. next prints a new id
+for a prefix, the day's UTC date and a code drawn at random,
 drawn again when the tree already holds that id, or as many as the count
 after the prefix asks for, each different. anchors prints, per id, the
 document, the title, the status, the scenarios, the realizing and
 concerning sites with their declarations, the verifying tests with the
-handles each names, the relations and the docs that mention it
-(CH-261127-8MYR). Every verb works on the charter
+handles each names, the relations, the docs that mention it
+(CH-261127-8MYR) and its Changes. Every verb works on the charter
 CH-261126-33GK finds, and an adopter writes or builds nothing of its own
 to run them.
 
@@ -363,16 +357,12 @@ Scenarios:
 1. `gen-from-documents-alone` (owner, backlog 003): charter gen writes
    every generated file when one of them is missing or stale, reading the
    documents alone.
-2. `registry-lists-everything`: the registry gives each entry with
-   scenarios, anchors and citations by handle, each area document in
-   reading order with title, code and summary, and each waiver with its
-   reason.
-3. `next-free`: next gives an id of the prefix, today's UTC date and a
+2. `next-free`: next gives an id of the prefix, today's UTC date and a
    code of the alphabet, for a prefix in use or not, drawing again one the
    tree holds.
-4. `next-count`: next with a count gives that many ids, each different,
+3. `next-count`: next with a count gives that many ids, each different,
    and a count that is not a number above zero is refused.
-5. `verbs-on-the-found-charter` (owner, backlog 003): run inside an
+4. `verbs-on-the-found-charter` (owner, backlog 003): run inside an
    adopter's tree, each verb reads the charter found there, with no
    command of the adopter's own.
 
@@ -385,15 +375,11 @@ Changes:
   as the claims viewer walks a reader through any charter in the order
   it declares and shows a scenario as waived without parsing the files
   again.
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 - 2026-10-09: the next free id is ruled here alone, the next verb's
   behaviour being this entry's subject: CH-012's next-free restated
   next-free and is dropped, its test citing this one, which now says what
   the dropped one did, the UTC date, a prefix in use or not and the
   redraw, and the text says how next draws.
-- 2026-10-09: `registry-lists-everything` reworded under thirty words; the
-  ruling is unchanged.
 - 2026-11-26: the charter became a repository of its own, meant for other repositories (Q-261015-3Q84). The verbs live in the
   cli package, which a repository's own command calls with the charters
   it keeps; the charter flag selects one of those by name, where it chose
@@ -411,6 +397,10 @@ Changes:
   (backlog 003).
 - 2026-11-27: curate is a verb, CH-261127-GXP7's, and anchors lists the
   docs that mention an entry, CH-261127-8MYR's (backlog 007).
+- 2026-11-27: lint and export are gone, the owner ruling the viewer, its
+  export and lint's baggage deleted; check prints the warnings lint kept.
+  `registry-lists-everything` goes with export, which was its one reader,
+  and anchors gives an entry's Changes, which export alone gave.
 
 ## CH-261127-3NY3 A doc is a markdown file charter.toml names; it declares no entry, and its references to entries must resolve
 
@@ -491,13 +481,18 @@ Scenarios:
 3. `typescript-symbol-resolves` (owner, backlog 007): a reference to a
    TypeScript file naming a function it exports passes, and a name it
    lacks fails.
-4. `method-by-type` (agent, provisional): a name qualified by a type
+4. `method-by-type` (owner, Q-261127-BVQX): a name qualified by a type
    resolves to that type's method, and to nothing when the type has no
    such method.
 5. `plain-file-exists` (owner, backlog 007): a reference to a file no
    language reads passes when the file exists, and a missing target fails.
 6. `prose-link-unread` (owner, backlog 007): a link whose text is not in
    backticks is not read as a code reference.
+
+Changes:
+- 2026-11-27: `method-by-type` is the owner's, answering Q-261127-BVQX
+  yes: a type qualifies its method, and in Python and TypeScript the
+  file's name stands for the package.
 
 ## CH-261127-H4B7 charter gen keeps each doc's references and embeds current with the record and the code
 
@@ -532,7 +527,7 @@ Scenarios:
    writes the entry's id, title and text, replacing what was there.
 5. `prose-untouched` (owner, backlog 007): gen leaves a doc's prose
    byte for byte as it was, and a second run writes nothing.
-6. `bare-id-stays` (agent, provisional): a reference whose text is the id
+6. `bare-id-stays` (owner, Q-261127-TW9H): a reference whose text is the id
    alone keeps it alone, its target made current.
 
 Guidance: an embed renders as a quote: the id, linked to the entry, and
@@ -545,12 +540,14 @@ Changes:
 - 2026-11-27: the bare id is the agent's choice, not a ruling, so its
   clause has a scenario of its own, provisional, and Q-261127-TW9H asks
   the owner (review of backlog 007).
+- 2026-11-27: `bare-id-stays` is the owner's, answering Q-261127-TW9H
+  yes.
 
-## CH-261127-GXP7 charter curate records who curated a doc and a hash of what it references; lint names one whose references changed
+## CH-261127-GXP7 charter curate records who curated a doc and a hash of what it references; check warns of one whose references changed
 
 Status: active
 Serves: CH-002
-See: CH-261127-3NY3, CH-261127-DW8R, CH-041
+See: CH-261127-3NY3, CH-261127-DW8R, CH-261127-QRQS
 
 charter curate FILE writes, at the end of the doc, a comment block naming
 who curated it, the date, and a hash of each entry and each code
@@ -561,14 +558,14 @@ reference's hash is of its declaration's source, whitespace normalized,
 or of the whole file for a file no language reads. Curate refuses a doc
 whose references do not resolve, and changes nothing of it outside the
 block. A doc is stale when a reference's hash now differs from the one
-recorded, and drafted when it has no block; lint names each such doc,
-with each changed reference, and the gate never fails on either.
+recorded, and drafted when it has no block; check warns of each such
+doc, with each changed reference, and never fails on either.
 
 Why: an agent drafts a doc and a person curates it, and what the person
 checked is what the doc rested on when they read it. A date compared with
 history needs that history whole, which a shallow clone or a squashed
 merge loses; a hash in the doc travels with it and changes only when the
-referenced text does, so lint can say which prose may no longer be true
+referenced text does, so check can say which prose may no longer be true
 without claiming to know whether it is.
 
 Scenarios:
@@ -576,19 +573,20 @@ Scenarios:
    with the curator, the date and a hash per reference, and curating again
    replaces it.
 2. `stale-on-entry-change` (owner, backlog 007): after a referenced
-   entry's text changes, lint names the doc as stale with that entry.
+   entry's text changes, check warns of the doc as stale with that
+   entry.
 3. `changes-line-not-stale` (owner, backlog 007): after a referenced
-   entry gains only a Changes line, lint does not name the doc.
+   entry gains only a Changes line, check does not warn of the doc.
 4. `stale-on-go-change` (owner, backlog 007): after a referenced Go
-   function's body changes, lint names the doc with that reference, and
+   function's body changes, check warns of the doc with that reference, and
    a change of whitespace alone does not.
 5. `stale-on-python-change` (owner, backlog 007): after a referenced
-   Python function's body changes, lint names the doc with that reference.
+   Python function's body changes, check warns of the doc with that reference.
 6. `stale-on-typescript-change` (owner, backlog 007): after a referenced
-   TypeScript function's body changes, lint names the doc with that
+   TypeScript function's body changes, check warns of the doc with that
    reference.
 7. `drafted-named` (owner, backlog 007): a doc with no curation block is
-   named by lint as drafted.
+   warned of as drafted.
 8. `stale-never-fails` (owner, backlog 007): a stale doc and a drafted
    one leave charter check passing.
 9. `curate-refuses-broken` (owner, backlog 007): curating a doc with a
@@ -596,16 +594,20 @@ Scenarios:
 10. `curate-touches-only-its-block` (owner, backlog 007): curating leaves
     every byte of the doc before its block as it was.
 
-## CH-261127-8MYR Which docs mention an entry is computed from the docs, and anchors, export and diff show it
+Changes:
+- 2026-11-27: check warns of a drafted or stale doc, where lint named
+  it: the owner ruled lint deleted and its three useful checks kept as
+  check's warnings (CH-261127-QRQS).
+
+## CH-261127-8MYR Which docs mention an entry is computed from the docs, and anchors and diff show it
 
 Status: active
 Serves: CH-002, CH-001
-See: CH-040, CH-261015-9ZTY, CH-261009-QQC8, CH-261127-GXP7
+See: CH-040, CH-261009-QQC8, CH-261127-GXP7
 
 Nobody writes a backlink: the docs that reference or embed an entry are
 read from the docs. charter anchors lists them for each id, with the line
-of each mention; the export carries them with each entry, and the viewer
-shows them on its page; and charter diff, given a revision, lists after
+of each mention; and charter diff, given a revision, lists after
 what it names each doc holding a reference whose hash differs from the
 revision's, as docs to read again, without changing its exit status.
 
@@ -617,8 +619,10 @@ everything the backlinks need.
 Scenarios:
 1. `anchors-lists-docs` (owner, backlog 007): anchors for an id that two
    docs mention lists both, with the line of each mention.
-2. `export-carries-docs` (owner, backlog 007): the export carries, with
-   each entry, the docs that mention it.
-3. `diff-lists-docs` (owner, backlog 007): diff against a revision lists
+2. `diff-lists-docs` (owner, backlog 007): diff against a revision lists
    a doc whose referenced entry's text changed since, and exits as it
    would without the doc.
+
+Changes:
+- 2026-11-27: the export and the viewer are deleted, by the owner's
+  ruling, so neither shows the docs; `export-carries-docs` goes with them.

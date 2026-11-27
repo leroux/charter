@@ -561,12 +561,12 @@ func Curate(d *Doc, by, date string, hashes map[string]string) string {
 }
 
 // Stale names a drafted doc, or each reference of a curated one whose hash
-// differs from the one recorded, as lint's advice.
+// differs from the one recorded, as check's warnings.
 //
 //charter:realizes CH-261127-GXP7
 func Stale(d *Doc, now map[string]string) []string {
 	if d.Curation == nil {
-		return []string{fmt.Sprintf("%s:1: lint: the doc is drafted: no one has curated it; read it against the record and the code, then run charter curate %s", d.File, d.File)}
+		return []string{fmt.Sprintf("%s:1: warning: the doc is drafted: no one has curated it; read it against the record and the code, then run charter curate %s", d.File, d.File)}
 	}
 	var out []string
 	at := func(key string) int {
@@ -596,9 +596,9 @@ func Stale(d *Doc, now map[string]string) []string {
 		was, ok := d.Curation.Hashes[k]
 		switch {
 		case !ok:
-			out = append(out, fmt.Sprintf("%s:%d: lint: the doc is stale: %s is referenced since it was curated on %s; read it again and run charter curate %s", d.File, at(k), k, d.Curation.Date, d.File))
+			out = append(out, fmt.Sprintf("%s:%d: warning: the doc is stale: %s is referenced since it was curated on %s; read it again and run charter curate %s", d.File, at(k), k, d.Curation.Date, d.File))
 		case was != now[k]:
-			out = append(out, fmt.Sprintf("%s:%d: lint: the doc is stale: %s changed since it was curated on %s; read it again and run charter curate %s", d.File, at(k), k, d.Curation.Date, d.File))
+			out = append(out, fmt.Sprintf("%s:%d: warning: the doc is stale: %s changed since it was curated on %s; read it again and run charter curate %s", d.File, at(k), k, d.Curation.Date, d.File))
 		}
 	}
 	return out

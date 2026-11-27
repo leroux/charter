@@ -104,9 +104,6 @@ Scenarios:
    text with no dated Changes line is named against the earlier revision,
    and one with the line is not.
 
-Changes:
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
 
 ## CH-002 A builder reaches the code and the tests from an id, and the gate names the fix for every problem
 

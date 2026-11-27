@@ -1,2 +1,0 @@
-kind: neutral
-Please allow queries to be written with parentheses as well as brackets: `#(...)` for the first match and `#(...)#` for all matches, the same as `#[...]` and `#[...]#`. On `{"friends":[{"a":10},{"a":20},{"a":30},{"a":40}]}`, `friends.#(a>9)#|#` is `4`, `friends.#(a>10)#|#` is `3` and `friends.#(a>40)#|#` is `0`. Brackets must keep working. Please document it in the README and add tests.

@@ -61,8 +61,6 @@ Changes:
 - 2026-10-09: the reader skips audit.md, the audit's report, as it skips
   README.md, the digest, questions.md, policy.md and glossary.md: none is
   an area document.
-- 2026-10-09: the title, the text and two scenarios reworded to the
-  style's bars; the ruling is unchanged.
 - 2026-10-09: a status outside the three, which fields-checked named
   beside CH-013's status-form, is CH-013's alone, the status form being
   its subject; fields-checked no longer names it, and the text names
@@ -173,8 +171,6 @@ Changes:
   the same number, and the later one rewrote it everywhere it was
   written. The numbered ids stand, and the declared-twice problem says
   which entry takes a new id.
-- 2026-10-09: the title and four scenarios reworded to the style's bars;
-  the ruling is unchanged.
 - 2026-10-09: the next free id moved to CH-040, the next verb's behaviour
   being its subject: this entry's next-free restated CH-040's and is
   dropped, its test citing CH-040's, and the text names CH-040 for how
@@ -227,41 +223,6 @@ Changes:
   CH-003: CH-003 is deprecated and the need above it is served directly
   (backlog 004).
 
-## CH-014 The earlier form, one file per spec, is read beside the area documents until it is migrated
-
-Status: deprecated
-Serves: CH-261126-PFG5
-
-A spec file in the spec directory, named for its numbered id, never a
-dated one, with a lens and a slug, is parsed into the same registry as an
-area entry: its fields in their fixed order, its Realizes counting as
-Serves, and its links pointing at the target's current file. The directory
-may be absent.
-
-Why: two hundred and sixty specs move one area at a time; the gate holds
-both forms while they do.
-
-Scenarios:
-1. `file-form-read`: a spec file yields its id, symbol, lens, status,
-   accounts, text and relations, with each link's target.
-2. `file-form-checked`: a field out of order, an unknown field, a link
-   whose text is not the id, a malformed change row and text outside a
-   field are problems.
-3. `file-name-checked`: a file not named LENS-NNN-slug.md with a lens of
-   the seven, one named by a dated id among them, is a problem.
-4. `link-into-a-document`: a spec file's link to an entry that has moved
-   into an area document is checked by id alone, whatever file it names.
-
-Changes:
-- 2026-10-09: that a dated id names no spec file is ruled here alone, a
-  spec file's name being this entry's subject: CH-012's id-form stated it
-  too and now points here, and the text and file-name-checked say it.
-- 2026-11-26: deprecated (Q-261015-N4HJ): neither charter holds a spec
-  file, so the earlier form is no longer read, and its code goes with the
-  rewrite (backlog 003).
-- 2026-11-26: serves CH-261126-PFG5, where it served CH-003: CH-003 is
-  deprecated and the need above it is served directly (backlog 004).
-
 ## CH-015 Serves and See name existing entries, a need serves nothing, and nothing names itself
 
 Status: active
@@ -285,44 +246,6 @@ Changes:
 - 2026-11-26: the earlier form's relations are no longer read
   (Q-261015-N4HJ): `stakeholder-realizes-nothing` is dropped with them,
   and `unknown-target` names Serves and See alone.
-
-## CH-003 The record is stable: ids never change or get reused, retired entries keep their history, and changes are dated
-
-Status: deprecated
-Serves: CH-261126-PFG5
-
-An entry keeps its id for life; a retired one stays in its document with
-its status and its changes, and its symbol still builds, so the strip can
-follow at its own pace. Two entries with one id, anywhere in the charter,
-fail. A change to an entry is a dated line in its Changes.
-
-Why: everything hangs on the ids: anchors, citations, waivers, the
-backlog. A record that renumbers or forgets is not a record.
-
-Scenarios:
-1. `id-declared-once`: two entries with one id, in one document or in two
-   documents, fail naming both places.
-2. `retired-entry-still-builds`: a deprecated entry is generated with a
-   deprecation notice and the gate asks no coverage of it.
-3. `next-free-id`: a new id with a prefix is one the charter does not
-   hold.
-
-Changes:
-- 2026-10-01: a new id is one the charter does not hold, where it was one
-  above the highest, which two branches took at once and one of them then
-  changed (CH-012).
-- 2026-10-09: the title reworded to twenty words or fewer; the ruling is
-  unchanged.
-- 2026-11-26: the earlier form's spec files are no longer read
-  (Q-261015-N4HJ), so `id-declared-once` names two documents, not a
-  document and a spec file.
-- 2026-11-26: a decision serving CH-261126-PFG5, where it was a need of
-  its own, the needs being re-cut one a problem: the record's stability is
-  how intent keeps a durable home, a property of the record and not
-  something a person asks of it (backlog 004).
-- 2026-11-26: deprecated: each of its scenarios restated one that CH-012,
-  CH-013 and CH-040 rule, and the promise above them is CH-261126-PFG5's;
-  its children serve CH-261126-PFG5 in its place (backlog 004).
 
 ## CH-261126-HK6S An observation is a heading in observations.md, with its subject, status, date or source and the entries it supports
 
@@ -358,66 +281,3 @@ Scenarios:
 Changes:
 - 2026-11-26: serves CH-261126-P2SK, where it served CH-005: CH-005 is
   deprecated and the need above it is served directly (backlog 004).
-
-## CH-261126-G5BX A need names the person it serves, one the needs document declares
-
-Status: deprecated
-Serves: CH-261126-PFG5
-See: CH-011
-
-The header of needs.md declares the charter's people in a line, "People:
-reviewer, builder, owner, adopter", and each need names one of them in a
-field line, "For: reviewer". A need without For, a For naming a person the
-header does not declare, and a For on a decision are form problems naming
-the line. The digest and the export group the needs by person.
-
-Why: a need is a promise to a person, and a record that does not say whose
-leaves the reader to guess who relies on it; naming the person lets each
-one find what the record promises them.
-
-Scenarios:
-1. `people-declared` (agent, provisional): a needs header with a People
-   line yields the charter's people, in order.
-2. `for-checked` (agent, provisional): a need without For, a For naming an
-   undeclared person, and a For on a decision are each a form problem
-   naming the line.
-3. `grouped-by-person` (agent, provisional): the digest and the export list
-   each person's needs together, in the order the People line gives.
-
-Changes:
-- 2026-11-26: deprecated before it was built: a need's title already names
-  the person it serves, so a For field would add a rule and no information
-  (owner, backlog 004).
-
-## CH-261126-PZ8Z An area is contract or design: what any implementation must do, or how this one does it
-
-Status: deprecated
-Serves: CH-261126-PFG5
-See: CH-261126-GFR7, CH-033
-
-An area document's header carries a Level line, "Level: contract" or
-"Level: design"; without one the area is contract. A contract entry rules
-what is observable at the edge of what the charter covers: what a user, a
-caller or another system can see. A design entry rules how this
-implementation meets the contract, serves a contract entry or another
-design entry, and binds no other implementation. A surface is accounted
-for by a contract entry only, so the contract describes the whole edge.
-
-Why: the record is meant to let someone rebuild the software from it, with
-other code and in another language; that needs the reader to tell what
-binds every implementation from what this one chose, and to know the
-contract leaves nothing at the edge out.
-
-Scenarios:
-1. `level-read` (agent, provisional): an area with "Level: design" yields
-   design entries, and one with no Level line yields contract entries.
-2. `design-serves` (agent, provisional): an active design entry that serves
-   nothing, or serves only a need, is named by lint.
-3. `surface-on-contract` (agent, provisional): an Accounts line on a design
-   entry fails, naming the contract entry the surface belongs to.
-4. `contract-alone` (agent, provisional): the digest and the export can be
-   read with the design areas left out, the contract complete on its own.
-
-Changes:
-- 2026-11-26: deprecated before it was built: held as an idea for later in
-  backlog 006, the foundations coming first (owner, backlog 006).

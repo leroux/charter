@@ -1,6 +1,6 @@
 ---
 name: claims-implement
-description: Take charter entries to covered. Set them active, run charter gen, build to their text and Why with the repository's implementation and testing skills, write a test per scenario and cite it, anchor the declaration that carries the decision, run the gate, lint and the report, then run claims-review. Use when a story's entries are ready to build, e.g. "implement SW-118", "build backlog 038". Not drafting (claims-draft) or reviewing (claims-review).
+description: Take charter entries to covered. Set them active, run charter gen, build to their text and Why with the repository's implementation and testing skills, write a test per scenario and cite it, anchor the declaration that carries the decision, run the gate and the report, then run claims-review. Use when a story's entries are ready to build, e.g. "implement SW-118", "build backlog 038". Not drafting (claims-draft) or reviewing (claims-review).
 ---
 
 # Implement entries
@@ -59,8 +59,8 @@ tests passed. The layout is the repository's `claims/charter.toml`.
    line comment); several ids with
    commas. `//charter:concerns SW-118` marks code coupled to it without
    realizing it; navigation, not coverage. A package clause carries a
-   realizes only for a `structure` decision; lint names any other
-   decision realized only by a package clause. A need gets no anchor.
+   realizes only for a `structure` decision; anchor any other decision on
+   the declaration that carries it. A need gets no anchor.
    Never place an anchor you are unsure is true: ask and leave the gap.
 
 6. **Surfaces.** A new environment variable is a constant in the
@@ -74,11 +74,10 @@ tests passed. The layout is the repository's `claims/charter.toml`.
    the user's agreement: a line `SW-118/handle<TAB>reason` in
    `claims/waivers.txt`. Never an anchor, never to go green.
 
-8. **Gate, lint, report.**
+8. **Gate and report.**
    - `charter check`: fails an active decision with no realizes anchor, a
-     scenario no test cites, a stale generated file.
-   - `charter lint`: nothing but the line counting the
-     open questions.
+     scenario no test cites, a stale generated file; and warns of nothing
+     the work left behind.
    - `charter report -md`: runs each language's test command and says, per
      scenario, which tests cited it and whether they passed. Every targeted
      scenario is passed, not skipped or none.
@@ -92,17 +91,19 @@ tests passed. The layout is the repository's `claims/charter.toml`.
 
 ## Retiring an entry
 
-Set `Status: deprecated` with a Changes line naming what replaces it, if
-anything; `charter gen`, and its symbol carries a deprecation notice so
-everything still builds. `charter lint` lists the anchors and citations
-that remain: remove them with the code and tests they served, dropping a
-directive whose last id is gone. Keep the entry; the record is the point.
+Retiring is two changes. First, set `Status: deprecated` with a Changes
+line naming what replaces it, if anything; `charter gen`, and its symbol
+carries a deprecation notice so everything still builds. `charter check`
+warns of each anchor and citation that remains: remove them with the
+code and tests they served, dropping a directive whose last id is gone.
+Then, in a later change, delete the entry; git keeps its text, and
+`charter diff` accepts the deletion of an entry deprecated at its base.
 
 ## Done when
 
 - Each target is `active`, regenerated, realized by an anchored
   declaration, with every scenario cited by a test that can fail.
-- The gate, lint and the report are green; a gap outside the target was
+- The gate and the report are green; a gap outside the target was
   reported, not anchored or waived.
 - `claims-review` ran and its findings were dispositioned; nothing is
   committed.

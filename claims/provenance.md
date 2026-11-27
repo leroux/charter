@@ -35,9 +35,6 @@ Scenarios:
    owner, delegate or agent, a named owner, an unnamed delegate, or an
    agent with a reference is a form problem naming the forms to write.
 
-Changes:
-- 2026-10-09: the title and the malformed-refused scenario reworded to the
-  style's bars; the ruling is unchanged.
 
 ## CH-261009-4B3B The question file holds what nobody ruled, each question naming its entry, who asked and the provisional answer until answered
 
@@ -51,18 +48,16 @@ once a person has answered, Answer, opening with the date and who
 answered. A question without Asked-by, Entry or Provisional, naming an
 entry or scenario the record does not hold, with an Answer that does not
 open with a date, or with an id declared twice, is a form problem naming
-the line. A question is never deleted. Lint prints one line, at the
-question file's first line, saying how many questions are open and naming
-the command that lists them; with none open it prints none. claimsgen
-questions lists each open question with its id, the entry it is about,
+the line. Once its answer is written into the record, as a scenario's
+provenance or a Changes line naming its id, an answered question is
+deleted; git keeps it. charter questions lists each open question with its id, the entry it is about,
 its text, the provisional answer and who asked, then how many are open;
 with -all it lists the answered ones too, each with its answer.
 
 Why: an agent that must choose something unruled needs a place to say so
 and go on, and the owner needs the list to clear; without it the choice
-lands as if it were a decision. Lint is read for what to look at, and a
-line per open question buried its advice; a count keeps it readable, and
-the list is one command away.
+lands as if it were a decision. An answer already written where it rules
+is a second copy to read stale.
 
 Scenarios:
 1. `question-read` (owner): a well-formed question yields its
@@ -73,10 +68,7 @@ Scenarios:
 3. `missing-parts-refused` (owner): a question without
    Asked-by, Entry or Provisional, or whose Answer does not open with a
    date, is a form problem naming what to write.
-4. `open-listed` (owner): lint prints one line, at the
-   question file's first line, counting the open questions and naming the
-   command that lists them, and none when no question is open.
-5. `questions-verb-lists` (owner): claimsgen questions prints
+4. `questions-verb-lists` (owner): charter questions prints
    each open question with its id, entry, text, provisional answer and who
    asked, then how many are open; -all adds the answered ones with their
    answers.
@@ -84,7 +76,9 @@ Scenarios:
 Changes:
 - 2026-10-09: lint summarises the open questions in one line and the
   questions verb lists them.
-- 2026-10-09: the title reworded to twenty words; the ruling is unchanged.
+- 2026-11-27: an answered question is deleted once its answer is written
+  into the record (Q-261015-YSKC, answered yes by the owner), and lint,
+  which counted the open ones, is gone; `open-listed` goes with it.
 
 ## CH-261009-QQC8 charter diff names what a change did to the record that its Changes lines do not say
 
@@ -92,8 +86,9 @@ Status: active
 Serves: CH-261009-3FHW
 
 Given a git revision, charter diff reads the area documents as they
-were there and as they are, and names, by id: an entry removed; an active
-entry made planned; an entry deprecated, or its text, Kind or a scenario
+were there and as they are, and names, by id: an entry removed that was
+not deprecated there, since an entry is deprecated first and deleted in a
+later change; an active entry made planned; an entry deprecated, or its text, Kind or a scenario
 changed or removed, with no Changes line the revision lacked; and a
 scenario whose ruling was the owner's or a delegate's and is now an
 agent's. An entry only set active, or changed with a new dated line, is
@@ -105,8 +100,8 @@ written down. Against the base of a pull request, this is the check that
 a change to a decision is a change recorded.
 
 Scenarios:
-1. `removed-named` (owner): an id present at the revision and
-   absent now is named: an entry is deprecated, never deleted.
+1. `removed-named` (owner): an id present at the revision and absent now
+   is named, unless it was deprecated there.
 2. `unbuilt-named` (owner): an entry active at the revision
    and planned now is named.
 3. `unrecorded-change-named` (owner): an entry whose text,
@@ -120,3 +115,7 @@ Scenarios:
 Changes:
 - 2026-11-26: the verb is charter diff, of the one charter command
   (CH-040); the ruling is unchanged (backlog 003).
+- 2026-11-27: an entry deprecated at the revision may be gone now: the
+  owner ruled that retiring is deprecating an entry and stripping its
+  code and tests, then deleting it in a later change, git keeping the
+  text; until now an entry was never deleted.

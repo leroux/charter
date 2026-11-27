@@ -1,7 +1,0 @@
-# The order the digest reads the area documents in: what every tool
-# shares, then each tool.
-cli.md
-wc.md
-cut.md
-sort.md
-uniq.md

@@ -1,8 +1,0 @@
-# The order the digest reads the area documents in: how a path is read,
-# what arrays add to it, the modifiers, what a caller reads off a result,
-# and what gjson does with a document it cannot trust.
-paths.md
-arrays.md
-modifiers.md
-results.md
-validity.md

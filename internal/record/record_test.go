@@ -231,8 +231,8 @@ func TestTheChartersOwnRecordReadsClean(t *testing.T) {
 	if len(r.Problems) != 0 {
 		t.Errorf("the charter's own record:\n%s", strings.Join(r.Problems, "\n"))
 	}
-	if r.Entry("CH-261126-HK6S") == nil || len(r.Questions) == 0 {
-		t.Errorf("the record lacks CH-261126-HK6S or its questions")
+	if r.Entry("CH-261126-HK6S") == nil {
+		t.Errorf("the record lacks CH-261126-HK6S")
 	}
 }
 

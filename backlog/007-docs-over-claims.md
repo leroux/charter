@@ -1,6 +1,6 @@
 # 007. Docs over claims: free prose that references and embeds claims and code, drafted by an agent, curated by a person, and warned on when what it rests on changes
 
-Status: in progress · Size: M · See: 005, 006
+Status: in progress · Size: M · See: 006, 008
 
 The record holds what binds: claims, each declared once, anchored to code
 and verified by tests. It has no place for the rest of what a reader needs

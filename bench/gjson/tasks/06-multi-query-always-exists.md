@@ -1,4 +1,0 @@
-kind: neutral
-A query for all matches, `#[...]#`, should always return an array, even when nothing matches: on a document where no friend has `"kind":"Other"`, `i*.f*.#[kind="Other"]#` should return `[]` rather than a non-existent result, the way `#.key` already returns `[]`. Callers then can count matches with `...#|#` and get `0`.
-
-While you are there, please make sure queries work after wildcard keys and on every value type, with tests: numbers (`extra.0<11`, `<=`, `=`, `!=`, `>`, `>=`), strings (`<`, `<=`, `>`, `>=`, `=`, `!=`, `%` like and `!%` not like, for example `first%"*e*"` and `first!%"*e*"` counted with `#|#`) and booleans (`cust1=true`, `cust2=false`, `!=`, and `>`, `>=`, `<`, `<=` with true ordered above false), all through a path such as `i*.f*.#[...]` on a document `{"info":{"friends":[...]}}`.
