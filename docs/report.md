@@ -117,7 +117,7 @@ section per entry. From `examples/ratelimit`:
 Active scenarios by who ruled them: 0 ruled by the owner (0 passed), 0 by a delegate (0 passed), 14 an agent's, provisional (14 passed).
 
 Every active scenario passed.
-## STK-261126-H2SW A caller gets a burst at once, then its sustained rate, and no more
+## STK-261126-H2SW ratelimit MUST let a quiet caller burst, then hold it to its sustained rate, and MUST NOT let one caller spend another's requests
 
 active, pass
 

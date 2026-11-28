@@ -104,20 +104,20 @@ func record(tb testing.TB, id string, handles []string) {
 	})
 }
 
-// STK_261126_H2SW is STK-261126-H2SW: A caller gets a burst at once, then its sustained rate, and no more
-var STK_261126_H2SW = &Spec{ID: "STK-261126-H2SW", Title: "A caller gets a burst at once, then its sustained rate, and no more", Status: Active}
+// STK_261126_H2SW is STK-261126-H2SW: ratelimit MUST let a quiet caller burst, then hold it to its sustained rate, and MUST NOT let one caller spend another's requests
+var STK_261126_H2SW = &Spec{ID: "STK-261126-H2SW", Title: "ratelimit MUST let a quiet caller burst, then hold it to its sustained rate, and MUST NOT let one caller spend another's requests", Status: Active}
 
-// STK_261126_T2BD is STK-261126-T2BD: An operator sets the rate and the burst at start, and a bad setting stops the start
-var STK_261126_T2BD = &Spec{ID: "STK-261126-T2BD", Title: "An operator sets the rate and the burst at start, and a bad setting stops the start", Status: Active}
+// STK_261126_T2BD is STK-261126-T2BD: ratelimit MUST take its rate and burst from the operator at start, and MUST NOT start on a setting it cannot read
+var STK_261126_T2BD = &Spec{ID: "STK-261126-T2BD", Title: "ratelimit MUST take its rate and burst from the operator at start, and MUST NOT start on a setting it cannot read", Status: Active}
 
-// SW_261126_2XG8 is SW-261126-2XG8: The limiter reads time through its Clock alone
-var SW_261126_2XG8 = &Spec{ID: "SW-261126-2XG8", Title: "The limiter reads time through its Clock alone", Status: Active, Kind: "structure"}
+// SW_261126_2XG8 is SW-261126-2XG8: The limiter MUST read the time from the Clock it is given and nowhere else
+var SW_261126_2XG8 = &Spec{ID: "SW-261126-2XG8", Title: "The limiter MUST read the time from the Clock it is given and nowhere else", Status: Active, Kind: "structure"}
 
-// SW_261126_39F6 is SW-261126-39F6: One key's requests never change another key's bucket
-var SW_261126_39F6 = &Spec{ID: "SW-261126-39F6", Title: "One key's requests never change another key's bucket", Status: Active, Kind: "invariant"}
+// SW_261126_39F6 is SW-261126-39F6: The limiter MUST NOT let one key's requests change another key's bucket
+var SW_261126_39F6 = &Spec{ID: "SW-261126-39F6", Title: "The limiter MUST NOT let one key's requests change another key's bucket", Status: Active, Kind: "invariant"}
 
-// SW_261126_CMTG is SW-261126-CMTG: The rate and the burst come from the environment at start, and an unreadable one stops the start
-var SW_261126_CMTG = &Spec{ID: "SW-261126-CMTG", Title: "The rate and the burst come from the environment at start, and an unreadable one stops the start", Status: Active}
+// SW_261126_CMTG is SW-261126-CMTG: The command MUST take the rate and the burst from the environment at start, and MUST NOT start on one it cannot read
+var SW_261126_CMTG = &Spec{ID: "SW-261126-CMTG", Title: "The command MUST take the rate and the burst from the environment at start, and MUST NOT start on one it cannot read", Status: Active}
 
-// SW_261126_VX8Z is SW-261126-VX8Z: A key's bucket starts full, earns the rate, holds at most the burst and pays a token a request
-var SW_261126_VX8Z = &Spec{ID: "SW-261126-VX8Z", Title: "A key's bucket starts full, earns the rate, holds at most the burst and pays a token a request", Status: Active, Kind: "bound"}
+// SW_261126_VX8Z is SW-261126-VX8Z: The limiter MUST give a new key a full bucket that earns the rate, holds at most the burst and pays a token for each request let through
+var SW_261126_VX8Z = &Spec{ID: "SW-261126-VX8Z", Title: "The limiter MUST give a new key a full bucket that earns the rate, holds at most the burst and pays a token for each request let through", Status: Active, Kind: "bound"}

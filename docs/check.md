@@ -205,8 +205,8 @@ entry holds; and a constant `Extra = "RATELIMIT_EXTRA"` added to
 `env/env.go`) prints:
 
 ```text
-claims/limiter.md:25: rule 25: scenario starts-full of SW-261126-VX8Z is verified by no test; cite it with verifies(claims.SW_261126_VX8Z, "starts-full") as a test's first statement, or waive SW-261126-VX8Z/starts-full in claims/waivers.txt with a reason
-claims/limiter.md:53: rule 25: active entry SW-261126-2XG8 is realized by no code; add charter:realizes SW-261126-2XG8 where it is implemented
+claims/limiter.md:29: rule 25: scenario starts-full of SW-261126-VX8Z is verified by no test; cite it with verifies(claims.SW_261126_VX8Z, "starts-full") as a test's first statement, or waive SW-261126-VX8Z/starts-full in claims/waivers.txt with a reason
+claims/limiter.md:67: rule 25: active entry SW-261126-2XG8 is realized by no code; add charter:realizes SW-261126-2XG8 where it is implemented
 limiter/clock.go:8: rule 24: charter:realizes names SW-261126-2XG9, which is not an entry of the record
 limiter/limiter_test.go:40: rule 24: Verifies is the leading statement of its test, before anything runs, skips or branches; here something precedes or encloses it
 rule 6: env:RATELIMIT_EXTRA is neither accounted for by an entry nor listed in claims/baseline.txt
