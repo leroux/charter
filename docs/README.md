@@ -48,6 +48,7 @@ the tooling's own decisions are the `CH` entries in `claims/`.
 | [diff.md](diff.md) | walkthrough | the record at a git revision, each change diff names, the docs to read again |
 | [docs.md](docs.md) | walkthrough | the reference syntax, `rule 26`, curation, hashes and staleness |
 | [adopting.md](adopting.md) | guide | charter.toml, the first entries, wiring the claims module, anchors, citations, CI |
+| [tracey.md](tracey.md) | design | charter beside tracey, the nearest tool: the requirement, links from code and tests, what fails, change over time, interfaces, and what charter could take from it |
 
 ## The needs
 
